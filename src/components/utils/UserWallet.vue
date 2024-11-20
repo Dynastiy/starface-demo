@@ -118,8 +118,8 @@ export default {
   },
 
   beforeMount() {
-    this.getWallets()
-    this.triggerDeposit()
+    // this.getWallets()
+    // this.triggerDeposit()
   },
 
   computed: {
