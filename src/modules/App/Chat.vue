@@ -44,7 +44,7 @@
             />
             <span>
               <h5 class="font-semibold text-md">{{ getOtherUser(item).userName }}</h5>
-              <h6 class="text-xs">{{ item.lastMessage.text }}</h6>
+              <h6 class="text-xs">{{ (item.lastMessage.sender == userID ? 'You: ' : '')  +item.lastMessage.text }}</h6>
             </span>
           </span>
           <span class="text-xs text-gray-400 capitalize"> {{ $formatRelativeTime(item.lastMessage.createdAt) }} </span>
@@ -66,7 +66,6 @@ export default {
   methods: {
     getConversations() {
       this.$chat.conversations().then((res) => {
-        console.log(res)
         this.messages = res
       })
     },
@@ -74,13 +73,20 @@ export default {
     getOtherUser(e) {
         let participants = e.participants
         let user = participants.find(user => user._id !== this.userID)
-        console.log('otherUsre:', user)
         return user
     }
   },
 
   beforeMount() {
     this.getConversations()
+  },
+
+  mounted() {
+    this.intervalId = setInterval(this.getConversations, 10000)
+  },
+
+  beforeUnmount() {
+    clearInterval(this.intervalId)
   },
 
   computed: {

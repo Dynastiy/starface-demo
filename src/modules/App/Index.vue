@@ -53,7 +53,7 @@
                     <i-icon
                       class="text-[25px]"
                       icon="fontisto:comment"
-                      @click="viewMore('comments', item.comments)"
+                      @click="viewMore('comments', item)"
                     />
                     <span class="text-xs">{{ item.comments.length }}</span>
                   </span>
@@ -122,7 +122,9 @@
         </div>
       </template>
       <div>
-        <comments v-if="actionable == 'comments'" :items="comments" />
+        <div class="h-full">
+          <comments v-if="actionable == 'comments'" :items="comments" />
+        </div>
         <ul v-if="actionable == 'view'">
           <li class="bg-gray-100 p-2 rounded-lg">Flag this post</li>
         </ul>
@@ -156,9 +158,16 @@ export default {
 
   methods: {
     getReels() {
-      this.$reels.get().then((res) => {
+      this.$reels.list().then((res) => {
         console.log(res)
         this.reels = res.reels
+      })
+    },
+
+    getReel(id) {
+      this.$reels.get(id).then((res) => {
+        console.log(res)
+        this.comments = res.reel.comments
       })
     },
 
@@ -166,7 +175,8 @@ export default {
       this.visibleBottom = true
       this.actionable = e
       console.log(value)
-      this.comments = value
+      this.getReel(value._id)
+      // this.comments = value
     },
 
     like(e) {
@@ -211,7 +221,7 @@ export default {
 
       // Set a timeout to show the container
       this.timer = setTimeout(() => {
-        this.showContainer = true
+        // this.showContainer = true
         console.log('alert')
       }, randomTime)
     },

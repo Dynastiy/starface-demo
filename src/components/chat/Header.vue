@@ -1,6 +1,6 @@
 <template>
   <div class="bg-white p-4 flex gap-2 items-center shadow-sm">
-    <span>
+    <span role="button" @click="$router.go(-1)">
       <i-icon icon="ic:baseline-arrow-back" class="text-2xl font-semibold" />
     </span>
     <div class="flex gap-2 items-center">

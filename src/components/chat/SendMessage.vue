@@ -2,7 +2,7 @@
   <div class="bg-white p-4 shadow-sm">
     <div class="flex gap-2 items-center">
       <pxTextarea
-        class="p-2 w-full border border-primary"
+        class="p-3 w-full border border-primary"
         v-model="content"
         autoResize
         rows="1"
@@ -17,6 +17,9 @@
 
 <script>
 export default {
+  props: {
+    isRefreshing: Boolean
+  },
   data() {
     return {
       content: '',
@@ -36,7 +39,7 @@ export default {
       this.$chat.send(payload).then((res) => {
         console.log(res)
         this.content = ''
-        this.$refresh('refresh')
+        this.$emit('refresh')
       })
     }
   },

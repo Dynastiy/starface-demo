@@ -21,9 +21,19 @@ export default {
     }
   },
 
-    async get() {
+    async list() {
         try {
           let res = await $request.get(`api/reel/get-reels`)
+          return res.data
+        } catch (error) {
+          catchAxiosError(error)
+          throw error
+        }
+      },
+
+      async get(id) {
+        try {
+          let res = await $request.get(`api/reel/get-reels/${id}`)
           return res.data
         } catch (error) {
           catchAxiosError(error)

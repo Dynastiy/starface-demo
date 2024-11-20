@@ -11,31 +11,40 @@
       :key="idx"
     >
       <!-- {{  }} -->
-      <span v-html="item.text"></span>
+      <div v-text="item.text"></div>
     </span>
   </div>
 </template>
 
 <script>
 export default {
+  props: {
+    allMessages: null,
+  },
+
   data() {
     return {
-      ID: this.$route.params.id,
+      // ID: this.$route.params.id,
       messages: []
     }
   },
 
   methods: {
-    getConversation() {
-      this.$chat.conversation(this.ID).then((res) => {
-        console.log(res)
-        this.messages = res
-      })
-    }
+    
   },
 
   beforeMount() {
-    this.getConversation()
+    // this.getConversation()
+  },
+
+  watch: {
+    allMessages: {
+      handler(val) {
+        if(val) {
+          this.messages = val
+        }
+      }
+    }
   },
 
   computed: {
