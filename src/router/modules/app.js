@@ -7,6 +7,7 @@ import Connect from '@/modules/App/Connect.vue'
 import User from '@/modules/App/User.vue'
 import Create from '@/modules/App/Create.vue'
 import Wallet from '@/modules/App/Wallet.vue'
+import ChatArea from '@/modules/App/chat/chatArea.vue'
 
 const routes = [
   {
@@ -39,11 +40,24 @@ const routes = [
     component: Chat,
     meta: {
       layout: 'Dashboard',
-      requiresAuth: false,
+      requiresAuth: true,
       parent: 'chat',
       name: 'chat'
     }
   },
+
+  {
+    path: '/chat/message/:id',
+    name: 'app-chat-details',
+    component: ChatArea,
+    meta: {
+      layout: '',
+      requiresAuth: true,
+      parent: 'chat',
+      name: 'chat'
+    }
+  },
+
 
   {
     path: '/connect',
@@ -87,7 +101,7 @@ const routes = [
     component: Profile,
     meta: {
       layout: 'Dashboard',
-      requiresAuth: false,
+      requiresAuth: true,
       parent: 'profile',
       name: 'edit-profile'
     }

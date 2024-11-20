@@ -27,27 +27,49 @@
         <div>
           <wallet-data class="z-1" />
           <!-- <wallet-data -->
-          <div class="reel-container" v-for="(item, index) in videos" :key="index">
-            <video class="reel-video" :src="item" loop autoplay muted></video>
+          <div class="reel-container" v-for="(item, index) in reels" :key="index">
+            <video class="reel-video" :src="item.videoUrl" loop autoplay muted></video>
             <div class="inner-content">
               <div class="reel-section">
-                <div class="user-info flex gap-2 items-center">
-                  <img
-                    class="h-[35px] w-[35px] rounded-full ring ring-[#fff]"
-                    src="http://test.starface.chat/assets/images/avatar/6.jpg"
-                    alt=""
-                  />
-                  <span> @User </span>
-                  <button class="brand-btn-md brand-outline text-white">follow</button>
+                <div>
+                  <div class="user-info flex gap-2 items-center">
+                    <img
+                      class="h-[35px] w-[35px] rounded-full ring ring-[#fff]"
+                      :src="item.thumbnailUrl"
+                      @error="$handleProfileError"
+                      alt=""
+                    />
+                    <span> {{ `@${item.userName}` }} </span>
+                    <button class="brand-btn-md brand-outline text-white">follow</button>
+                  </div>
+                  <p class="mt-2 text-sm">{{item.description}}</p>
                 </div>
                 <div class="reel-actions flex flex-col gap-4">
                   <span class="flex gap-1 items-center flex-col">
                     <i-icon class="text-[30px]" icon="icon-park-outline:like" />
-                    <span class="text-xs">20</span>
+                    <span class="text-xs">{{ item.likes }}</span>
+                  </span>
+                  <span class="flex gap-1 items-center flex-col" role="button">
+                    <i-icon
+                      class="text-[25px]"
+                      icon="fontisto:comment"
+                      @click="viewMore('comments', item.comments)"
+                    />
+                    <span class="text-xs">{{ item.comments.length }}</span>
                   </span>
                   <span class="flex gap-1 items-center flex-col">
-                    <i-icon class="text-[25px]" icon="fontisto:comment" />
-                    <span class="text-xs">2</span>
+                    <i-icon class="text-[25px]" icon="fa6-solid:share" />
+                    <span class="text-xs">{{ item.shares }}</span>
+                  </span>
+                  <span
+                    class="flex gap-1 items-center flex-col"
+                    role="button"
+                    @click="viewMore('view')"
+                  >
+                    <i-icon class="text-[25px]" icon="uis:ellipsis-h" />
+                  </span>
+                  <span class="flex gap-1 items-center flex-col" role="button">
+                    <i-icon class="text-[35px]" icon="noto-v1:sunflower" />
                   </span>
                 </div>
               </div>
@@ -78,41 +100,73 @@
           @click="closeContainer"
           class="flex flex-col items-center justify-center w-full"
         >
-          <i-icon icon="fluent-emoji-flat:coin" class="text-[200px]" />
+          <!-- <i-icon icon="fluent-emoji-flat:coin" class="text-[200px]" /> -->
+          <img src="@/assets/img/icons/coin_claim.png" alt="" />
           <span class="text-white text-xs">Tap to claim</span>
         </span>
       </div>
     </vDialog>
+
+    <Sidebar
+      v-model:visible="visibleBottom"
+      :show-close-icon="false"
+      position="bottom"
+      class="max-h-80 h-full"
+    >
+      <template #header>
+        <div class="flex w-full justify-between">
+          <h4 v-if="actionable == 'comments'" class="font-semibold">Comments</h4>
+          <span class="text-red-500 ml-auto block" role="button" @click="visibleBottom = false">
+            <i-icon icon="iconamoon:close" class="text-2xl" />
+          </span>
+        </div>
+      </template>
+      <div>
+        <comments v-if="actionable == 'comments'" :items="comments" />
+        <ul v-if="actionable == 'view'">
+          <li class="bg-gray-100 p-2 rounded-lg">Flag this post</li>
+        </ul>
+      </div>
+    </Sidebar>
   </div>
 </template>
 
 <script>
 import walletData from '@/components/utils/walletData.vue'
+import Comments from '@/components/reels/Comments.vue'
 // import { useToast } from 'vue-toastification'
 export default {
-  components: { walletData },
+  components: { walletData, Comments },
   data() {
     return {
       filter: {
         per_page: 1,
         page_no: 1
       },
-      videos: [],
+      reels: [],
       meta: {},
       loading: false,
       showContainer: false,
-      timer: null
+      timer: null,
+      visibleBottom: false,
+      actionable: null,
+      comments: []
     }
   },
 
   methods: {
-    getMatch() {
-      this.videos = [
-        'https://datingkit.dexignzone.com/xhtml/assets/images/reels/video1.mp4',
-        'https://datingkit.dexignzone.com/xhtml/assets/images/reels/video2.mp4',
-        'https://datingkit.dexignzone.com/xhtml/assets/images/reels/video3.mp4',
-        'https://datingkit.dexignzone.com/xhtml/assets/images/reels/video4.mp4'
-      ]
+    getReels() {
+      this.$reels.get().then((res) => {
+        console.log(res)
+        this.reels = res.reels
+      })
+    },
+
+    viewMore(e, value) {
+      this.visibleBottom = true
+      this.actionable = e
+      console.log(value)
+      this.comments = value
     },
 
     like(e) {
@@ -169,7 +223,7 @@ export default {
   },
 
   beforeMount() {
-    this.getMatch()
+    this.getReels()
   },
 
   mounted() {

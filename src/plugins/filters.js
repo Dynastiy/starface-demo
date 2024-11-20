@@ -1,3 +1,13 @@
+import image from '@/assets/img/icons/profile_avatar.png'
+import placeholder from '@/assets/img/icons/placeholder-image.png'
+
+import { formatDistanceToNow } from 'date-fns';
+
+export function formatRelativeTime(dateString) {
+  const date = new Date(dateString);
+  return formatDistanceToNow(date, { addSuffix: true });
+}
+
 export function currencyFormat(value) {
   if (!value) return ''
   value = Number(value).toLocaleString('en-US', {
@@ -18,3 +28,17 @@ export function getID(value) {
   const ID = options.slice(0,6)
   return ID
 }
+
+export function handleImageError(event) {
+    // Handle the error, e.g., set a default image or log the error
+    event.target.src = placeholder;
+}
+
+export function handleProfileError() {
+  event.target.src = image;
+}
+
+// export function handleBackgroundError() {
+//   event.target.src = image;
+// }
+

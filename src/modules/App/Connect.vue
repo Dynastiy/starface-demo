@@ -29,13 +29,13 @@
             v-for="(item, i) in images"
             :key="i"
             class="swiper-card rounded-[10px] bg-cover bg-top flex px-4 items-end"
-            :style="`background: url(${item})`"
+            :style="`background: url(${item.filepaths[0]})`"
           >
             <div class="overlay p-4">
               <div class="flex flex-col gap-1">
                 <button class="brand-btn-md brand-outline text-white w-fit"><router-link to="/user/profile">View More</router-link></button>
-                <h4 class="font-semibold text-xl">Harleen, 24</h4>
-                <div class="flex gap-1">
+                <h4 class="font-semibold text-xl">{{ item.userName }}</h4>
+                <div class="flex gap-2">
                     <button class="brand-btn-md brand-outline text-white">Like</button>
                     <button class="brand-btn-md brand-outline text-white">Chat</button>
                     <button class="brand-btn-md brand-outline text-white">Skip</button>
@@ -123,13 +123,28 @@ export default {
   },
 
   methods: {
-    getMatch() {
-      this.images = [
-        'http://test.starface.chat/assets/images/avatar/6.jpg',
-        'http://test.starface.chat/assets/images/avatar/3.jpg',
-        'http://test.starface.chat/assets/images/avatar/4.jpg',
-        'http://test.starface.chat/assets/images/avatar/5.jpg'
-      ]
+    getConnect() {
+        this.$appImages.connect()
+        .then((res)=> {
+            console.log(res)
+            let resData = res.data
+            const allImages = []
+            resData.forEach(element => {
+                let newData = {
+                    ...element,
+                    imageUrl: element.filepaths[0]
+                }
+                allImages.push(newData)
+            });
+            this.images = allImages
+            console.log(allImages)
+        })
+    //   this.images = [
+    //     'http://test.starface.chat/assets/images/avatar/6.jpg',
+    //     'http://test.starface.chat/assets/images/avatar/3.jpg',
+    //     'http://test.starface.chat/assets/images/avatar/4.jpg',
+    //     'http://test.starface.chat/assets/images/avatar/5.jpg'
+    //   ]
     },
 
     like(e) {
@@ -154,19 +169,19 @@ export default {
 
     next() {
       this.filter.page_no++
-      this.getMatch()
+      this.getConnect()
     },
 
     prev() {
       if (this.meta.current_page > 1) {
         this.filter.page_no--
-        this.getMatch()
+        this.getConnect()
       }
     }
   },
 
   beforeMount() {
-    this.getMatch()
+    this.getConnect()
   },
 
   computed: {

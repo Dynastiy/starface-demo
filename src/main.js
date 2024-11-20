@@ -109,11 +109,11 @@ defineRule('termsValidation', (value) => {
     return true
   })
 
-import image from '@/assets/img/no-user.png'
-import cover from '@/assets/img/no-cover.png'
+import image from '@/assets/img/icons/profile_avatar.png'
+import placeholder from '@/assets/img/icons/placeholder-image.png'
 
-app.config.globalProperties.defaultImage = image
-app.config.globalProperties.defaultCover = cover
+app.config.globalProperties.avatar = image
+app.config.globalProperties.placeholder = placeholder
 
 app.config.globalProperties.imgUrl = config.imgUrl
 app.config.globalProperties.$axios = axios
@@ -148,6 +148,9 @@ app.component('wxBreadcrumb', wxBreadcrumb)
 
 import Avatar from 'primevue/avatar'
 app.component('Avatar', Avatar)
+
+import Textarea from 'primevue/textarea';
+app.component('pxTextarea', Textarea)
 
 import Accordion from 'primevue/accordion'
 import AccordionTab from 'primevue/accordiontab'
@@ -220,9 +223,13 @@ app.use(QrReader)
 
 
 // Plugins
-import { currencyFormat, formatDate, getID } from './plugins/filters'
+import { currencyFormat, formatDate, getID, handleImageError, handleProfileError, formatRelativeTime } from './plugins/filters'
 app.config.globalProperties.$currencyFormat = currencyFormat
 app.config.globalProperties.$formatDate = formatDate
 app.config.globalProperties.$getID = getID
+app.config.globalProperties.$handleProfileError = handleProfileError
+app.config.globalProperties.$handleImageError = handleImageError
+app.config.globalProperties.$formatRelativeTime = formatRelativeTime
+
 
 app.mount('#app')

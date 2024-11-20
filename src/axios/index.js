@@ -30,7 +30,7 @@ if (accessToken) {
 // Add a request interceptor
 $axios.interceptors.request.use(
   function (axiosConfig) {
-    NProgress.start();
+    // NProgress.start();
     // Add access token to header before request is sent if any
     // const accessToken = Cookies.get(config.accessTokenStorageKey);
     const accessToken = store.getters['auth/getToken'];
@@ -50,7 +50,7 @@ $axios.interceptors.request.use(
 // Add a response interceptor
 $axios.interceptors.response.use(
   function (response) {
-    NProgress.done();
+    // NProgress.done();
     // Any status code that lie within the range of 2xx cause this function to trigger
     return response;
   },

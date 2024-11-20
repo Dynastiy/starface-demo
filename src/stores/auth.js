@@ -10,7 +10,7 @@ export default {
     tags: [],
     order: null,
     loading: false,
-    warehauze_token: null,
+    starface_token: null,
     validationErrors: null,
   },
 
@@ -44,13 +44,13 @@ export default {
     },
 
     login(state, { token, user }) {
-      state.warehauze_token = token;
+      state.starface_token = token;
       state.user = user;
     },
 
     async LOGOUT(state) {
       state.user = null
-      state.warehauze_token = null
+      state.starface_token = null
       localStorage.clear()
     },
 
@@ -73,12 +73,12 @@ export default {
     getUser: (state) => state.user,
     getAddress: (state) => state.address,
     getUserMeta: (state) => state.userMeta,
-    getToken: (state) => state.warehauze_token,
+    getToken: (state) => state.starface_token,
     getWalletAddress: (state) => state.address,
     getSubCategories: (state) => state.sub_categories,
     getTags: (state) => state.tags,
     getOrder: (state) => state.order,
-    getAuthenticated: (state) => !!state.warehauze_token,
-    getUserID:(state) => state.userId
+    getAuthenticated: (state) => !!state.starface_token,
+    getUserID:(state) => state.user.existingUser._id
   }
 }

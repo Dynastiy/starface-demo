@@ -24,6 +24,13 @@
     color: var(---white);
 }
 
+.brand-primary-clear {
+    background-color: var(---primary-color);
+    /* background: linear-gradient(45deg, var(---primary-color), var(---primary-color), #fff); */
+
+    color: var(---white);
+}
+
 .brand-outline {
     /* background-color: var(---primary-color); */
     /* background: linear-gradient(to left, var(---primary-color), var(---secondary-color)); */
