@@ -1,109 +1,80 @@
 <template>
-  <div>
-    <div class="p-4">
-      <el-skeleton style="width: 100%" :loading="loading" animated>
-        <template #template>
-          <div class="flex lg:flex-row md:flex-row flex-col w-full gap-4">
-            <div v-for="item in 2" :key="item" class="w-full">
-              <el-skeleton-item
-                variant="image"
-                style="height: 120px; border-radius: 10px; width: 100%"
-              />
+  <div class="p-4">
+      <div>
+        <div
+          class="flex lg:flex-row md:flex-row flex-col justify-between lg:items-end md:items-end gap-4"
+        >
+          <div>
+            <div class="flex flex-col mb-4">
+              <span class="text-xs block text-primary leading-tightest font-semibold">
+                Star Balance</span
+              >
+              <span class="font-bold text-4xl leading-tightest">{{ walletData.starBalance }}</span>
+              <span class="text-sm text-gray-500 block leading-tightest font-semibold">{{ $convertToDollar(walletData.starBalance) }}</span>
             </div>
-          </div>
-        </template>
-        <template #default>
-          <div class="flex lg:flex-row md:flex-row flex-col w-full gap-4">
-            <!-- <div
-              class="flex items-center bg-secondary text-white px-4 py-8 rounded-lg justify-between lg:pt-4 lg:pt-4 w-full"
-              v-for="(item, i) in balances"
-              :key="i"
-              role="button"
-            > -->
-            <div
-              class="flex items-center bg-secondary text-white px-4 py-8 rounded-lg justify-between lg:pt-4 lg:pt-4 w-full"
-              role="button"
-            >
-              <div>
-                <span class="flex items-center gap-1">
-                  <span class="block text-[12px] text-gray-200 font-medium"
-                    >Total Starface Balance:</span
-                  >
-                  <!-- <span class="password-iccon" role="button" @click="revealAmount(item)">
-                    <i-icon
-                      :icon="showAmount  ? 'tabler:eye' : 'gridicons:not-visible'"
-                      class="form-icon"
-                    />
-                  </span> -->
-                </span>
-                <h1 class="text-4xl font-bold flex items-end gap-[2px]">
-                  {{ `30,000` }}
-                  <span class="text-lg">{{ 'starface' }}</span>
-                </h1>
+
+            <div class="flex flex-col gap-3 w-full">
+              <div
+                class="bg-secondary w-full p-3 rounded-md flex flex-col"
+                v-for="(value, name) in walletData.otherBalances"
+                :key="name"
+              >
+                <span class="text-[12px] text-gray-400 font-medium capitalize">{{
+                  name.split('_').join(' ')
+                }}</span>
+                <span class="font-bold text-xl text-white">{{ value }}</span>
               </div>
-              <!-- <img src="@/assets/img/wallet.svg" class="w-24" alt="" /> -->
             </div>
           </div>
-        </template>
-      </el-skeleton>
-    </div>
+          <div class="flex lg:w-fit md:w-fit w-full gap-2">
+            <span
+              role="button"
+              class="border w-full whitespace-nowrap bg-gray-100 flex flex-col items-center gap-1 rounded-[5px] px-1 py-[5px] text-[11px] capitalize font-sembold"
+              v-for="item in actions"
+              :key="item.label"
+              @click="openSendFunds(item)"
+            >
+              <i-icon
+                :icon="item.icon"
+                class="bg-primary text-white block text-primary rounded-full text-xl p-[2px]"
+              />
+              <span class="text-[9px]">{{ item.label.split('_').join(' ') }}</span></span
+            >
+          </div>
+        </div>
+      </div>
   </div>
 </template>
 
 <script>
+// import WalletData from './walletData.vue';
+
 export default {
   props: {
-    hasActions: {
-      type: Boolean,
-      default: true
-    }
+    hasActions: Boolean,
+    walletData: {
+      type: Object,
+      default: () => ({}), // Prevents errors if walletData is undefined or null
+    },
   },
+
   data() {
     return {
-      loading: false,
       showAmount: null,
       balances: [],
-      selected: null
+      selected: null,
+      actions: [
+        { label: 'fund_wallet', icon: 'mingcute:send-fill' },
+        { label: 'withdraw', icon: 'flowbite:download-solid' },
+        { label: 'convert', icon: 'simple-icons:convertio' },
+        { label: 'transfer', icon: 'mingcute:transfer-line' }
+      ],
+      localLoading: true
     }
   },
   methods: {
-    getWallets() {
-      this.loading = true
-      let payload = {
-        wallet_id: 'usdt,chambs',
-        formatted: 'yes',
-        user_id: this.user.user_id
-      }
-      this.$appDomain
-        .getWallets(payload)
-        .then((res) => {
-          console.log(res)
-          this.balances = res.data
-        })
-        .finally(() => {
-          this.loading = false
-        })
-    },
-
-    selectWallet(item){
-      this.selected = this.selected && this.selected === item.wallet_id ? null : item.wallet_id
-      const data_to_emit = this.selected ? item : null
-      this.$emit('walletSelected', data_to_emit)
-    },
-
-    revealAmount(item) {
-      this.showAmount = !this.showAmount
-        ? item.wallet_id
-        : this.showAmount !== item.wallet_id
-          ? item.wallet_id
-          : null
-    },
-
-    triggerDeposit() {
-      let payload = {
-        user_id: this.user.user_id
-      }
-      this.$middleware.dashboardRefresh(payload)
+    openSendFunds(item) {
+      this.$emit('actionClick', item)
     },
 
     hideBalance(value) {
@@ -122,32 +93,13 @@ export default {
     // this.triggerDeposit()
   },
 
+
   computed: {
     user() {
       return this.$store.getters['auth/getUser']
     }
-    // balance() {
-    //   return Number(this.wallet.tradingBalance).toLocaleString('en-US', {
-    //     style: 'currency',
-    //     currency: 'NGN'
-    //   })
-    // },
-    // hidden() {
-    //   let nummber_of_times = this.balance.length
-    //   let value = []
-    //   for (let i = 0; i < nummber_of_times; i++) {
-    //     value.push('*')
-    //   }
-    //   let completed = value.join('')
-    //   return completed
-    // }
   }
 }
 </script>
 
-<style scoped>
-.wallet {
-  /* background: var(---secondary-color);
-  color: var(---white); */
-}
-</style>
+<style scoped></style>

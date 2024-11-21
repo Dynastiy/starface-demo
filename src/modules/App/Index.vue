@@ -25,7 +25,7 @@
       </template>
       <template #default>
         <div>
-          <wallet-data class="z-1" />
+          <wallet-data class="z-1" :starBalance="starBalance" />
           <!-- <wallet-data -->
           <div class="reel-container" v-for="(item, index) in reels" :key="index">
             <video class="reel-video" :src="item.videoUrl" loop autoplay muted></video>
@@ -39,10 +39,10 @@
                       @error="$handleProfileError"
                       alt=""
                     />
-                    <span> {{ `@${item.userName}` }} </span>
+                    <span class="text-sm"> {{ `@${item.userName}` }} </span>
                     <button class="brand-btn-md brand-outline text-white">follow</button>
                   </div>
-                  <p class="mt-2 text-sm">{{item.description}}</p>
+                  <p class="mt-2 text-sm">{{ item.description }}</p>
                 </div>
                 <div class="reel-actions flex flex-col gap-4">
                   <span class="flex gap-1 items-center flex-col">
@@ -57,7 +57,11 @@
                     />
                     <span class="text-xs">{{ item.comments.length }}</span>
                   </span>
-                  <span class="flex gap-1 items-center flex-col">
+                  <span
+                    class="flex gap-1 items-center flex-col"
+                    role="button"
+                    @click="triggerShare"
+                  >
                     <i-icon class="text-[25px]" icon="fa6-solid:share" />
                     <span class="text-xs">{{ item.shares }}</span>
                   </span>
@@ -69,7 +73,7 @@
                     <i-icon class="text-[25px]" icon="uis:ellipsis-h" />
                   </span>
                   <span class="flex gap-1 items-center flex-col" role="button">
-                    <i-icon class="text-[35px]" icon="noto-v1:sunflower" />
+                    <i-icon class="text-[35px] heartbeat" icon="noto-v1:sunflower" />
                   </span>
                 </div>
               </div>
@@ -95,14 +99,16 @@
       }"
     >
       <div class="">
-        <span
-          role="button"
-          @click="closeContainer"
-          class="flex flex-col items-center justify-center w-full"
-        >
+        <span class="flex flex-col items-center justify-center w-full">
           <!-- <i-icon icon="fluent-emoji-flat:coin" class="text-[200px]" /> -->
-          <img src="@/assets/img/icons/coin_claim.png" alt="" />
-          <span class="text-white text-xs">Tap to claim</span>
+          <img
+            role="button"
+            @click.once="redeem"
+            src="@/assets/img/icons/coin_claim.png"
+            alt=""
+            :class="isLoading ? 'heartbeat' : 'fadeIn'"
+          />
+          <span class="text-white text-sm mt-12">Tap to claim</span>
         </span>
       </div>
     </vDialog>
@@ -113,18 +119,15 @@
       position="bottom"
       class="max-h-80 h-full"
     >
-      <template #header>
-        <div class="flex w-full justify-between">
-          <h4 v-if="actionable == 'comments'" class="font-semibold">Comments</h4>
-          <span class="text-red-500 ml-auto block" role="button" @click="visibleBottom = false">
-            <i-icon icon="iconamoon:close" class="text-2xl" />
-          </span>
-        </div>
-      </template>
-      <div>
-        <div class="h-full">
-          <comments v-if="actionable == 'comments'" :items="comments" />
-        </div>
+      <div class="h-[100%]">
+        <comments
+          v-if="actionable == 'comments'"
+          @refresh="refresh"
+          :items="comments"
+          :reel="reel"
+        />
+      </div>
+      <div class="h-full">
         <ul v-if="actionable == 'view'">
           <li class="bg-gray-100 p-2 rounded-lg">Flag this post</li>
         </ul>
@@ -152,7 +155,10 @@ export default {
       timer: null,
       visibleBottom: false,
       actionable: null,
-      comments: []
+      comments: [],
+      reel: {},
+      starBalance: 0,
+      isLoading: false
     }
   },
 
@@ -164,10 +170,62 @@ export default {
       })
     },
 
+    redeem() {
+      this.isLoading = true
+      this.$wallet
+        .redeem()
+        .then((res) => {
+          this.getEarnWallet()
+          this.closeContainer()
+          return res
+        })
+        .finally(() => {
+          this.isLoading = false
+        })
+    },
+
+    async onShare(callback) {
+      try {
+        await navigator.share({
+          title: `
+          Refer your friends and earn upto <b>25 SFC</b> per referral & your friends will get
+        <b>20 SFC</b>`,
+          text: 'Share referral code',
+          url: this.locat
+        })
+        // Run the callback on success
+        if (callback) callback()
+      } catch (err) {
+        alert(err)
+      }
+    },
+
+    onShareSuccess() {
+      console.log('Share was successful!')
+      // Perform additional actions like showing a success message or tracking an event
+    },
+
+    triggerShare() {
+      this.onShare(this.onShareSuccess)
+    },
+
+    getEarnWallet() {
+      this.$wallet.earnWallet().then((res) => {
+        console.log(res)
+        this.starBalance = res.star.balance
+      })
+    },
+
+    refresh() {
+      this.getReel(this.reel._id)
+      this.getReels()
+    },
+
     getReel(id) {
       this.$reels.get(id).then((res) => {
         console.log(res)
         this.comments = res.reel.comments
+        this.reel = res.reel
       })
     },
 
@@ -234,6 +292,7 @@ export default {
 
   beforeMount() {
     this.getReels()
+    this.getEarnWallet()
   },
 
   mounted() {

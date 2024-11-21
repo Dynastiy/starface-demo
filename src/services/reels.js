@@ -41,9 +41,9 @@ export default {
         }
       },
 
-      async getCategory(slug) {
+      async comment(formData, id) {
         try {
-          let res = await $request.get(`show-category/${slug}`)
+          let res = await $request.post(`api/reel/reels/${id}/comment`, formData)
           return res.data
         } catch (error) {
           catchAxiosError(error)

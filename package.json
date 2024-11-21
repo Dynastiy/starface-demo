@@ -1,5 +1,5 @@
 {
-  "name": "mango-meet",
+  "name": "starface",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -36,7 +36,8 @@
     "vue3-pincode-input": "^0.0.1",
     "vue3-qr-reader": "^1.0.0",
     "vuex": "^4.1.0",
-    "vuex-persistedstate": "^4.1.0"
+    "vuex-persistedstate": "^4.1.0",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@iconify/vue": "^4.1.1",

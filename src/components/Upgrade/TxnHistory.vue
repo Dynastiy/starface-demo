@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="p-4">
     <h4 class="font-semibold mb-2">Recent Transactions</h4>
     <el-skeleton :loading="loading" animated>
       <template #template>
@@ -81,7 +81,7 @@ export default {
   },
 
   beforeMount() {
-    this.getTxnHistory()
+    // this.getTxnHistory()
   },
   
   computed: {

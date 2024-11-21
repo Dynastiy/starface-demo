@@ -38,7 +38,8 @@ export function handleProfileError() {
   event.target.src = image;
 }
 
-// export function handleBackgroundError() {
-//   event.target.src = image;
-// }
+export function convertToDollar(value) {
+  const RATE = 10
+  return `$ ${value/RATE}`
+}
 

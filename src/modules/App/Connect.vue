@@ -29,11 +29,11 @@
             v-for="(item, i) in images"
             :key="i"
             class="swiper-card rounded-[10px] bg-cover bg-top flex px-4 items-end"
-            :style="`background: url(${item.filepaths[0]})`"
+            :style="getBackgroundStyle(item.filepaths[0])"
           >
             <div class="overlay p-4">
               <div class="flex flex-col gap-1">
-                <button class="brand-btn-md brand-outline text-white w-fit"><router-link to="/user/profile">View More</router-link></button>
+                <button class="brand-btn-md brand-outline text-white w-fit"><router-link :to="`/user/profile/${item.userId}`">View More</router-link></button>
                 <h4 class="font-semibold text-xl">{{ item.userName }}</h4>
                 <div class="flex gap-2">
                     <button class="brand-btn-md brand-outline text-white">Like</button>
@@ -139,12 +139,6 @@ export default {
             this.images = allImages
             console.log(allImages)
         })
-    //   this.images = [
-    //     'http://test.starface.chat/assets/images/avatar/6.jpg',
-    //     'http://test.starface.chat/assets/images/avatar/3.jpg',
-    //     'http://test.starface.chat/assets/images/avatar/4.jpg',
-    //     'http://test.starface.chat/assets/images/avatar/5.jpg'
-    //   ]
     },
 
     like(e) {
@@ -177,7 +171,18 @@ export default {
         this.filter.page_no--
         this.getConnect()
       }
-    }
+    },
+
+    getBackgroundStyle(image) {
+      const img = new Image();
+      img.src = image;
+
+      return {
+        backgroundImage: `url('${img.complete && img.naturalWidth !== 0 ? image : this.$placeholder}')`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      };
+    },
   },
 
   beforeMount() {
@@ -227,7 +232,7 @@ export default {
   /* padding: 15px 200px; */
   left: 0;
   width: 100%;
-  min-height: 400px; /* Adjust height as needed */
+  min-height: 300px; /* Adjust height as needed */
   background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent); /* Smooth blend */
   display: flex;
   align-items: end;

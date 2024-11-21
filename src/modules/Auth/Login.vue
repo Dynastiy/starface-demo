@@ -15,31 +15,11 @@
         }}</span>
       </div> -->
 
-    <vForm
-      @submit="onSubmit"
-      v-slot="{ meta }"
-      class="mt-20 h-[60vh] flex flex-col justify-between"
-    >
-      <div class="flex flex-col gap-6">
+    <vForm @submit="onSubmit" v-slot="{ meta }" class="mt-6 flex flex-col justify-between">
+      <div class="flex flex-col gap-4">
         <div>
           <label for="">Email</label>
-          <vField name="email" v-slot="{ field }" class="input" type="email" rules="email">
-            <div class="input-field">
-              <span class="w-full flex gap-2 items-center">
-                <span class="password-iccon">
-                  <i-icon icon="mdi:email-check" class="form-icon" />
-                </span>
-                <input
-                  type="email"
-                  name="email"
-                  class="w-full"
-                  id="email"
-                  placeholder="Enter Email"
-                  v-bind="field"
-                />
-              </span>
-            </div>
-          </vField>
+          <vField name="email" class="input" type="email" rules="email"> </vField>
           <ErrorMessage name="email" class="text-xs text-error"></ErrorMessage>
         </div>
 
@@ -96,7 +76,7 @@
         <div class="mt-3">
           <span class="flex justify-center gap-1 text-[13px]">
             <span class="font-medium text-gray2">Don't have an account?</span>
-            <router-link class="font-semibold text-primary" to="/register">Sign Up</router-link>
+            <router-link class="font-semibold text-primary" to="/signup">Sign Up</router-link>
           </span>
         </div>
       </div>

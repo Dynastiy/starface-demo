@@ -112,8 +112,8 @@ defineRule('termsValidation', (value) => {
 import image from '@/assets/img/icons/profile_avatar.png'
 import placeholder from '@/assets/img/icons/placeholder-image.png'
 
-app.config.globalProperties.avatar = image
-app.config.globalProperties.placeholder = placeholder
+app.config.globalProperties.$avatar = image
+app.config.globalProperties.$placeholder = placeholder
 
 app.config.globalProperties.imgUrl = config.imgUrl
 app.config.globalProperties.$axios = axios
@@ -223,13 +223,15 @@ app.use(QrReader)
 
 
 // Plugins
-import { currencyFormat, formatDate, getID, handleImageError, handleProfileError, formatRelativeTime } from './plugins/filters'
+import { currencyFormat, formatDate, getID, handleImageError, handleProfileError, formatRelativeTime, convertToDollar } from './plugins/filters'
 app.config.globalProperties.$currencyFormat = currencyFormat
 app.config.globalProperties.$formatDate = formatDate
 app.config.globalProperties.$getID = getID
 app.config.globalProperties.$handleProfileError = handleProfileError
 app.config.globalProperties.$handleImageError = handleImageError
 app.config.globalProperties.$formatRelativeTime = formatRelativeTime
+app.config.globalProperties.$convertToDollar = convertToDollar
+
 
 
 app.mount('#app')

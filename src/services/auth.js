@@ -15,112 +15,46 @@ export default {
     }
   },
 
-  async createAccount(formData) {
+  async requestCode(formData) {
     try {
-      let res = await $request.post(`/auth/signup`, formData)
+      let res = await $request.post(`api/auths/request-otp`, formData)
       catchAxiosSuccess(res)
       return res.data
     } catch (error) {
       catchAxiosError(error)
-      // return error
       throw error
     }
   },
 
-  async forgotPasswordRequestLink(formData) {
+  async resendCode(formData) {
     try {
-      let res = await $request.post(`/auth/forgot-password`, formData)
+      let res = await $request.post(`api/auths/resendotp`, formData)
       catchAxiosSuccess(res)
       return res.data
     } catch (error) {
       catchAxiosError(error)
-      // return error
       throw error
     }
   },
 
-
-  async resetPassword(formData, {token, email}) {
+  async verifyOTP(formData) {
     try {
-      let res = await $request.post(`/auth/reset-password?token=${token}&email=${email}`, formData)
+      let res = await $request.post(`api/auths/verify-otp`, formData)
       catchAxiosSuccess(res)
       return res.data
     } catch (error) {
       catchAxiosError(error)
-      // return error
       throw error
     }
   },
-
-  async getProfile() {
+  async setPassword(formData) {
     try {
-      let res = await $request.get(`/auth/user-profile`)
-      // catchAxiosSuccess(res)
-      return res.data
-    } catch (error) {
-      // catchAxiosError(error)
-      return error
-      // throw error
-    }
-  },
-
-  async getUser(id) {
-    try {
-      let res = await $request.get(`/api/user/profile/${id}`)
-      // catchAxiosSuccess(res)
-      return res.data
-    } catch (error) {
-      // catchAxiosError(error)
-      return error
-      // throw error
-    }
-  },
-
-  async changePassword(formData) {
-    try {
-      let res = await $request.post(`/auth/change-password`, formData)
+      let res = await $request.post(`api/auths/set-password`, formData)
       catchAxiosSuccess(res)
       return res.data
     } catch (error) {
       catchAxiosError(error)
-      //   return error
       throw error
     }
   },
-
-  async updateProfile(formData) {
-    try {
-      let res = await $request.post(`/auth/update-profile-details`, formData)
-      catchAxiosSuccess(res)
-      return res.data
-    } catch (error) {
-      catchAxiosError(error)
-      //   return error
-      throw error
-    }
-  },
-
-  async updateCoverPhoto(formData) {
-    try {
-      let res = await $request.post(`/auth/update-cover-photo`, formData)
-      catchAxiosSuccess(res)
-      return res.data
-    } catch (error) {
-      catchAxiosError(error)
-      //   return error
-      throw error
-    }
-  },
-
-  async updateProfilePhoto(formData) {
-    try {
-      let res = await $request.post(`/auth/update-profile-photo`, formData)
-      catchAxiosSuccess(res)
-      return res.data
-    } catch (error) {
-      catchAxiosError(error)
-      //   return error
-      throw error
-    }
-  }
 }
