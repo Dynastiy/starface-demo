@@ -148,6 +148,9 @@
 <script>
 import walletData from '@/components/utils/walletData.vue'
 import Comments from '@/components/reels/Comments.vue'
+/* eslint-disable no-prototype-builtins */
+import { useToast } from 'vue-toastification'
+const toast = useToast()
 // import { useToast } from 'vue-toastification'
 export default {
   components: { walletData, Comments },
@@ -180,10 +183,17 @@ export default {
     },
 
     handleVideoError(index) {
-      this.reels[index].hasError = true;
+      this.reels[index].hasError = true
     },
 
     redeem() {
+      if (!this.isLoggedIn) {
+        toast.error('Login to be able claim bonus.', {
+          timeout: 4000
+        })
+        this.$router.push('/auth/login')
+        return
+      }
       this.isLoading = true
       this.$wallet
         .redeem()
@@ -321,6 +331,9 @@ export default {
   computed: {
     user() {
       return this.$store.getters['auth/getUser']
+    },
+    isLoggedIn(){
+      return this.$store.getters['auth/getAuthenticated']
     }
   }
 }
