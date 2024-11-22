@@ -3,13 +3,21 @@
     <!-- {{ userData }} -->
     <div class="bg-white p-4 lg:w-6/12 md:w-6/12 w-full rounded-md flex justify-center">
       <div class="w-full">
+        <div @click="logout" role="button" class="flex gap-1 justify-end items-center text-red-500 text-sm font-semibold">
+          <i-icon icon="humbleicons:logout" />
+          <span>Logout</span>
+        </div>
         <img
           src="http://test.starface.chat/assets/images/avatar/6.jpg"
           class="w-[100px] h-[100px] mx-auto border-2 p-1 border-gray-200 rounded-full object-fit object-top"
         />
         <div class="">
           <h5 class="text-lg justify-center font-bold mt-2 flex gap-1 items-center">
-            {{ userData.firstName && userData.lastName ? `${userData.firstName} ${userData.lastName}` : '' }}
+            {{
+              userData.firstName && userData.lastName
+                ? `${userData.firstName} ${userData.lastName}`
+                : ''
+            }}
             <span class="text-[12px]">
               {{ `@${userData.userName}` }}
             </span>
@@ -46,13 +54,13 @@
         </div>
         <div class="flex gap-4 mt-4 w-full">
           <button
-            class="brand-btn brand-primary py-2 text-xs w-full "
+            class="brand-btn brand-primary py-2 text-xs w-full"
             @click="$router.push('/wallet')"
           >
             My Wallet
           </button>
           <button
-            class="brand-btn brand-primary py-2 text-xs w-full "
+            class="brand-btn brand-primary py-2 text-xs w-full"
             @click="$router.push('/invite')"
           >
             Invite Friends
@@ -175,6 +183,40 @@ export default {
       Promise.all([request1, request2, request3, request4]).finally(() => {
         this.isLoading = false
       })
+    },
+
+    logout() {
+      this.$swal
+        .fire({
+          title: 'Uhhhh! 😔',
+          text: 'Are you sure you want to log out?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, logout!'
+        })
+        .then((result) => {
+          console.log(result, 'kkk')
+          if (result.isConfirmed) {
+            this.userLogout()
+          }
+        })
+    },
+
+    userLogout() {
+      this.$store.dispatch('auth/logout')
+      this.$swal
+        .fire({
+          title: 'Woo hoo 😫',
+          text: 'Logged out succesfully',
+          icon: 'success',
+          confirmButtonText: 'Ok!'
+        })
+        .then((result) => {
+          console.log(result, 'kkk')
+          if (result.isConfirmed) {
+            this.$router.go()
+          }
+        })
     }
   },
 

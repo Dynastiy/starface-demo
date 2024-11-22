@@ -33,9 +33,9 @@
               v-if="!item.hasError"
               @error="handleVideoError(index)"
               :src="item.videoUrl"
+              autoplay
               loop
               muted
-              autoplay
             ></video>
             <img v-else @error="$handleProfileError" :src="item.thumbnailUrl" alt="Placeholder" class="reel-video" />
             <!-- <img v-else src="@/assets/img/video.jpg" alt="Placeholder" class="reel-video" /> -->
@@ -434,7 +434,7 @@ export default {
 .reel-section {
   align-items: flex-end;
   margin-top: auto;
-  padding: 15px 0 90px;
+  padding: 15px 0 100px;
 }
 
 .reel-section .user-item {
