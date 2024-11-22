@@ -1,6 +1,6 @@
 <template>
   <div
-    class="sticky w-full rounded-tr-[15px] bottom-nav px-6 h-[70px] rounded-tl-[15px] bottom-0"
+    class="fixed w-full rounded-tr-[15px] bottom-nav px-6 py-4 h-[60px] rounded-tl-[15px] bottom-0"
   >
     <div class="flex justify-between h-full w-full items-center container">
       <ul class="flex items-center w-full justify-between h-full mb-0">

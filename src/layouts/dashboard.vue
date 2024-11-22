@@ -93,14 +93,5 @@ export default {
 </script>
 
 <style>
-.app-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
 
-.content {
-  flex: 1; /* Fills remaining space above the navigation */
-  overflow-y: auto; /* Ensures scrollability if content overflows */
-}
 </style>

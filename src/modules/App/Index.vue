@@ -388,7 +388,7 @@ export default {
 .reel-section {
   align-items: flex-end;
   margin-top: auto;
-  padding: 15px 0 120px;
+  padding: 15px 0 140px;
 }
 
 .reel-section .user-item {
