@@ -33,11 +33,17 @@
               v-if="!item.hasError"
               @error="handleVideoError(index)"
               :src="item.videoUrl"
-              autoplay
               loop
               muted
+              autoplay
             ></video>
-            <img v-else @error="$handleProfileError" :src="item.thumbnailUrl" alt="Placeholder" class="reel-video" />
+            <img
+              v-else
+              @error="$handleProfileError"
+              :src="item.thumbnailUrl"
+              alt="Placeholder"
+              class="reel-video"
+            />
             <!-- <img v-else src="@/assets/img/video.jpg" alt="Placeholder" class="reel-video" /> -->
             <div class="inner-content">
               <div class="reel-section">
@@ -45,7 +51,7 @@
                   <div class="user-info flex gap-2 items-center">
                     <img
                       class="h-[35px] w-[35px] rounded-full ring ring-[#fff]"
-                      :src="item.avartar"
+                      :src="item.avartar ? item.avartar : $avatar"
                       @error="$handleProfileError"
                       alt=""
                     />
@@ -149,9 +155,6 @@
         </ul>
       </div>
     </Sidebar>
-
-   
-
   </div>
 </template>
 
@@ -218,7 +221,7 @@ export default {
     },
 
     gift(e) {
-    console.log(this.isLoggedIn)
+      console.log(this.isLoggedIn)
       if (!this.isLoggedIn) {
         toast.error('Login to be able gift user.', {
           timeout: 4000
@@ -231,13 +234,11 @@ export default {
         reelsOwnerId: e.user
       }
       // this.isLoading = true
-      this.$wallet
-        .gift()
-        .then((res) => {
-          this.getEarnWallet()
-          return res
-        })
-       console.log(payload)
+      this.$wallet.gift().then((res) => {
+        this.getEarnWallet()
+        return res
+      })
+      console.log(payload)
     },
 
     async onShare(callback) {
@@ -335,9 +336,21 @@ export default {
 
       // Set a timeout to show the container
       this.timer = setTimeout(() => {
-        this.showContainer = true
+        
         console.log('alert')
       }, randomTime)
+    },
+
+    openContainer(){
+      this.showContainer = true
+    },
+
+    showContainerModified() {
+      setTimeout(() => {
+        this.openContainer() // Run the operation immediately
+        // Then, schedule the repeated execution every 30 minutes (1,800,000 milliseconds)
+        setInterval(this.openContainer, 1800000)
+      }, 600000) // 10 mi
     },
     // Method to close the container and restart the process
     closeContainer() {
@@ -353,7 +366,7 @@ export default {
 
   mounted() {
     // Start the process when the component is mounted
-    this.showContainerAtRandomTime()
+    this.showContainerModified()
   },
 
   beforeUnmount() {
@@ -365,7 +378,7 @@ export default {
     user() {
       return this.$store.getters['auth/getUser']
     },
-    isLoggedIn(){
+    isLoggedIn() {
       return this.$store.getters['auth/getAuthenticated']
     }
   }
