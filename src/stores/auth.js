@@ -4,43 +4,12 @@ export default {
   namespaced: true,
   state: {
     user: null,
-    address: null,
-    userMeta: null,
-    sub_categories: [],
-    tags: [],
-    order: null,
-    loading: false,
     starface_token: null,
-    validationErrors: null,
   },
 
   mutations: {
     setUser(state, data) {
       state.user = data
-    },
-
-    setWalletAddress(state, data) {
-      state.address = data
-    },
-
-    setOrder(state, data) {
-      state.order = data
-    },
-
-    setUserMeta(state, data) {
-      state.userMeta = data
-    },
-
-    removeOrder(state) {
-      state.order = null
-    },
-
-    setSubCategories(state, data) {
-      state.sub_categories = data
-    },
-
-    setTags(state, data) {
-      state.tags = data
     },
 
     login(state, { token, user }) {

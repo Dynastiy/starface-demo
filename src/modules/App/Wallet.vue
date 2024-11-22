@@ -120,16 +120,17 @@ export default {
       this.$wallet.allWallets().then((res) => {
         console.log(res)
         this.walletData = {
+          ...this.walletData,
           otherBalances: {
             ...this.walletData.otherBalances,
-            USDT: res.wallets[0].balance
+            USDT: res[0].balance,
+            SFC: res[1].balance
           }
         }
       })
     },
 
     getWalletData() {
-      // this.loading = true
       const request1 = this.getEarnWallet()
       const request2 = this.getAllWallets()
       Promise.all([request1, request2]).finally(() => {

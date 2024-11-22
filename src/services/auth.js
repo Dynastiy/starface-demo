@@ -15,6 +15,18 @@ export default {
     }
   },
 
+  async myProfile() {
+    try {
+      let res = await $request.get(`api/user`,)
+      // catchAxiosSuccess(res)
+      return res.data
+    } catch (error) {
+      catchAxiosError(error)
+      // return error
+      throw error
+    }
+  },
+
   async getUser(id) {
     try {
       let res = await $request.get(`api/user/profile/${id}`,)
@@ -59,6 +71,7 @@ export default {
       throw error
     }
   },
+  
   async setPassword(formData) {
     try {
       let res = await $request.post(`api/auths/set-password`, formData)
@@ -69,4 +82,26 @@ export default {
       throw error
     }
   },
+
+  async listCountries(){
+    try {
+      let res = await $request.post(`api/auths/country-list`)
+      // catchAxiosSuccess(res)
+      return res.data
+    } catch (error) {
+      catchAxiosError(error)
+      throw error
+    }
+  },
+
+  async updateUserProfile(formData, id) {
+    try {
+      let res = await $request.put(`api/user/profile-update/${id}`, formData)
+      catchAxiosSuccess(res)
+      return res.data
+    } catch (error) {
+      catchAxiosError(error)
+      throw error
+    }
+  }
 }

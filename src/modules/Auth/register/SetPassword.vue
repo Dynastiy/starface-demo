@@ -131,7 +131,12 @@ export default {
         .setPassword(payload)
         .then((res) => {
           console.log(res)
-          this.$router.push('/auth/login')
+          const userData = res.data
+          this.$store.commit('auth/login', {
+            token: userData.token
+          })
+          localStorage.setItem('_starface_token', userData.token)
+          this.$router.push(`/complete-profile?uid=${this.uid}`)
         })
         .finally(() => {
           this.isLoading = false

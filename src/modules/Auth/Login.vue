@@ -117,7 +117,7 @@ export default {
           console.log(res, 'from login')
           let userData = res
           this.$store.commit('auth/login', {
-            user: userData,
+            user: userData.existingUser,
             token: userData.token
           })
           localStorage.setItem('_starface_token', userData.token)

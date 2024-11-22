@@ -187,7 +187,7 @@ export default {
 
   computed: {
     userData() {
-      return this.user.existingUser
+      return this.user
     },
     user() {
       return this.$store.getters['auth/getUser']

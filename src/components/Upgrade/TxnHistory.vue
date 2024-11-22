@@ -65,11 +65,8 @@ export default {
   methods: {
     getTxnHistory() {
       this.loading = true
-      let payload = {
-        user_id: this.user.user_id
-      }
-      this.$appDomain
-        .getTransactions(payload)
+      this.$wallet
+        .transactionHistory()
         .then((res) => {
           console.log(res)
           this.items = res.data
@@ -81,13 +78,11 @@ export default {
   },
 
   beforeMount() {
-    // this.getTxnHistory()
+    this.getTxnHistory()
   },
   
   computed: {
-    user() {
-      return this.$store.getters['auth/getUser']
-    }
+    
   }
 }
 </script>

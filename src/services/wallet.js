@@ -15,7 +15,7 @@ export default {
 
   async allWallets() {
     try {
-      let res = await $request.get(`api/wallet/get-all-wallet`)
+      let res = await $request.get(`api/wallet/get-wallet`)
       return res.data
     } catch (error) {
       catchAxiosError(error)
@@ -57,7 +57,7 @@ export default {
 
   async withdraw(formData){
     try {
-        let res = await $request.post(`api/transwithdraw`, formData)
+        let res = await $request.post(`api/trans/withdraw`, formData)
         catchAxiosSuccess(res.data)
         return res.data
       } catch (error) {
@@ -77,6 +77,27 @@ export default {
       }
   },
 
+  async transactionHistory(params){
+    try {
+        let res = await $request.get(`api/transaction/history`, {params})
+        // catchAxiosSuccess(res.data)
+        return res.data
+      } catch (error) {
+        catchAxiosError(error)
+        throw error
+      }
+  },
+  
+  async gift(payload){
+    try {
+        let res = await $request.post(`api/transaction/gift-flower`, payload)
+        catchAxiosSuccess(res.data)
+        return res.data
+      } catch (error) {
+        catchAxiosError(error)
+        throw error
+      }
+  },
   
   
 }

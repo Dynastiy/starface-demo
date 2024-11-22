@@ -124,7 +124,7 @@
     background-color: var(---gray-300);
 }
 
-form label {
+form label, .form label {
     margin-bottom: 2px;
     font-size: 12.7px;
     font-weight: 500;

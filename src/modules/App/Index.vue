@@ -64,7 +64,7 @@
                       icon="fontisto:comment"
                       @click="viewMore('comments', item)"
                     />
-                    <span class="text-xs">{{ item.comments.length }}</span>
+                    <span class="text-xs">{{ item?.comments?.length }}</span>
                   </span>
                   <span
                     class="flex gap-1 items-center flex-col"
@@ -72,7 +72,7 @@
                     @click="triggerShare"
                   >
                     <i-icon class="text-[25px]" icon="fa6-solid:share" />
-                    <span class="text-xs">{{ item.shares }}</span>
+                    <span class="text-xs">{{ item?.shares }}</span>
                   </span>
                   <span
                     class="flex gap-1 items-center flex-col"
@@ -81,7 +81,7 @@
                   >
                     <i-icon class="text-[25px]" icon="uis:ellipsis-h" />
                   </span>
-                  <span class="flex gap-1 items-center flex-col" role="button">
+                  <span @click="gift(item)" class="flex gap-1 items-center flex-col" role="button">
                     <i-icon class="text-[35px] heartbeat" icon="noto-v1:sunflower" />
                   </span>
                 </div>
@@ -205,6 +205,28 @@ export default {
         .finally(() => {
           this.isLoading = false
         })
+    },
+
+    gift(e) {
+      if (!this.isLoggedIn) {
+        toast.error('Login to be able gift user.', {
+          timeout: 4000
+        })
+        this.$router.push('/auth/login')
+        return
+      }
+      let payload = {
+        amountToGift: 5,
+        reelsOwnerId: e.user
+      }
+      // this.isLoading = true
+      this.$wallet
+        .gift()
+        .then((res) => {
+          this.getEarnWallet()
+          return res
+        })
+       console.log(payload)
     },
 
     async onShare(callback) {
@@ -401,7 +423,7 @@ export default {
 .reel-section {
   align-items: flex-end;
   margin-top: auto;
-  padding: 15px 0 140px;
+  padding: 15px 0 90px;
 }
 
 .reel-section .user-item {
