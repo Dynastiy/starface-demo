@@ -15,6 +15,18 @@ export default {
     }
   },
 
+  async getUser(id) {
+    try {
+      let res = await $request.get(`api/user/profile/${id}`,)
+      // catchAxiosSuccess(res)
+      return res.data
+    } catch (error) {
+      catchAxiosError(error)
+      // return error
+      throw error
+    }
+  },
+
   async requestCode(formData) {
     try {
       let res = await $request.post(`api/auths/request-otp`, formData)

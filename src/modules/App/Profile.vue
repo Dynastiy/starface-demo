@@ -1,6 +1,6 @@
 <template>
   <div class="flex gap-6 p-4 items-start lg:flex-row md:flex-row flex-col">
-    {{ userData }}
+    <!-- {{ userData }} -->
     <div class="bg-white p-4 lg:w-6/12 md:w-6/12 w-full rounded-md flex justify-center">
       <div class="w-full">
         <img

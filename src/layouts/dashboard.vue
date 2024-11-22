@@ -1,12 +1,10 @@
 <template>
-  <div class="">
-    <Loader v-if="loading" />
-    <div v-else>
-      <div class="">
-        <slot />
-      </div>
-      <bottom-navigation class="" :menu="menu" />
+  <div class="app-container">
+    <div class="content">
+      <slot />
     </div>
+
+    <bottom-navigation class="" :menu="menu" />
   </div>
 </template>
 
@@ -53,18 +51,16 @@ export default {
           title: 'profile',
           url: '/profile'
         }
-      ],
-      
+      ]
     }
   },
 
   methods: {
-    
+   
   },
   mounted() {
-    
+    // this.enterFullscreen()
   },
-
 
   created() {},
 
@@ -96,4 +92,15 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.content {
+  flex: 1; /* Fills remaining space above the navigation */
+  overflow-y: auto; /* Ensures scrollability if content overflows */
+}
+</style>

@@ -28,7 +28,15 @@
           <wallet-data class="z-1" :starBalance="starBalance" />
           <!-- <wallet-data -->
           <div class="reel-container" v-for="(item, index) in reels" :key="index">
-            <video class="reel-video" :src="item.videoUrl" loop autoplay muted></video>
+            <video
+              class="reel-image"
+              v-if="!item.hasError"
+              @error="handleVideoError(index)"
+              :src="item.videoUrl"
+              loop
+              muted
+            ></video>
+            <img v-else src="@/assets/img/video.jpg" alt="Placeholder" class="reel-video" />
             <div class="inner-content">
               <div class="reel-section">
                 <div>
@@ -168,6 +176,10 @@ export default {
         console.log(res)
         this.reels = res.reels
       })
+    },
+
+    handleVideoError(index) {
+      this.reels[index].hasError = true;
     },
 
     redeem() {
@@ -337,6 +349,19 @@ export default {
   right: 50%;
   transform: translate(50%, 0%);
   object-fit: cover;
+  object-position: bottom;
+  position: absolute;
+  top: 0;
+  width: auto;
+  z-index: 0;
+}
+
+.reel-image {
+  height: 100%;
+  right: 50%;
+  transform: translate(50%, 0%);
+  object-fit: cover;
+  object-position: center center;
   position: absolute;
   top: 0;
   width: auto;
@@ -362,7 +387,7 @@ export default {
 .reel-section {
   align-items: flex-end;
   margin-top: auto;
-  padding: 15px 0 80px;
+  padding: 15px 0 120px;
 }
 
 .reel-section .user-item {
