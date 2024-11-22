@@ -35,6 +35,7 @@
               :src="item.videoUrl"
               loop
               muted
+              autoplay
             ></video>
             <img v-else src="@/assets/img/video.jpg" alt="Placeholder" class="reel-video" />
             <div class="inner-content">
@@ -291,7 +292,7 @@ export default {
 
       // Set a timeout to show the container
       this.timer = setTimeout(() => {
-        // this.showContainer = true
+        this.showContainer = true
         console.log('alert')
       }, randomTime)
     },
