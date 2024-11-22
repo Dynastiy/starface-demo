@@ -38,16 +38,9 @@ export default {
   
   getters: {
     auth: (state) => state.auth,
-    isLoading: (state) => state.loading,
     getUser: (state) => state.user,
-    getAddress: (state) => state.address,
-    getUserMeta: (state) => state.userMeta,
     getToken: (state) => state.starface_token,
-    getWalletAddress: (state) => state.address,
-    getSubCategories: (state) => state.sub_categories,
-    getTags: (state) => state.tags,
-    getOrder: (state) => state.order,
     getAuthenticated: (state) => !!state.starface_token,
-    getUserID:(state) => state.user.existingUser._id
+    getUserID:(state) => state.user._id
   }
 }

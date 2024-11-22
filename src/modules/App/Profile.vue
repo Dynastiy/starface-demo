@@ -9,16 +9,16 @@
         />
         <div class="">
           <h5 class="text-lg justify-center font-bold mt-2 flex gap-1 items-center">
-            {{ `${userData.firstName} ${userData.lastName}` }}
-            <span class="text-xs">
+            {{ userData.firstName && userData.lastName ? `${userData.firstName} ${userData.lastName}` : '' }}
+            <span class="text-[12px]">
               {{ `@${userData.userName}` }}
             </span>
           </h5>
         </div>
-        <h6 class="text-center text-[13px] text-center mb-2">
-          {{ `@${userData.email}` }}
+        <h6 class="text-center text-[12px] text-center mb-2">
+          {{ `${userData.email}` }}
         </h6>
-        <span class="flex gap-1 justify-center">
+        <span class="flex gap-1 justify-center" v-if="userData.hasCountry">
           <i-icon icon="ic:baseline-location-on" />
           <span class="text-xs">{{ userData.countryName }}</span>
         </span>

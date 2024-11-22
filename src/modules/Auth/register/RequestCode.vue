@@ -98,7 +98,8 @@ export default {
     refCode: {
       handler(val) {
         this.ref = val
-      }
+      },
+      immediate: true
     }
   },
 

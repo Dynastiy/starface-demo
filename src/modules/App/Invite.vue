@@ -147,10 +147,12 @@ export default {
 
   computed: {
     locat() {
-      return this.user.referralLink
+      // let window;
+      console.log(window.location)
+      return `${window.location.origin}/signup?ref=${this.user.referralCode}`
     },
     userData() {
-      return this.user.existingUser
+      return this.user
     },
     user() {
       return this.$store.getters['auth/getUser']

@@ -1,26 +1,13 @@
 
 
 import $request from '@/axios/index'
-// import { catchAxiosError, catchAxiosSuccess } from './response'
-import { catchAxiosError } from './response'
-import { useToast } from "vue-toastification";
-const toast = useToast();
+import { catchAxiosError, catchAxiosSuccess } from './response'
+// import { catchAxiosError } from './response'
+// import { useToast } from "vue-toastification";
+// const toast = useToast();
 
 export default {
-  async subscribeToNewsletter(formData) {
-    try {
-      let res = await $request.post(`newsletter/subscribe/c5d37ef1-db76-449d-8379-ae91237c1296`, formData)
-      // catchAxiosSuccess("Subscribed to Newsletter Successfully")
-      toast.success("Subscribed to Newsletter Successfully", {
-        timeout: 4000,
-    });
-      return res.data
-    } catch (error) {
-      catchAxiosError(error)
-      throw error
-    }
-  },
-
+  
     async list() {
         try {
           let res = await $request.get(`api/reel/get-reels`)
@@ -50,6 +37,29 @@ export default {
           throw error
         }
       },
+
+      async create(formData) {
+        try {
+          let res = await $request.post(`api/reel/post-reels`, formData)
+          catchAxiosSuccess(res.data)
+          return res.data
+        } catch (error) {
+          catchAxiosError(error)
+          throw error
+        }
+      },
+
+      async uploadImage(formData) {
+        try {
+          let res = await $request.post(`api/images/upload`, formData)
+          catchAxiosSuccess(res.data)
+          return res.data
+        } catch (error) {
+          catchAxiosError(error)
+          throw error
+        }
+      },
+      
 
       async getStores({name, type, page}) {
         try {

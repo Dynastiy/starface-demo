@@ -35,19 +35,25 @@
               :src="item.videoUrl"
               loop
               muted
-              autoplay
             ></video>
-            <img v-else src="@/assets/img/video.jpg" alt="Placeholder" class="reel-video" />
+            <img v-else @error="$handleProfileError" :src="item.thumbnailUrl" alt="Placeholder" class="reel-video" />
+            <!-- <img v-else src="@/assets/img/video.jpg" alt="Placeholder" class="reel-video" /> -->
             <div class="inner-content">
               <div class="reel-section">
                 <div>
                   <div class="user-info flex gap-2 items-center">
                     <img
                       class="h-[35px] w-[35px] rounded-full ring ring-[#fff]"
-                      :src="item.thumbnailUrl"
+                      :src="item.avartar"
                       @error="$handleProfileError"
                       alt=""
                     />
+                    <!-- <img
+                      class="h-[35px] w-[35px] rounded-full ring ring-[#fff]"
+                      :src="item.thumbnailUrl"
+                      @error="$handleProfileError"
+                      alt=""
+                    /> -->
                     <span class="text-sm"> {{ `@${item.userName}` }} </span>
                     <button class="brand-btn-md brand-outline text-white">follow</button>
                   </div>
@@ -142,6 +148,9 @@
         </ul>
       </div>
     </Sidebar>
+
+   
+
   </div>
 </template>
 
@@ -208,6 +217,7 @@ export default {
     },
 
     gift(e) {
+    console.log(this.isLoggedIn)
       if (!this.isLoggedIn) {
         toast.error('Login to be able gift user.', {
           timeout: 4000

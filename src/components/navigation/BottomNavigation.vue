@@ -10,9 +10,9 @@
           v-for="(item, idx) in menu"
           :key="idx"
         >
-          <router-link
+          <span
             class="flex flex-col items-center gap-1 w-full text-sm font-semibold"
-            :to="item.url"
+            @click="routeClick(item)"
           >
             <span>
               <i-icon :icon="item.icon" class="text-xl" />
@@ -20,7 +20,7 @@
             <span class="font-medium text-[12px] capitalize">
               {{ item.title }}
             </span>
-          </router-link>
+          </span>
         </li>
       </ul>
     </div>
@@ -33,6 +33,13 @@ export default {
     menu: {
       type: Array,
       default: () => []
+    }
+  },
+
+  methods: {
+    routeClick(item) {
+      console.log(item)
+      this.$emit('routeClick', item)
     }
   },
 

@@ -29,7 +29,7 @@
             v-for="(item, i) in images"
             :key="i"
             class="swiper-card rounded-[10px] bg-cover bg-top flex px-4 items-end"
-            :style="getBackgroundStyle(item.filepaths[0])"
+            :style="getBackgroundStyle(item.imageUrl)"
           >
             <div class="overlay p-4">
               <div class="flex flex-col gap-1">
