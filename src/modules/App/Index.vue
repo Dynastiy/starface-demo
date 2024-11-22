@@ -35,6 +35,7 @@
               :src="item.videoUrl"
               loop
               muted
+              autoplay
             ></video>
             <img v-else @error="$handleProfileError" :src="item.thumbnailUrl" alt="Placeholder" class="reel-video" />
             <!-- <img v-else src="@/assets/img/video.jpg" alt="Placeholder" class="reel-video" /> -->
