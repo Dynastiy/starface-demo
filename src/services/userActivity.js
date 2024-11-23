@@ -1,8 +1,8 @@
 
 
 import $request from '@/axios/index'
-// import { catchAxiosError, catchAxiosSuccess } from './response'
-import { catchAxiosError } from './response'
+import { catchAxiosError, catchAxiosSuccess } from './response'
+// import { catchAxiosError } from './response'
 
 export default {
 
@@ -46,5 +46,28 @@ export default {
         }
       },
 
+      async followFunc(formData) {
+        try {
+          let res = await $request.post(`/api/activity/follow`, formData)
+          catchAxiosSuccess(res.data)
+          return res.data
+        } catch (error) {
+          catchAxiosError(error)
+          throw error
+        }
+      },
+
+      async likeImage(id) {
+        try {
+          let res = await $request.get(`api/activity/like-image/${id}`)
+          catchAxiosSuccess(res.data)
+          return res.data
+        } catch (error) {
+          catchAxiosError(error)
+          throw error
+        }
+      },
+
+      
       
 }

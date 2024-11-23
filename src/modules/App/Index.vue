@@ -24,6 +24,7 @@
               :src="item.videoUrl"
               loop
               muted
+              autoplay
             ></video>
             <img
               v-else
@@ -50,7 +51,7 @@
                       alt=""
                     /> -->
                     <span class="text-sm"> {{ `@${item.userName}` }} </span>
-                    <button class="brand-btn-md brand-outline text-white">follow</button>
+                    <button class="brand-btn-md brand-outline text-white" @click="followAction(item)">{{ checkFollowing(item) ? "Following" : "Follow"}}</button>
                   </div>
                   <p class="mt-2 text-sm">{{ item.description }}</p>
                 </div>
@@ -129,7 +130,7 @@
       position="bottom"
       class="max-h-80 h-full"
     >
-      <div class="h-[100%]">
+      <div class="">
         <comments
           v-if="actionable == 'comments'"
           @refresh="refresh"
@@ -137,7 +138,7 @@
           :reel="reel"
         />
       </div>
-      <div class="h-full">
+      <div class="">
         <ul v-if="actionable == 'view'">
           <li class="bg-gray-100 p-2 rounded-lg">Flag this post</li>
         </ul>
@@ -184,6 +185,38 @@ export default {
       })
       .finally(()=> {
         this.loading = false
+      })
+    },
+
+    getUser() {
+      this.$auth.getUser(this.user._id).then((res) => {
+        console.log(res)
+        this.$store.commit('auth/setUser', res.user)
+        return res
+      })
+    },
+
+    followAction(e) {
+      if (!this.checkFollowing(e))  this.follow(e);
+      return
+    },
+
+    checkFollowing(e) {
+      let following = this.user.following
+      let isFollowing = following.find(item => item == e.user )
+      return isFollowing
+      // console.log(isFollowing)
+    },
+
+    follow(e) {
+      console.log(e, 'follow');
+      let payload = {
+        followId: e.user
+      }
+      this.$userActivity.followFunc(payload)
+      .then((res)=> {
+        console.log(res)
+        this.getUser()
       })
     },
 
@@ -285,7 +318,7 @@ export default {
       this.visibleBottom = true
       this.actionable = e
       console.log(value)
-      this.getReel(value.user._id)
+      this.getReel(value._id)
       // this.comments = value
     },
 

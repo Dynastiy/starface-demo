@@ -1,5 +1,5 @@
 <template>
-  <div class="reels-page p-4 ">
+  <div class="reels-page p-4">
     <el-skeleton style="width: 100%" :loading="loading" animated>
       <template #template>
         <div class="">
@@ -24,34 +24,38 @@
         </div>
       </template>
       <template #default>
-        <swiper :effect="'cards'" :grabCursor="true" :modules="modules" class="mySwiper">
-          <swiper-slide
-            v-for="(item, i) in images"
-            :key="i"
-            class="swiper-card rounded-[10px] bg-cover bg-top flex px-4 items-end"
-            :style="getBackgroundStyle(item.imageUrl)"
-          >
-            <div class="overlay p-4">
-              <div class="flex flex-col gap-1">
-                <button class="brand-btn-md brand-outline text-white w-fit">
-                  <router-link :to="`/user/profile/${item.userId}`">View More</router-link>
-                </button>
-                <h4 class="font-semibold text-xl">{{ item.userName }}</h4>
-                <div class="flex gap-2">
-                  <button class="brand-btn-md brand-outline text-white">Like</button>
-                  <button class="brand-btn-md brand-outline text-white" @click="startChat(item)">
-                    Chat
+        <div class="">
+          <swiper :effect="'cards'" :grabCursor="true" :modules="modules">
+            <swiper-slide v-for="(item, i) in images" :key="i">
+              <img
+                class="rounded-[10px] swiper-img"
+                :src="item.imageUrl"
+                @error="$handleImageError"
+                alt=""
+              />
+              
+              <div class="overlay p-4">
+                <div class="flex flex-col gap-1">
+                  <button class="brand-btn-md brand-outline text-white w-fit">
+                    <router-link :to="`/user/profile/${item.userId}`">View More</router-link>
                   </button>
-                  <button class="brand-btn-md brand-outline text-white">Follow</button>
+                  <h4 class="font-semibold text-xl">{{ item.userName }}</h4>
+                  <div class="flex gap-2">
+                    <button class="brand-btn-md brand-outline text-white" @click="likeImage(item)">Like</button>
+                    <button class="brand-btn-md brand-outline text-white" @click="startChat(item)">
+                      Chat
+                    </button>
+                    <button class="brand-btn-md brand-outline text-white" @click="followAction(item)">{{ checkFollowing(item) ? "Following" : "Follow"}}</button>
+                  </div>
                 </div>
+                <button class="brand-primary brand-btn rounded-full shadow">
+                  <!-- <i-icon icon="twemoji:glowing-star" class="text-2xl text-white" /> -->
+                  <star-icon />
+                </button>
               </div>
-              <button class="brand-primary brand-btn rounded-full shadow">
-                <!-- <i-icon icon="twemoji:glowing-star" class="text-2xl text-white" /> -->
-                <star-icon />
-              </button>
-            </div>
-          </swiper-slide>
-        </swiper>
+            </swiper-slide>
+          </swiper>
+        </div>
         <!-- <div class="flex flex-col gap-4" v-for="(item, i) in images" :key="i">
           <div
             class="h-screen rounded-[10px] bg-cover bg-top flex px-4 py-[100px] items-end"
@@ -129,23 +133,25 @@ export default {
   methods: {
     getConnect() {
       this.loading = true
-      this.$appImages.connect().then((res) => {
-        console.log(res)
-        let resData = res.data
-        const allImages = []
-        resData.forEach((element) => {
-          let newData = {
-            ...element,
-            imageUrl: element.filepaths[0]
-          }
-          allImages.push(newData)
+      this.$appImages
+        .connect()
+        .then((res) => {
+          console.log(res)
+          let resData = res.data
+          const allImages = []
+          resData.forEach((element) => {
+            let newData = {
+              ...element,
+              imageUrl: element.filepaths[0]
+            }
+            allImages.push(newData)
+          })
+          this.images = allImages
+          console.log(allImages)
         })
-        this.images = allImages
-        console.log(allImages)
-      })
-      .finally(()=> {
-        this.loading = false
-      })
+        .finally(() => {
+          this.loading = false
+        })
     },
 
     startChat(item) {
@@ -154,41 +160,54 @@ export default {
         userId: this.user._id,
         recipientId: item.userId
       }
-      this.$chat.startChat(payload)
-      .then((res)=> {
+      this.$chat.startChat(payload).then((res) => {
         console.log(res)
         this.$router.push(`/chat/message/${res._id}?uid=${item.userId}`)
       })
       // console.log(payload)
     },
 
-    like(e) {
+    followAction(e) {
+      if (!this.checkFollowing(e))  this.follow(e);
+      return
+    },
+
+    unfollow(e) {
+      console.log(e, 'unfollow');
       let payload = {
-        user_id_to_connect: e.ID,
-        user_id: this.user.user_id
+        unfollowId: e.userId
       }
-      this.$appDomain.likeMatch(payload).then((res) => {
+      this.$userActivity.unfollowfollowFunc(payload)
+      .then((res)=> {
+        console.log(res)
+        this.getUser()
+      })
+    },
+
+    follow(e) {
+      console.log(e, 'follow');
+      let payload = {
+        followId: e.userId
+      }
+      this.$userActivity.followFunc(payload)
+      .then((res)=> {
+        console.log(res)
+        this.getUser()
+      })
+    },
+
+    likeImage(e) {
+      this.$userActivity.likeImage(e.imageId).then((res) => {
         console.log(res)
       })
     },
 
-    timeLeft(value) {
-      return (
-        value.subscription_fee_expiration_time_of_last_payment -
-        value.subscription_fee_transaction_time_of_last_payment
-      )
-    },
-
-    next() {
-      this.filter.page_no++
-      this.getConnect()
-    },
-
-    prev() {
-      if (this.meta.current_page > 1) {
-        this.filter.page_no--
-        this.getConnect()
-      }
+    getUser() {
+      this.$auth.getUser(this.user._id).then((res) => {
+        console.log(res)
+        this.$store.commit('auth/setUser', res.user)
+        return res
+      })
     },
 
     getBackgroundStyle(image) {
@@ -203,9 +222,12 @@ export default {
       }
     },
 
-    // checkFollowing(e) {
-
-    // }
+    checkFollowing(e) {
+      let following = this.user.following
+      let isFollowing = following.find(item => item == e.userId )
+      return isFollowing
+      // console.log(isFollowing)
+    }
   },
 
   beforeMount() {
@@ -221,23 +243,30 @@ export default {
 </script>
 
 <style scoped>
+.swiper-img  {
+  height: 100%;
+  object-position: center;
+  object-fit: cover;
+}
+
 .reels-page {
   background-color: #000;
-  /* height: 100vh; */
+  /* height: 100dvh; */
   overflow-y: hidden;
-  scroll-snap-type: y mandatory;
+  /* scroll-snap-type: y mandatory; */
   width: 100%;
   overflow-x: hidden;
 }
 
 .swiper-card {
-  min-height: calc(100vh - 90px);
+  /* min-height: calc(100vh - 90px); */
 }
 
 .swiper {
   width: 100%;
   position: relative;
   /* height: 320px; */
+  height: calc(100vh - 90px);
 }
 
 .swiper-slide {

@@ -1,6 +1,21 @@
 <template>
   <div class="flex flex-col h-full">
     <div class="flex flex-1 flex-col overflow-y-auto gap-3 mb-4">
+      <h4 class="font-semibold">Comments</h4>
+      <div>
+        <div class="flex gap-2 items-center">
+          <pxTextarea
+            class="p-3 w-full border border-primary"
+            v-model="content"
+            autoResize
+            rows="1"
+            cols="30"
+          />
+          <button class="brand-primary p-3 shadow rounded-full" @click="sendComment">
+            <i-icon icon="fluent:send-16-filled" class="text-lg text-white" />
+          </button>
+        </div>
+      </div>
       <div v-for="comment in comments" :key="comment.id" class="flex gap-2">
         <img
           v-if="Object.keys(user).length > 0"
@@ -13,21 +28,6 @@
           <h6 class="text-xs font-semibold">{{ comment.userName }}</h6>
           <p class="text-xs">{{ comment.comment }}</p>
         </span>
-      </div>
-    </div>
-
-    <div>
-      <div class="flex gap-2 items-center">
-        <pxTextarea
-          class="p-3 w-full border border-primary"
-          v-model="content"
-          autoResize
-          rows="1"
-          cols="30"
-        />
-        <button class="brand-primary p-3 shadow rounded-full" @click="sendComment">
-          <i-icon icon="fluent:send-16-filled" class="text-lg text-white" />
-        </button>
       </div>
     </div>
   </div>
@@ -82,14 +82,13 @@ export default {
     sendComment() {
       let payload = {
         userId: this.userID,
-        comment: this.content,
+        comment: this.content
       }
       console.log(payload)
-      this.$reels.comment(payload, this.reel._id)
-      .then((res)=> {
+      this.$reels.comment(payload, this.reel._id).then((res) => {
         console.log(res)
         this.$emit('refresh')
-        this.content = ""
+        this.content = ''
       })
     }
   },
