@@ -1,5 +1,5 @@
 <template>
-  <div class="reels-page h-screen">
+  <div class="reels-page h-[100dvh]">
     <el-skeleton style="width: 100%" :loading="loading" animated>
       <template #template>
         <div class="">
@@ -14,9 +14,9 @@
       </template>
       <template #default>
         <div>
-          <wallet-data class="z-1" :starBalance="starBalance" />
+          <wallet-data class="z-2" :starBalance="starBalance" />
           <!-- <wallet-data -->
-          <div class="reel-container h-screen" v-for="(item, index) in reels" :key="index">
+          <div class="reel-container h-[100dvh]" v-for="(item, index) in reels" :key="index">
             <video
               class="reel-image"
               v-if="!item.hasError"
@@ -434,6 +434,8 @@ export default {
 .inner-content,
 .reel-section {
   display: flex;
+  display: inline-flex;
+  display: -webkit-flex;
   justify-content: space-between;
   width: 100%;
 }

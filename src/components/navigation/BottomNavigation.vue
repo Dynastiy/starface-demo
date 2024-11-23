@@ -58,6 +58,8 @@ export default {
 .bottom-nav {
   position: fixed;
   display: flex;
+  display: inline-flex;
+  display: -webkit-flex;
   align-items: flex-end;
   direction: ltr;
   bottom: 0;
