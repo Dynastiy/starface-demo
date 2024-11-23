@@ -25,8 +25,8 @@
           </div>
 
           <div>
-            <label for="">Age</label>
-            <input v-model="form.age" name="age" class="input" type="text" />
+            <label for="">Date of Birth</label>
+            <input v-model="form.dateOfBirth" name="age" class="input" type="date" />
           </div>
 
           <div>
@@ -37,6 +37,11 @@
           <div>
             <label for="">City</label>
             <input v-model="form.city" name="city" class="input" type="text" />
+          </div>
+
+          <div>
+            <label for="">Bio</label>
+            <textarea v-model="form.bio" name="bio" class="input" type="text" > </textarea>
           </div>
 
           <div>
@@ -97,7 +102,8 @@ export default {
         lastName: '',
         city: '',
         countryName: '',
-        age: ''
+        dateOfBirth: '',
+        bio: ''
       },
       interests: [],
       interest: ''
@@ -117,7 +123,8 @@ export default {
             lastName: userData.lastName,
             city: userData.city,
             countryName: userData.countryName,
-            age: userData.age
+            dateOfBirth: userData.dateOfBirth,
+            bio: userData.bio
           }
           this.interests = userData.interests
         })

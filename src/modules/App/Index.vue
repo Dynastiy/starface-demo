@@ -50,7 +50,7 @@
                       @error="$handleProfileError"
                       alt=""
                     /> -->
-                    <span class="text-sm"> {{ `@${item.userName}` }} </span>
+                    <span class="text-sm"> <router-link :to="`/user/profile/${item.user}`"> {{ `@${item.userName}` }} </router-link> </span>
                     <button class="brand-btn-md brand-outline text-white" @click="followAction(item)">{{ checkFollowing(item) ? "Following" : "Follow"}}</button>
                   </div>
                   <p class="mt-2 text-sm">{{ item.description }}</p>

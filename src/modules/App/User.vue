@@ -32,9 +32,7 @@
         <div>
           <span class="text-sm block text-gray-500">Bio</span>
           <p class="text-sm">
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ratione incidunt accusamus
-            molestias aliquam laboriosam ipsam ex non veniam iste, enim modi, ducimus totam!
-            Similique eos labore eius minus expedita? Modi!
+            {{ info.bio }}
           </p>
         </div>
 

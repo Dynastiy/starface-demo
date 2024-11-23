@@ -19,13 +19,13 @@
       <div v-for="comment in comments" :key="comment.id" class="flex gap-2">
         <img
           v-if="Object.keys(user).length > 0"
-          class="h-[35px] w-[35px] rounded-full ring ring-[#fff]"
+          class="h-[30px] w-[30px] rounded-full ring ring-[#fff]"
           :src="user[comment.user].profilePicture"
           @error="$handleProfileError"
           alt=""
         />
         <span class="p-2 bg-gray-50 block w-full rounded-lg">
-          <h6 class="text-xs font-semibold">{{ comment.userName }}</h6>
+          <h6 class="text-xs font-semibold"><router-link :to="`/user/profile/${comment.user}`"> {{ comment.userName }} </router-link> </h6>
           <p class="text-xs">{{ comment.comment }}</p>
         </span>
       </div>
