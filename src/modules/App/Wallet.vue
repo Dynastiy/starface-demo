@@ -1,7 +1,9 @@
 <template>
-  <div>
+  <div class="pb-[80px]">
     <div>
-      <!-- {{ loading }} -->
+      <!-- <div>
+        {{ user }}
+      </div> -->
       <el-skeleton style="width: 100%" :loading="loading" animated>
         <template #template>
           <div>
@@ -89,7 +91,6 @@ export default {
   methods: {
     actionClick(e) {
       this.showContainer = true
-      console.log(e)
       this.action = e.label
     },
 
@@ -141,6 +142,10 @@ export default {
 
   created() {
     this.getWalletData()
+  },
+
+  computed: {
+    
   }
 }
 </script>

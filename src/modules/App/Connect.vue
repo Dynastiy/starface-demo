@@ -1,5 +1,6 @@
 <template>
   <div class="reels-page p-4">
+    {{ user }}
     <el-skeleton style="width: 100%" :loading="loading" animated>
       <template #template>
         <div class="">
@@ -33,17 +34,21 @@
           >
             <div class="overlay p-4">
               <div class="flex flex-col gap-1">
-                <button class="brand-btn-md brand-outline text-white w-fit"><router-link :to="`/user/profile/${item.userId}`">View More</router-link></button>
+                <button class="brand-btn-md brand-outline text-white w-fit">
+                  <router-link :to="`/user/profile/${item.userId}`">View More</router-link>
+                </button>
                 <h4 class="font-semibold text-xl">{{ item.userName }}</h4>
                 <div class="flex gap-2">
-                    <button class="brand-btn-md brand-outline text-white">Like</button>
-                    <button class="brand-btn-md brand-outline text-white">Chat</button>
-                    <button class="brand-btn-md brand-outline text-white">Skip</button>
+                  <button class="brand-btn-md brand-outline text-white">Like</button>
+                  <button class="brand-btn-md brand-outline text-white" @click="startChat(item)">
+                    Chat
+                  </button>
+                  <button class="brand-btn-md brand-outline text-white">Follow</button>
                 </div>
               </div>
               <button class="brand-primary brand-btn rounded-full shadow">
                 <!-- <i-icon icon="twemoji:glowing-star" class="text-2xl text-white" /> -->
-                 <star-icon />
+                <star-icon />
               </button>
             </div>
           </swiper-slide>
@@ -124,21 +129,34 @@ export default {
 
   methods: {
     getConnect() {
-        this.$appImages.connect()
-        .then((res)=> {
-            console.log(res)
-            let resData = res.data
-            const allImages = []
-            resData.forEach(element => {
-                let newData = {
-                    ...element,
-                    imageUrl: element.filepaths[0]
-                }
-                allImages.push(newData)
-            });
-            this.images = allImages
-            console.log(allImages)
+      this.$appImages.connect().then((res) => {
+        console.log(res)
+        let resData = res.data
+        const allImages = []
+        resData.forEach((element) => {
+          let newData = {
+            ...element,
+            imageUrl: element.filepaths[0]
+          }
+          allImages.push(newData)
         })
+        this.images = allImages
+        console.log(allImages)
+      })
+    },
+
+    startChat(item) {
+      console.log(item)
+      let payload = {
+        userId: this.user._id,
+        recipientId: item.userId
+      }
+      this.$chat.startChat(payload)
+      .then((res)=> {
+        console.log(res)
+        this.$router.push(`/chat/message/${res._id}?uid=${item.userId}`)
+      })
+      // console.log(payload)
     },
 
     like(e) {
@@ -149,9 +167,6 @@ export default {
       this.$appDomain.likeMatch(payload).then((res) => {
         console.log(res)
       })
-      // .finally(() => {
-      //   this.loading = false
-      // })
     },
 
     timeLeft(value) {
@@ -174,15 +189,16 @@ export default {
     },
 
     getBackgroundStyle(image) {
-      const img = new Image();
-      img.src = image;
-
+      const img = new Image()
+      img.src = image
       return {
-        backgroundImage: `url('${img.complete && img.naturalWidth !== 0 ? image : this.$placeholder}')`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      };
-    },
+        backgroundImage: `url('${
+          img.complete && img.naturalWidth !== 0 ? image : this.$placeholder
+        }')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }
+    }
   },
 
   beforeMount() {
@@ -208,7 +224,7 @@ export default {
 }
 
 .swiper-card {
-    min-height: calc(100vh - 90px);
+  min-height: calc(100vh - 90px);
 }
 
 .swiper {
@@ -227,7 +243,7 @@ export default {
 }
 
 .overlay {
-    position: absolute;
+  position: absolute;
   bottom: 0;
   /* padding: 15px 200px; */
   left: 0;
@@ -236,7 +252,7 @@ export default {
   background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent); /* Smooth blend */
   display: flex;
   align-items: end;
-  justify-content: space-between
+  justify-content: space-between;
 }
 
 .overlay-content {

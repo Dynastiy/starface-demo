@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 mb-[70px]">
+  <div class="p-4 pb-[80px]">
     <!-- Hello World -->
     <div class="flex flex-col gap-6">
       <div>

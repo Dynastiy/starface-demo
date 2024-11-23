@@ -1,16 +1,42 @@
 <template>
-  <div class="flex gap-6 p-4 items-start lg:flex-row md:flex-row flex-col">
-    <!-- {{ userData }} -->
+  <div class="flex gap-6 p-4 pb-[80px] items-start lg:flex-row md:flex-row flex-col">
     <div class="bg-white p-4 lg:w-6/12 md:w-6/12 w-full rounded-md flex justify-center">
       <div class="w-full">
-        <div @click="logout" role="button" class="flex gap-1 justify-end items-center text-red-500 text-sm font-semibold">
+        <div
+          @click="logout"
+          role="button"
+          class="flex gap-1 justify-end items-center text-red-500 text-[14px]"
+        >
           <i-icon icon="humbleicons:logout" />
-          <span>Logout</span>
+          <span class="font-medium">Logout</span>
         </div>
-        <img
-          src="http://test.starface.chat/assets/images/avatar/6.jpg"
-          class="w-[100px] h-[100px] mx-auto border-2 p-1 border-gray-200 rounded-full object-fit object-top"
-        />
+
+        <div class="relative w-fit mx-auto">
+          <img
+            :src="userData.profilePicture ? userData.profilePicture : $avatar"
+            @error="$handleProfileError"
+            class="w-[100px] h-[100px] mx-auto border-2 p-1 border-gray-200 rounded-full object-fit object-top relative"
+          />
+          <input
+            type="file"
+            name="file"
+            id="profilePhotoInput"
+            class="hidden-input"
+            ref="file"
+            accept=".png,.jpg,.jpeg,.webp,.svg"
+            @change="uploadPhoto"
+          />
+          <label
+            for="profilePhotoInput"
+            class="file-label mb-0 flex flex-col items-center bg-primary text-white p-[8px] rounded-full absolute right-0 bottom-0"
+          >
+            <i-icon
+              :icon="isUploading ? 'line-md:downloading-loop' : 'lucide:images'"
+              class="text-[15px]"
+            />
+          </label>
+        </div>
+
         <div class="">
           <h5 class="text-lg justify-center font-bold mt-2 flex gap-1 items-center">
             {{
@@ -21,11 +47,18 @@
             <span class="text-[12px]">
               {{ `@${userData.userName}` }}
             </span>
+            <router-link
+              to="/profile/edit"
+              class="block text-primary flex items-center gap-1 justify-center text-sm gap-2 font-medium underline text-center"
+            >
+              <i-icon icon="iconamoon:edit-duotone"
+            /></router-link>
           </h5>
         </div>
         <h6 class="text-center text-[12px] text-center mb-2">
           {{ `${userData.email}` }}
         </h6>
+
         <span class="flex gap-1 justify-center" v-if="userData.hasCountry">
           <i-icon icon="ic:baseline-location-on" />
           <span class="text-xs">{{ userData.countryName }}</span>
@@ -54,13 +87,13 @@
         </div>
         <div class="flex gap-4 mt-4 w-full">
           <button
-            class="brand-btn brand-primary py-2 text-xs w-full"
+            class="brand-btn brand-primary-clear py-2 text-xs w-full"
             @click="$router.push('/wallet')"
           >
             My Wallet
           </button>
           <button
-            class="brand-btn brand-primary py-2 text-xs w-full"
+            class="brand-btn brand-primary-clear py-2 text-xs w-full"
             @click="$router.push('/invite')"
           >
             Invite Friends
@@ -75,17 +108,49 @@
           class="block px-3 py-2 text-[12px] capitalize font-medium"
           role="button"
           @click="activateTab(i)"
-          :class="{ 'brand-primary text-white font-semibold': i === activeTab }"
+          :class="{ 'brand-primary-clear text-white font-semibold': i === activeTab }"
           v-for="(item, i) in tabs"
           :key="i"
         >
           {{ item.label }}
         </span>
       </span>
-      <div class="bg-white p-6">
-        <div>
-          <img src="" alt="" />
-          <video src=""></video>
+      <div class="bg-white p-4">
+        <div class="flex gap-2 flex-col">
+          <div class="grid grid-cols-3 gap-2" v-if="activeTab == '1' || activeTab == '0'">
+            <div v-for="item in posts.images"
+            :key="item.id" class="relative">
+              <img
+                class="rounded-sm h-[80px] w-full object-cover object-center"
+                @error="$handleImageError"
+                :src="item.filepaths[0]"
+                alt=""
+              />
+              <span class="bg-[#000] text-xs p-[4px] justify-end flex gap-1 items-center text-white block absolute bottom-0 w-full">
+                <i-icon icon="icon-park-solid:like" />
+                {{item.likes}}
+              </span>
+            </div>
+          </div>
+          <div class="grid grid-cols-3 gap-2" v-if="activeTab == '2' || activeTab == '0'">
+            <div v-for="(item, index) in posts.reels" :key="item.id">
+              <video
+                class="rounded-sm h-[80px] w-full object-cover object-center"
+                v-if="!item.hasError"
+                @error="handleVideoError(index)"
+                autoplay
+                muted
+                :src="item?.videoUrl"
+              ></video>
+              <img
+                v-else
+                @error="$handleImageError"
+                :src="item.thumbnailUrl"
+                alt="Placeholder"
+                class="h-[80px] w-full object-cover object-center"
+              />
+            </div>
+          </div>
         </div>
         <!-- <component :is="tabs[activeTab].component" /> -->
       </div>
@@ -139,7 +204,9 @@ export default {
       likes: 0,
       views: 0,
       followers: 0,
-      following: 0
+      following: 0,
+      isUploading: false,
+      posts: {}
     }
   },
 
@@ -148,11 +215,22 @@ export default {
       this.activeTab = e
     },
 
+    handleVideoError(index) {
+      this.posts.reels[index].hasError = true
+    },
+
     getLikes() {
       this.$userActivity.views().then((res) => {
         console.log(res)
         this.likes = res.totalLikes
         this.views = this.totalViews
+      })
+    },
+    getUser() {
+      this.$auth.getUser(this.userData._id).then((res) => {
+        console.log(res)
+        this.$store.commit('auth/setUser', res.user)
+        return res
       })
     },
 
@@ -171,6 +249,7 @@ export default {
     getPosts() {
       this.$userActivity.allPosts().then((res) => {
         console.log(res)
+        this.posts = res
       })
     },
 
@@ -180,9 +259,28 @@ export default {
       const request2 = this.getFollowCount()
       const request3 = this.getEarnWallet()
       const request4 = this.getPosts()
-      Promise.all([request1, request2, request3, request4]).finally(() => {
+      const request5 = this.getUser()
+      Promise.all([request1, request2, request3, request4, request5]).finally(() => {
         this.isLoading = false
       })
+    },
+
+    uploadPhoto() {
+      const input = event.target
+      let image = input.files[0]
+      this.isUploading = true
+      let formdata = new FormData()
+      formdata.append('profilePicture', image)
+
+      this.$auth
+        .updateProfilePhoto(formdata)
+        .then((res) => {
+          this.getUser()
+          return res
+        })
+        .finally(() => {
+          this.isUploading = false
+        })
     },
 
     logout() {
@@ -247,4 +345,18 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+.hidden-input {
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+}
+
+.file-label {
+  font-size: 20px;
+  display: block;
+  cursor: pointer;
+}
+</style>

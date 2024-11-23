@@ -1,22 +1,22 @@
 <template>
-  <div class="min-h-[85vh] flex flex-col justify-between">
+  <div class="p-6 flex flex-col justify-between pb-[80px]">
     <div class="flex flex-col gap-4">
-      <span class="text-sm font-semibold"
-        >Fund your balance below with USDT or CHAMBS to upgrade</span
-      >
-      <div class="flex items-center p-2 bg-white rounded-[6px] shadow-sm gap-3">
-        <!-- <input
-          type="text"
-          class="bg-transparent w-full text-sm font-semibold block break-all"
-          v-model="address"
-          disabled
-          readonly
-        /> -->
+      <div>
+        <span class="text-xs font-medium text-gray-500">
+          Wallet Balance:
+        </span> 
+        <span class="flex gap-1 items-center font-semibold">
+          <i-icon icon="basil:wallet-solid" />
+          {{`${wallet}USDT`}}
+        </span>
+      </div>
+      <span class="text-sm font-semibold">Fund your balance below with USDT</span>
+      <div class="flex items-center p-2 bg-white rounded-[6px] gap-3">
         <span class="bg-transparent w-full text-sm font-semibold block break-all">
           {{ address }}
         </span>
         <span
-          class="brand-primary p-[5px] rounded-md"
+          class="brand-primary-clear p-[5px] rounded-md"
           role="button"
           v-clipboard:copy="address"
           v-clipboard:success="onCopy"
@@ -27,25 +27,22 @@
       </div>
 
       <div>
-        <user-wallet />
+        <button class="brand-btn w-full brand-primary-clear">Earn as a creator</button>
       </div>
 
       <div class="flex gap-3 flex-col">
         <div>
-          <label class="text-xs" for="">Select Wallet to pay from</label>
-          <select name="" id="" class="input" v-model="wallet">
-            <option value="" selected disabled>--Select Wallet--</option>
-            <option :value="item" v-for="item in ['usdt', 'chambs']" :key="item">{{ item }}</option>
-          </select>
+          <h4 class="text-sm font-medium">Subscribe to any of the plans below to start earning daily from watching videos.</h4>
+          <hr class="my-2">
+          <h6 class="text-xs text-gray-600">Each earning cycle may take 3 to 4 weeks to complete.</h6>
         </div>
-
         <div>
           <label class="text-xs" for="">Select Plan</label>
           <UpgradeFees @selectedFees="feesRetrieved" />
         </div>
       </div>
     </div>
-    <div class="flex gap-4 justify-center mt-3">
+    <!-- <div class="flex gap-4 justify-center mt-3">
       <button
         @click="payUpgradeFees"
         class="brand-btn w-full flex items-center justify-center gap-[4px]"
@@ -55,30 +52,47 @@
         <i-icon icon="eos-icons:loading" class="text-[20px]" v-if="loading"/>
         Upgrade
       </button>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
 import UpgradeFees from '@/components/Upgrade/UpgradeFees.vue'
-import UserWallet from '@/components/utils/UserWallet.vue'
+// import UserWallet from '@/components/utils/UserWallet.vue'
 export default {
-  components: { UpgradeFees, UserWallet },
+  components: { UpgradeFees },
   data() {
     return {
       wallet: '',
       plan: null,
       loading: false,
-      requestId: ''
+      requestId: '',
+      address: ""
     }
   },
 
   methods: {
+    // generateAddress() {
+    //   let user_id = this.user.user_id
+    //   this.$middleware.generateWalletAddress(user_id).then((res) => {
+    //     this.$store.commit('auth/setWalletAddress', res.data.address)
+    //   })
+    // },
+
     generateAddress() {
-      let user_id = this.user.user_id
-      this.$middleware.generateWalletAddress(user_id).then((res) => {
-        this.$store.commit('auth/setWalletAddress', res.data.address)
-      })
+      this.loading = true
+      let formData = {
+        asset: 'USDT'
+      }
+      this.$wallet
+        .deposit(formData)
+        .then((res) => {
+          console.log(res)
+          this.address = res.Addres
+        })
+        .finally(() => {
+          this.loading = false
+        })
     },
 
     feesRetrieved(e) {
@@ -104,6 +118,13 @@ export default {
         })
     },
 
+    getAllWallets() {
+      this.$wallet.allWallets().then((res) => {
+        console.log(res)
+        this.wallet = res[0].balance
+      })
+    },
+
     onCopy: function () {
       this.$toastify({
         text: `Wallet Address Copied`,
@@ -127,6 +148,7 @@ export default {
     if (!hasAddress) {
       this.generateAddress()
     }
+    this.getAllWallets()
   },
 
   mounted() {
@@ -135,9 +157,9 @@ export default {
   },
 
   computed: {
-    address() {
-      return this.$store.getters['auth/getWalletAddress']
-    },
+    // address() {
+    //   return this.$store.getters['auth/getWalletAddress']
+    // },
     user() {
       return this.$store.getters['auth/getUser']
     },

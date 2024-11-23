@@ -1,6 +1,6 @@
 <template>
   <div
-    class="fixed w-full rounded-tr-[15px] bottom-nav px-6 py-4 h-[60px] rounded-tl-[15px] bottom-0"
+    class="bottom-nav"
   >
     <div class="flex justify-between h-full w-full items-center container">
       <ul class="flex items-center w-full justify-between h-full mb-0">
@@ -56,12 +56,18 @@ export default {
 
 <style scoped>
 .bottom-nav {
-  /* backdrop-filter: blur(25px) saturate(200%);
-  -webkit-backdrop-filter: blur(25px) saturate(200%);
-  background-color: rgba(255, 255, 255, 0.5); */
-  background-color: white;
-  z-index: 1000;
-  /* border-radius: 12px; */
-  /* border: 1px solid rgba(255, 255, 255, 0.125); */
+  position: fixed;
+  display: flex;
+  align-items: flex-end;
+  direction: ltr;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 2147483647;
+  height: 64px;
+  background: #fff;
+  padding: 0 20px;
+  border-radius: 10px 10px 0 0;
+  /* box-shadow: 0 0 5px 0 #eee; */
 }
 </style>

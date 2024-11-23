@@ -1,27 +1,30 @@
 <template>
-  <div>
+  <div class="py-2 px-4 bg-white z-10 rounded-bl-3xl rounded-br-3xl">
     <div class="flex justify-between items-center">
-      <span v-if="routeName === 'home'" class="brand-icon block text-2xl">Mango Meet</span>
-      <div v-else class="flex gap-4 items-center justify-between">
+      <!-- <span v-if="routeName === 'home'" class="brand-icon block text-2xl">
+
+      </span> -->
+      <div class="flex gap-2 items-center justify-between">
         <span
           @click="$router.go(-1)"
           role="button"
-          class="bg-gray200 border border-gray300 p-2 rounded-full"
+          class="bg-gray-200 border border-gray-300 p-[8px] rounded-full"
         >
-          <i-icon icon="charm:arrow-left" class="text-xl" />
+          <i-icon icon="charm:arrow-left" class="text-lg" />
         </span>
         <div class="flex justify-center w-full">
-          <h3 class="font-bold text-2xl capitalize">{{ routeName.split('-').join(' ') }}</h3>
+          <h3 class="font-semibold text-lg capitalize">{{ routeName.split('-').join(' ') }}</h3>
         </div>
       </div>
       <div class="flex gap-2 items-center">
         <!-- {{user}} -->
         <img
-          v-if="userMeta"
-          :src="userMeta.profile_picture_url ? userMeta.profile_picture_url : image"
+          v-if="user"
+          :src="user.profilePicture ? user.profilePicture : image"
           class="w-[45px] h-[45px] border-2 p-[2px] border-gray-300 rounded-full object-fit object-top"
           role="button"
           @click="$router.push('/profile')"
+          @error="$handleProfileError"
         />
         <!-- <div>
           <span class="text-sm capitalize font-semibold block">Vendor</span>
@@ -29,14 +32,13 @@
             `${user.first_name} ${user.last_name}`
           }}</span>
         </div> -->
-        <button
+        <!-- <button
           v-if="routeName === 'home'"
           class="brand-btn brand-primary rounded-full flex items-center gap-2 justify-center"
           @click="$router.push('/upgrade')"
         >
           <i-icon icon="icomoon-free:fire" />
-          <!-- upgrade -->
-        </button>
+        </button> -->
       </div>
     </div>
   </div>

@@ -99,5 +99,37 @@ export default {
       }
   },
   
+  async getSubsciptions(){
+    try {
+      let res = await $request.get(`api/subscribe/subscriptions`)
+      // catchAxiosSuccess(res.data)
+      return res.data
+    } catch (error) {
+      catchAxiosError(error)
+      throw error
+    }
+  },
+
+  async getSubsciptionPlans(){
+    try {
+      let res = await $request.get(`api/subscribe/plans`)
+      // catchAxiosSuccess(res.data)
+      return res.data
+    } catch (error) {
+      catchAxiosError(error)
+      throw error
+    }
+  },
+
+  async subscibeToPlan(formData){
+    try {
+      let res = await $request.post(`api/subscribe`, formData)
+      catchAxiosSuccess(res.data)
+      return res.data
+    } catch (error) {
+      catchAxiosError(error)
+      throw error
+    }
+  }
   
 }

@@ -1,10 +1,13 @@
 <template>
   <div class="app-container">
+    <app-header :class="[isNotVisible ? 'sticky top-0' : 'hidden']" />
     <div class="content">
       <slot />
     </div>
 
     <bottom-navigation class="" @routeClick="routeClick" :menu="menu" />
+
+    
 
     <!-- SideBar -->
     <Sidebar
@@ -26,7 +29,7 @@
             <h6 class="font-semibold text-sm">Upload a video</h6>
           </div>
           <div
-          @click="upload('image')"
+            @click="upload('image')"
             role="button"
             class="bg-gray-200 w-full rounded-md p-4 flex flex-col gap-4 justify-between items-center"
           >
@@ -37,8 +40,8 @@
       </div>
     </Sidebar>
 
-     <!-- Modal For uploading  -->
-     <vDialog
+    <!-- Modal For uploading  -->
+    <vDialog
       v-model:visible="showContainer"
       modal
       :style="{ width: '80%' }"
@@ -58,13 +61,12 @@
             Close
           </span>
         </div>
-       <div class="mt-2">
-        <upload-image v-if="type == 'image'" @completed="completed"/>
-        <upload-video v-if="type == 'video'" @completed="completed"/>
-       </div>
+        <div class="mt-2">
+          <upload-image v-if="type == 'image'" @completed="completed" />
+          <upload-video v-if="type == 'video'" @completed="completed" />
+        </div>
       </div>
     </vDialog>
-
   </div>
 </template>
 
@@ -73,9 +75,10 @@
 import BottomNavigation from '@/components/navigation/BottomNavigation.vue'
 import UploadImage from '@/components/upload/UploadImage.vue'
 import UploadVideo from '@/components/upload/UploadVideo.vue'
+import AppHeader from '@/components/navigation/headers/AppHeader.vue'
 // import WalletData from '@/components/utils/walletData.vue'
 export default {
-  components: { BottomNavigation, UploadImage, UploadVideo },
+  components: { BottomNavigation, UploadImage, UploadVideo, AppHeader },
   name: 'DashboardLayout',
 
   data() {
@@ -120,7 +123,7 @@ export default {
       ],
       visibleBottom: false,
       showContainer: false,
-      type: ""
+      type: ''
     }
   },
 
@@ -139,12 +142,12 @@ export default {
       this.type = e
     },
 
-    completed(){
+    completed() {
       this.type = ''
       this.showContainer = false
     },
 
-    closeContainer(){
+    closeContainer() {
       this.showContainer = false
     }
   },
@@ -156,6 +159,10 @@ export default {
   created() {},
 
   computed: {
+    isNotVisible() {
+      return this.routeName != 'connect' && this.routeName != 'feeds'
+    },
+
     routeName() {
       return this.$route.meta.name
     },

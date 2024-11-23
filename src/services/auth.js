@@ -103,5 +103,16 @@ export default {
       catchAxiosError(error)
       throw error
     }
+  },
+
+  async updateProfilePhoto(formData) {
+    try {
+      let res = await $request.put(`api/user/profile-update`, formData)
+      catchAxiosSuccess(res)
+      return res.data
+    } catch (error) {
+      catchAxiosError(error)
+      throw error
+    }
   }
 }

@@ -96,8 +96,7 @@ export default {
     getUser() {
       this.$auth.getUser(this.uid).then((res) => {
         console.log(res)
-        // let data = 
-        this.$store.commit('auth/setUser',  res.user)
+        this.$store.commit('auth/setUser', res.user)
         this.$router.push('/')
         return res
       })
@@ -106,21 +105,17 @@ export default {
     onSubmit() {
       this.isLoading = true
 
-        // const formData = new FormData()
-        // formData.append('profilePicture', this.file)
-      let formData = {
-        profilePicture: this.file
-      }
+      let formdata = new FormData()
+      formdata.append('profilePicture', this.files[0])
       this.$auth
-        .updateUserProfile(formData, this.uid)
+        .updateProfilePhoto(formdata)
         .then((res) => {
           this.getUser()
           return res
         })
         .finally(() => {
-          this.isLoading = false
+          this.isUploading = false
         })
-      return
     },
 
     onChange() {

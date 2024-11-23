@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white p-4 flex gap-2 items-center shadow-sm">
+  <div class="bg-white px-4 h-[50px] flex gap-2 items-center shadow-sm">
     <span role="button" @click="$router.go(-1)">
       <i-icon icon="ic:baseline-arrow-back" class="text-2xl font-semibold" />
     </span>
@@ -10,7 +10,7 @@
         @error="$handleProfileError"
         alt=""
       />
-      <h4>{{ info.userName }}</h4>
+      <h4 class="capitalize font-semibold">{{ info.userName }}</h4>
     </div>
   </div>
 </template>

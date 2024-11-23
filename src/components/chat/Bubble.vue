@@ -4,8 +4,8 @@
       class="p-3 text-[13px] lg:w-6/12 md:w-7/12 w-6/12 block"
       :class="[
         item.sender === this.userID
-          ? 'ml-auto lg:bg-gray-100 md:bg-gray-100 bg-gray-200 rounded-tr-[15px] rounded-bl-[15px] rounded-br-[15px]'
-          : 'rounded-tr-[15px] rounded-tl-[15px] rounded- rounded-bl-[15px] bg-white'
+          ? 'ml-auto lg:bg-gray-100 md:bg-gray-100 bg-primary text-white rounded-tr-[12px] rounded-bl-[12px] rounded-br-[12px]'
+          : 'rounded-tr-[12px] rounded-tl-[12px] rounded- rounded-bl-[12px] bg-gray-200'
       ]"
       v-for="(item, idx) in messages"
       :key="idx"

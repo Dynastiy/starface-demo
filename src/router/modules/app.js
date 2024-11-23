@@ -9,17 +9,18 @@ import Create from '@/modules/App/Create.vue'
 import Wallet from '@/modules/App/Wallet.vue'
 import ChatArea from '@/modules/App/chat/chatArea.vue'
 import Invite from '@/modules/App/Invite.vue'
+import Edit from '@/modules/App/profile/Edit.vue'
 
 const routes = [
   {
     path: '/',
-    name: 'app-home',
+    name: 'feeds',
     component: Home,
     meta: {
       layout: 'Dashboard',
       requiresAuth: false,
       parent: 'feeds',
-      name: 'home'
+      name: 'feeds'
     }
   },
 
@@ -37,7 +38,7 @@ const routes = [
 
   {
     path: '/chat',
-    name: 'app-chat',
+    name: 'chat',
     component: Chat,
     meta: {
       layout: 'Dashboard',
@@ -62,7 +63,7 @@ const routes = [
 
   {
     path: '/connect',
-    name: 'app-connect',
+    name: 'connect',
     component: Connect,
     meta: {
       layout: 'Dashboard',
@@ -84,6 +85,20 @@ const routes = [
     }
   },
 
+
+  {
+    path: '/profile/edit',
+    name: 'edit-profile',
+    component: Edit,
+    meta: {
+      layout: 'Dashboard',
+      requiresAuth: false,
+      parent: 'profile',
+      name: 'edit-profile'
+    }
+  },
+
+
   {
     path: '/upgrade',
     name: 'app-upgrade',
@@ -91,7 +106,7 @@ const routes = [
     meta: {
       layout: 'Dashboard',
       requiresAuth: false,
-      parent: 'upgrade',
+      parent: 'profile',
       name: 'upgrade'
     }
   },
@@ -110,7 +125,7 @@ const routes = [
 
   {
     path: '/profile',
-    name: 'app-profile',
+    name: 'profile',
     component: Profile,
     meta: {
       layout: 'Dashboard',

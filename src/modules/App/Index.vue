@@ -35,7 +35,6 @@
               :src="item.videoUrl"
               loop
               muted
-              autoplay
             ></video>
             <img
               v-else
@@ -290,7 +289,7 @@ export default {
       this.visibleBottom = true
       this.actionable = e
       console.log(value)
-      this.getReel(value._id)
+      this.getReel(value.user._id)
       // this.comments = value
     },
 
@@ -447,7 +446,7 @@ export default {
 .reel-section {
   align-items: flex-end;
   margin-top: auto;
-  padding: 15px 0 100px;
+  padding: 15px 0 80px;
 }
 
 .reel-section .user-item {
