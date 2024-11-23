@@ -1,5 +1,5 @@
 <template>
-  <div class="reels-page">
+  <div class="reels-page h-screen">
     <el-skeleton style="width: 100%" :loading="loading" animated>
       <template #template>
         <div class="">
@@ -16,7 +16,7 @@
         <div>
           <wallet-data class="z-1" :starBalance="starBalance" />
           <!-- <wallet-data -->
-          <div class="reel-container" v-for="(item, index) in reels" :key="index">
+          <div class="reel-container h-screen" v-for="(item, index) in reels" :key="index">
             <video
               class="reel-image"
               v-if="!item.hasError"
@@ -383,7 +383,7 @@ export default {
 <style scoped>
 .reels-page {
   background-color: #000;
-  height: 100vh;
+  /* height: 100; */
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
   width: 100%;
@@ -392,7 +392,6 @@ export default {
 .reel-container {
   align-items: center;
   display: flex;
-  height: 100vh;
   justify-content: center;
   position: relative;
   scroll-snap-align: start;
