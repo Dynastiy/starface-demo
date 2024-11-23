@@ -158,7 +158,7 @@ export default {
 .swiper-img {
   object-fit: cover;
   width: 100%;
-  height: calc(100vh - 120px); /* Adjust to match overlay height */
+  height: calc(100vh - 300px); /* Adjust to match overlay height */
 }
 .overlay {
   position: absolute;
