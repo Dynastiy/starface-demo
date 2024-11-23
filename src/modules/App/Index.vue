@@ -6,20 +6,9 @@
           <div class="flex flex-col w-full gap-4">
             <el-skeleton-item
               variant="image"
-              style="height: 55vh; border-radius: 10px; width: 100%"
+              style="height: 100vh; border-radius: 10px; width: 100%"
             />
-            <el-skeleton-item
-              variant="text"
-              style="height: 20px; border-radius: 10px; width: 40%"
-            />
-            <el-skeleton-item
-              variant="text"
-              style="height: 20px; border-radius: 10px; width: 50%"
-            />
-            <el-skeleton-item
-              variant="text"
-              style="height: 20px; border-radius: 10px; width: 80%"
-            />
+            
           </div>
         </div>
       </template>
@@ -188,9 +177,13 @@ export default {
 
   methods: {
     getReels() {
+      this.loading = true
       this.$reels.list().then((res) => {
         console.log(res)
         this.reels = res.reels
+      })
+      .finally(()=> {
+        this.loading = false
       })
     },
 
@@ -266,6 +259,9 @@ export default {
     },
 
     getEarnWallet() {
+      if (!this.isLoggedIn) {
+        return
+      }
       this.$wallet.earnWallet().then((res) => {
         console.log(res)
         this.starBalance = res.star.balance

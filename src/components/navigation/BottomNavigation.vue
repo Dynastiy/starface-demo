@@ -63,7 +63,7 @@ export default {
   bottom: 0;
   left: 0;
   width: 100%;
-  z-index: 2147483647;
+  z-index: 2;
   height: 64px;
   background: #fff;
   padding: 0 20px;

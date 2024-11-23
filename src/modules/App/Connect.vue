@@ -1,15 +1,14 @@
 <template>
-  <div class="reels-page p-4">
-    {{ user }}
+  <div class="reels-page p-4 ">
     <el-skeleton style="width: 100%" :loading="loading" animated>
       <template #template>
         <div class="">
           <div class="flex flex-col w-full gap-4">
             <el-skeleton-item
               variant="image"
-              style="height: 55vh; border-radius: 10px; width: 100%"
+              style="height: 100vh; border-radius: 10px; width: 100%"
             />
-            <el-skeleton-item
+            <!-- <el-skeleton-item
               variant="text"
               style="height: 20px; border-radius: 10px; width: 40%"
             />
@@ -20,7 +19,7 @@
             <el-skeleton-item
               variant="text"
               style="height: 20px; border-radius: 10px; width: 80%"
-            />
+            /> -->
           </div>
         </div>
       </template>
@@ -129,6 +128,7 @@ export default {
 
   methods: {
     getConnect() {
+      this.loading = true
       this.$appImages.connect().then((res) => {
         console.log(res)
         let resData = res.data
@@ -142,6 +142,9 @@ export default {
         })
         this.images = allImages
         console.log(allImages)
+      })
+      .finally(()=> {
+        this.loading = false
       })
     },
 
@@ -198,7 +201,11 @@ export default {
         backgroundSize: 'cover',
         backgroundPosition: 'center'
       }
-    }
+    },
+
+    // checkFollowing(e) {
+
+    // }
   },
 
   beforeMount() {
@@ -216,7 +223,7 @@ export default {
 <style scoped>
 .reels-page {
   background-color: #000;
-  height: 100vh;
+  /* height: 100vh; */
   overflow-y: hidden;
   scroll-snap-type: y mandatory;
   width: 100%;
