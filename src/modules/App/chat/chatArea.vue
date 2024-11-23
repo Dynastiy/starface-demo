@@ -1,5 +1,5 @@
 <template>
-  <div class="h-[100vh] flex flex-col overflow-y-hidden">
+  <div class="h-screen flex flex-col overflow-y-hidden">
     <chat-header />
     <div 
       class="flex-1 overflow-y-auto h-full" 
