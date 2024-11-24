@@ -15,18 +15,18 @@
             <div class="card-wrapper">
               <img
                 class="rounded-[10px] swiper-img"
-                :src="item.imageUrl"
+                :src="item.profilePicture ? item.profilePicture : $avatar "
                 @error="$handleImageError"
                 alt="Image"
               />
               <div class="overlay">
                 <div class="flex flex-col gap-2 p-4">
                   <button class="brand-btn-md brand-outline text-white w-fit">
-                    <router-link :to="`/user/profile/${item.userId}`">
+                    <router-link :to="`/user/profile/${item._id}`">
                       View More
                     </router-link>
                   </button>
-                  <h4 class="font-semibold text-xl">{{ item.userName }}</h4>
+                  <h4 class="font-semibold text-xl text-white">{{ item.userName }}</h4>
                   <div class="flex gap-2">
                     <button
                       class="brand-btn-md brand-outline text-white"
@@ -85,10 +85,7 @@ export default {
       this.loading = true;
       try {
         const res = await this.$appImages.connect();
-        this.images = res.data.map((item) => ({
-          ...item,
-          imageUrl: item.filepaths[0],
-        }));
+        this.images = res.users
       } catch (error) {
         console.error('Error fetching images:', error);
       } finally {
@@ -141,6 +138,9 @@ export default {
     user() {
       return this.$store.getters['auth/getUser'];
     },
+    isLoggedIn() {
+      return this.$store.getters['auth/getAuthenticated']
+    }
   },
   mounted() {
     this.getConnect();

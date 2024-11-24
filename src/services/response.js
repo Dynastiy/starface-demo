@@ -1,15 +1,26 @@
 /* eslint-disable no-prototype-builtins */
-import { useToast } from "vue-toastification";
+// import { useToast } from "vue-toastification";
+// const toast = useToast();
+import $toastify from 'toastify-js'
 
-const toast = useToast();
 export const catchAxiosError = (error) => {
   if (error?.data) {
     const responseData = error.data
     // Display the main error message
     if (responseData.message) {
-      toast.error(responseData.message, {
-        timeout: 4000
-      })
+      // toast.error(responseData.message, {
+      //   timeout: 4000
+      // })
+      $toastify({
+        text: responseData.message,
+        gravity: 'top', // `top` or `bottom`
+        position: 'center', // `left`, `center` or `right`
+        style: {
+          fontSize: '13px',
+          borderRadius: '4px',
+          background: '#ff0000'
+        }
+      }).showToast()
     }
 
     // Display individual error messages
@@ -17,18 +28,38 @@ export const catchAxiosError = (error) => {
       for (const key in responseData.errors) {
         if (responseData.errors.hasOwnProperty(key)) {
           responseData.errors[key].forEach((errorMessage) => {
-            toast.error(errorMessage, {
-              timeout: 6000
-            })
+            // toast.error(errorMessage, {
+            //   timeout: 6000
+            // })
+            $toastify({
+              text: errorMessage,
+              gravity: 'top', // `top` or `bottom`
+              position: 'center', // `left`, `center` or `right`
+              style: {
+                fontSize: '13px',
+                borderRadius: '4px',
+                background: '#ff0000'
+              }
+            }).showToast()
           })
         }
       }
     }
   } else {
     // Handle generic error when no specific message is available
-    toast.error('An error occurred.', {
-      timeout: 4000
-    })
+    // toast.error('An error occurred.', {
+    //   timeout: 4000
+    // })
+    $toastify({
+      text: 'An error occurred.',
+      gravity: 'top', // `top` or `bottom`
+      position: 'center', // `left`, `center` or `right`
+      style: {
+        fontSize: '13px',
+        borderRadius: '4px',
+        background: '#ff0000'
+      }
+    }).showToast()
   }
 }
 // export const catchAxiosError = (error) => {
@@ -76,18 +107,36 @@ export const catchAxiosError = (error) => {
 // }
 
 export const catchAxiosSuccess = (res) => {
-
-    if(res?.data?.message){
-        toast.success(res.data.message, {
-            timeout: 4000,
-        });
-    }
-    if(res?.message) {
-      toast.success(res.message, {
-        timeout: 4000,
-    });
-    }
-
+  if (res?.data?.message) {
+    // toast.success(res.data.message, {
+    //     timeout: 4000,
+    // });
+    $toastify({
+      text: res.data.message,
+      gravity: 'top', // `top` or `bottom`
+      position: 'center', // `left`, `center` or `right`
+      style: {
+        fontSize: '13px',
+        borderRadius: '4px',
+        background: '#333'
+      }
+    }).showToast()
+  }
+  if (res?.message) {
+    //   toast.success(res.message, {
+    //     timeout: 4000,
+    // });
+    $toastify({
+      text: res?.message,
+      gravity: 'top', // `top` or `bottom`
+      position: 'center', // `left`, `center` or `right`
+      style: {
+        fontSize: '13px',
+        borderRadius: '4px',
+        background: '#333'
+      }
+    }).showToast()
+  }
 }
 
-export default {catchAxiosError, catchAxiosSuccess}
+export default { catchAxiosError, catchAxiosSuccess }

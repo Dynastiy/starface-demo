@@ -60,10 +60,10 @@ export default {
         }
       },
       
-
-      async getStores({name, type, page}) {
+      async like(formData, id) {
         try {
-          let res = await $request.get(`/all-shops?name=${name}&type=${type}&page=${page}`)
+          let res = await $request.post(`api/reel/reels/${id}/like`, formData)
+          catchAxiosSuccess(res.data)
           return res.data
         } catch (error) {
           catchAxiosError(error)
@@ -71,9 +71,10 @@ export default {
         }
       },
 
-      async showShop(slug) {
+      async share(id) {
         try {
-          let res = await $request.get(`show-shop/${slug}`)
+          let res = await $request.post(`api/reel/reels/${id}/share`)
+          catchAxiosSuccess(res.data)
           return res.data
         } catch (error) {
           catchAxiosError(error)
@@ -81,34 +82,6 @@ export default {
         }
       },
 
-      async findShop(id) {
-        try {
-          let res = await $request.get(`find-shop/${id}`)
-          return res.data
-        } catch (error) {
-          catchAxiosError(error)
-          throw error
-        }
-      },
-
-      async getSubCategories() {
-        try {
-          let res = await $request.get(`all-subcategories`)
-          return res.data
-        } catch (error) {
-          catchAxiosError(error)
-          throw error
-        }
-      },
-
-      async getTags() {
-        try {
-          let res = await $request.get(`all-tags`)
-          return res.data
-        } catch (error) {
-          catchAxiosError(error)
-          throw error
-        }
-      },
+      
 
 }

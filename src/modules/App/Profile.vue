@@ -59,6 +59,11 @@
           {{ `${userData.email}` }}
         </h6>
 
+        <h6 class="text-center text-[14px] capitalize text-center mb-2">
+          {{ `Status | ${userData.role}` }}
+          <span class="text-sm text-primary underline"><router-link to="/become-a-creator">Become a Creator</router-link></span>
+        </h6>
+
         <span class="flex gap-1 justify-center" v-if="userData.hasCountry">
           <i-icon icon="ic:baseline-location-on" />
           <span class="text-xs">{{ userData.countryName }}</span>

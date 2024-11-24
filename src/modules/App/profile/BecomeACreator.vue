@@ -2,12 +2,10 @@
   <div class="p-6 flex flex-col justify-between pb-[80px]">
     <div class="flex flex-col gap-4">
       <div>
-        <span class="text-xs font-medium text-gray-500">
-          Wallet Balance:
-        </span> 
+        <span class="text-xs font-medium text-gray-500"> Wallet Balance: </span>
         <span class="flex gap-1 items-center font-semibold">
           <i-icon icon="basil:wallet-solid" />
-          {{`${wallet}USDT`}}
+          {{ `${wallet}USDT` }}
         </span>
       </div>
       <span class="text-sm font-semibold">Fund your balance below with USDT</span>
@@ -26,19 +24,25 @@
         </span>
       </div>
 
-      <div>
-        <button class="brand-btn w-full brand-primary-clear"><router-link to="/become-a-creator">Earn as a creator</router-link></button>
-      </div>
-
       <div class="flex gap-3 flex-col">
-        <div>
-          <h4 class="text-sm font-medium">Subscribe to any of the plans below to start earning daily from watching videos.</h4>
-          <hr class="my-2">
-          <h6 class="text-xs text-gray-600">Each earning cycle may take 3 to 4 weeks to complete.</h6>
-        </div>
+        <h4 class="text-lg font-bold leading-tight">Become a creator to increase your earnings.</h4>
         <div>
           <label class="text-xs" for="">Select Plan</label>
-          <UpgradeFees @refreshBalance="getAllWallets" />
+          <div class="flex flex-col gap-2">
+            <div
+              v-for="(item, i) in fees"
+              :key="i"
+              class="p-4 border rounded-md w-full flex flex-col bg-white gap-1 justify-between"
+              @click="payUpgradeFees(item)"
+            >
+              <div>
+                <h2 class="font-bold text-center text-3xl">
+                  {{ `${item.USDT}` }}<span class="text-sm text-gray-400 font-medium"> USDT/{{ item.planType }}</span>
+                </h2>
+              </div>
+              <button class="brand-btn brand-primary-clear w-full">Upgrade</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -46,21 +50,28 @@
 </template>
 
 <script>
-import UpgradeFees from '@/components/Upgrade/UpgradeFees.vue'
-// import UserWallet from '@/components/utils/UserWallet.vue'
 export default {
-  components: { UpgradeFees },
   data() {
     return {
       wallet: '',
       plan: null,
       loading: false,
       requestId: '',
-      address: ""
+      address: '',
+      fees: [
+       
+      ]
     }
   },
 
   methods: {
+    // generateAddress() {
+    //   let user_id = this.user.user_id
+    //   this.$middleware.generateWalletAddress(user_id).then((res) => {
+    //     this.$store.commit('auth/setWalletAddress', res.data.address)
+    //   })
+    // },
+
     generateAddress() {
       this.loading = true
       let formData = {
@@ -71,6 +82,40 @@ export default {
         .then((res) => {
           console.log(res)
           this.address = res.Addres
+        })
+        .finally(() => {
+          this.loading = false
+        })
+    },
+
+    getSubscriptions() {
+      this.loading = true
+      this.$wallet
+        .creatorPlans()
+        .then((res) => {
+          console.log(res)
+          this.fees = res
+        })
+        .finally(() => {
+          this.loading = false
+        })
+    },
+
+    feesRetrieved(e) {
+      console.log(e)
+      this.plan = e
+    },
+
+    payUpgradeFees(e) {
+      this.loading = true
+      let payload = {
+       planType: e.planType
+      }
+      this.$wallet
+        .becomeACreator(payload)
+        .then((res) => {
+          this.getAllWallets()
+          return res
         })
         .finally(() => {
           this.loading = false
@@ -108,6 +153,7 @@ export default {
       this.generateAddress()
     }
     this.getAllWallets()
+    this.getSubscriptions()
   },
 
   mounted() {

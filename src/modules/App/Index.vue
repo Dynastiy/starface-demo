@@ -8,7 +8,6 @@
               variant="image"
               style="height: 100vh; border-radius: 10px; width: 100%"
             />
-            
           </div>
         </div>
       </template>
@@ -25,6 +24,7 @@
               loop
               muted
               autoplay
+              playsInline
             ></video>
             <img
               v-else
@@ -50,14 +50,23 @@
                       @error="$handleProfileError"
                       alt=""
                     /> -->
-                    <span class="text-sm"> <router-link :to="`/user/profile/${item.user}`"> {{ `@${item.userName}` }} </router-link> </span>
-                    <button class="brand-btn-md brand-outline text-white" @click="followAction(item)">{{ checkFollowing(item) ? "Following" : "Follow"}}</button>
+                    <span class="text-sm">
+                      <router-link :to="`/user/profile/${item.user}`">
+                        {{ `@${item.userName}` }}
+                      </router-link>
+                    </span>
+                    <button
+                      class="brand-btn-md brand-outline text-white"
+                      @click="followAction(item)"
+                    >
+                      {{ checkFollowing(item) ? 'Following' : 'Follow' }}
+                    </button>
                   </div>
                   <p class="mt-2 text-sm">{{ item.description }}</p>
                 </div>
                 <div class="reel-actions flex flex-col gap-4">
-                  <span class="flex gap-1 items-center flex-col">
-                    <i-icon class="text-[30px]" icon="icon-park-outline:like" />
+                  <span class="flex gap-1 items-center flex-col" @click="like(item)">
+                    <i-icon class="text-[30px]" :icon="checkLiked(item) ? 'icon-park-solid:like' : 'icon-park-outline:like'" />
                     <span class="text-xs">{{ item.likes }}</span>
                   </span>
                   <span class="flex gap-1 items-center flex-col" role="button">
@@ -71,7 +80,7 @@
                   <span
                     class="flex gap-1 items-center flex-col"
                     role="button"
-                    @click="triggerShare"
+                    @click="triggerShare(item)"
                   >
                     <i-icon class="text-[25px]" icon="fa6-solid:share" />
                     <span class="text-xs">{{ item?.shares }}</span>
@@ -151,8 +160,8 @@
 import walletData from '@/components/utils/walletData.vue'
 import Comments from '@/components/reels/Comments.vue'
 /* eslint-disable no-prototype-builtins */
-import { useToast } from 'vue-toastification'
-const toast = useToast()
+// import { useToast } from 'vue-toastification'
+// const toast = useToast()
 // import { useToast } from 'vue-toastification'
 export default {
   components: { walletData, Comments },
@@ -177,15 +186,19 @@ export default {
   },
 
   methods: {
-    getReels() {
-      this.loading = true
-      this.$reels.list().then((res) => {
-        console.log(res)
-        this.reels = res.reels
-      })
-      .finally(()=> {
-        this.loading = false
-      })
+    getReels(e) {
+      if(!e) {
+        this.loading = true
+      }
+      this.$reels
+        .list()
+        .then((res) => {
+          console.log(res)
+          this.reels = res.reels
+        })
+        .finally(() => {
+          this.loading = false
+        })
     },
 
     getUser() {
@@ -197,24 +210,31 @@ export default {
     },
 
     followAction(e) {
-      if (!this.checkFollowing(e))  this.follow(e);
+      if (!this.checkFollowing(e)) this.follow(e)
+      return
+    },
+
+    likeAction(e) {
+      if (!this.checkFollowing(e)) this.follow(e)
       return
     },
 
     checkFollowing(e) {
+      if (!this.isLoggedIn) {
+        return
+      }
       let following = this.user.following
-      let isFollowing = following.find(item => item == e.user )
+      let isFollowing = following.find((item) => item == e.user)
       return isFollowing
       // console.log(isFollowing)
     },
 
     follow(e) {
-      console.log(e, 'follow');
+      console.log(e, 'follow')
       let payload = {
         followId: e.user
       }
-      this.$userActivity.followFunc(payload)
-      .then((res)=> {
+      this.$userActivity.followFunc(payload).then((res) => {
         console.log(res)
         this.getUser()
       })
@@ -226,9 +246,16 @@ export default {
 
     redeem() {
       if (!this.isLoggedIn) {
-        toast.error('Login to be able claim bonus.', {
-          timeout: 4000
-        })
+        this.$toastify({
+          text: 'Login to be able claim bonus.',
+          gravity: 'top', // `top` or `bottom`
+          position: 'center', // `left`, `center` or `right`
+          style: {
+            fontSize: '13px',
+            borderRadius: '4px',
+            background: '#ff0000'
+          }
+        }).showToast()
         this.$router.push('/auth/login')
         return
       }
@@ -237,7 +264,7 @@ export default {
         .redeem()
         .then((res) => {
           this.getEarnWallet()
-          this.closeContainer()
+          
           return res
         })
         .finally(() => {
@@ -248,9 +275,20 @@ export default {
     gift(e) {
       console.log(this.isLoggedIn)
       if (!this.isLoggedIn) {
-        toast.error('Login to be able gift user.', {
-          timeout: 4000
-        })
+        this.$toastify({
+          text: 'Login to be able gift user.',
+          gravity: 'top', // `top` or `bottom`
+          position: 'center', // `left`, `center` or `right`
+          style: {
+            fontSize: '13px',
+            borderRadius: '4px',
+            background: '#ff0000'
+          }
+        }).showToast()
+        // toast.error('Login to be able gift user.', {
+        //   timeout: 4000
+        // })
+        
         this.$router.push('/auth/login')
         return
       }
@@ -282,13 +320,14 @@ export default {
       }
     },
 
-    onShareSuccess() {
-      console.log('Share was successful!')
+    onShareSuccess(e) {
+      // console.log('Share was successful!')
+      this.completeShare(e)
       // Perform additional actions like showing a success message or tracking an event
     },
 
-    triggerShare() {
-      this.onShare(this.onShareSuccess)
+    triggerShare(e) {
+      this.onShare(this.onShareSuccess(e))
     },
 
     getEarnWallet() {
@@ -303,7 +342,7 @@ export default {
 
     refresh() {
       this.getReel(this.reel._id)
-      this.getReels()
+      this.getReels('refresh')
     },
 
     getReel(id) {
@@ -323,16 +362,35 @@ export default {
     },
 
     like(e) {
-      let payload = {
-        user_id_to_connect: e.ID,
-        user_id: this.user.user_id
+      if (!this.isLoggedIn) {
+        this.$toastify({
+          text: 'Login to be able gift user.',
+          gravity: 'top', // `top` or `bottom`
+          position: 'center', // `left`, `center` or `right`
+          style: {
+            fontSize: '13px',
+            borderRadius: '4px',
+            background: '#ff0000'
+          }
+        }).showToast()
+        this.$router.push('/auth/login')
+        return
       }
-      this.$appDomain.likeMatch(payload).then((res) => {
+      let payload = {
+        action: this.checkLiked(e) ? 'unlike' : 'like'
+      }
+      this.$reels.like(payload, e._id).then((res) => {
         console.log(res)
+        this.getReels('refresh')
       })
       // .finally(() => {
       //   this.loading = false
       // })
+    },
+
+    checkLiked(e) {
+      let isUser = e.likedBy.find(item => item == this.user._id)
+      return isUser
     },
 
     timeLeft(value) {
@@ -342,16 +400,26 @@ export default {
       )
     },
 
-    next() {
-      this.filter.page_no++
-      this.getMatch()
-    },
-
-    prev() {
-      if (this.meta.current_page > 1) {
-        this.filter.page_no--
-        this.getMatch()
+    completeShare(e){
+      if (!this.isLoggedIn) {
+        this.$toastify({
+          text: 'Login to be able gift user.',
+          gravity: 'top', // `top` or `bottom`
+          position: 'center', // `left`, `center` or `right`
+          style: {
+            fontSize: '13px',
+            borderRadius: '4px',
+            background: '#ff0000'
+          }
+        }).showToast()
+        this.$router.push('/auth/login')
+        return
       }
+      this.$reels.share(e._id).then((res) => {
+        console.log(res)
+        this.getReels('refresh')
+      })
+      console.log(e)
     },
 
     // Method to display the container at a random time
@@ -364,12 +432,11 @@ export default {
 
       // Set a timeout to show the container
       this.timer = setTimeout(() => {
-        
         console.log('alert')
       }, randomTime)
     },
 
-    openContainer(){
+    openContainer() {
       this.showContainer = true
     },
 
@@ -377,14 +444,16 @@ export default {
       setTimeout(() => {
         this.openContainer() // Run the operation immediately
         // Then, schedule the repeated execution every 30 minutes (1,800,000 milliseconds)
-        setInterval(this.openContainer, 1800000)
-      }, 600000) // 10 mi
+        setInterval(this.openContainer, 600000)
+      }, 60000) // 10 mi
     },
     // Method to close the container and restart the process
     closeContainer() {
       this.showContainer = false
       this.showContainerAtRandomTime()
-    }
+    },
+
+  
   },
 
   beforeMount() {

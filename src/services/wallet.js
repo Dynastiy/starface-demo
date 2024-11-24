@@ -121,9 +121,32 @@ export default {
     }
   },
 
+  async creatorPlans(){
+    
+    try {
+      let res = await $request.get(`api/subscribe/creator-plans`)
+      // catchAxiosSuccess(res.data)
+      return res.data
+    } catch (error) {
+      catchAxiosError(error)
+      throw error
+    }
+  },
+
   async subscibeToPlan(formData){
     try {
       let res = await $request.post(`api/subscribe`, formData)
+      catchAxiosSuccess(res.data)
+      return res.data
+    } catch (error) {
+      catchAxiosError(error)
+      throw error
+    }
+  },
+
+  async becomeACreator(formData) {
+    try {
+      let res = await $request.post(`api/subscribe/become-a-creaor`, formData)
       catchAxiosSuccess(res.data)
       return res.data
     } catch (error) {

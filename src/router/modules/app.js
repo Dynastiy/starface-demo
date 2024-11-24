@@ -10,6 +10,7 @@ import Wallet from '@/modules/App/Wallet.vue'
 import ChatArea from '@/modules/App/chat/chatArea.vue'
 import Invite from '@/modules/App/Invite.vue'
 import Edit from '@/modules/App/profile/Edit.vue'
+import BecomeACreator from '@/modules/App/profile/BecomeACreator.vue'
 
 const routes = [
   {
@@ -108,6 +109,18 @@ const routes = [
       requiresAuth: false,
       parent: 'profile',
       name: 'upgrade'
+    }
+  },
+
+  {
+    path: '/become-a-creator',
+    name: 'become-a-creator',
+    component: BecomeACreator,
+    meta: {
+      layout: 'Dashboard',
+      requiresAuth: false,
+      parent: 'profile',
+      name: 'become-a-creator'
     }
   },
 

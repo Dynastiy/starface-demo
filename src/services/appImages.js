@@ -10,10 +10,34 @@ export default {
 
     async connect() {
         try {
-          let res = await $request.get(`api/images/connect-images`)
+          let res = await $request.get(`api/connect`)
           return res.data
         } catch (error) {
           catchAxiosError(error)
+          throw error
+        }
+      },
+
+      async getUser(id) {
+        try {
+          let res = await $request.get(`api/images/${id}`,)
+          // catchAxiosSuccess(res)
+          return res.data
+        } catch (error) {
+          catchAxiosError(error)
+          // return error
+          throw error
+        }
+      },
+
+      async getUserReels(id) {
+        try {
+          let res = await $request.get(`api/reel/get-reels/user/${id}`,)
+          // catchAxiosSuccess(res)
+          return res.data
+        } catch (error) {
+          catchAxiosError(error)
+          // return error
           throw error
         }
       },

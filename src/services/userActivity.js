@@ -68,6 +68,16 @@ export default {
         }
       },
 
+      async toggleUserActions(formdata){
+        try {
+          let res = await $request.post(`api/user/action`, formdata)
+          catchAxiosSuccess(res.data)
+          return res.data
+        } catch (error) {
+          catchAxiosError(error)
+          throw error
+        }
+      }
       
       
 }

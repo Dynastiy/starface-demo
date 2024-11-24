@@ -10,13 +10,19 @@
             <div class="flex items-center justify-between w-full">
               <h4 class="font-bold text-white text-xl">{{ info.userName }}</h4>
               <div class="flex items-center gap-2">
-                <button class="brand-primary brand-btn rounded-full shadow">
+                <!-- <button class="brand-primary brand-btn rounded-full shadow">
                   <i-icon icon="fontisto:close-a" class="text-xl text-white" />
-                </button>
-                <button class="brand-primary brand-btn rounded-full shadow">
+                </button> -->
+                <button
+                  @click="favouriteAction(info)"
+                  :class="[checkFavourite ? 'bg-gray-400' : 'brand-primary' , 'brand-btn rounded-full shadow']"
+                >
                   <i-icon icon="streamline:star-1-solid" class="text-xl text-white" />
                 </button>
-                <button class="brand-primary brand-btn rounded-full shadow">
+                <button
+                  @click="likeAction(info)"
+                  :class="[checkLiked ? 'bg-gray-400' : 'brand-primary' , 'brand-btn rounded-full shadow']"
+                >
                   <i-icon icon="icon-park-solid:like" class="text-xl text-white" />
                 </button>
               </div>
@@ -39,15 +45,68 @@
         <div>
           <span class="text-sm block text-gray-500">Interests</span>
           <span class="flex gap-2 flex-wrap">
-            <span class="bg-gray-100 border border-gray-200 px-2 py-1 text-xs rounded-xl" v-for="item in info.interests" :key="item">{{item}}</span>
+            <span
+              class="bg-gray-100 border border-gray-200 px-2 py-1 text-xs rounded-xl"
+              v-for="item in info.interests"
+              :key="item"
+              >{{ item }}</span
+            >
           </span>
         </div>
 
-        <div>
-          <span class="text-sm block text-gray-500">Languages</span>
-          <span class="flex gap-2 flex-wrap">
-            <span class="bg-gray-100 border border-gray-200 px-2 py-1 text-xs rounded-xl" v-for="item in ['spanish', 'english', 'german']" :key="item">{{item}}</span>
+        <div class="w-full">
+          <span class="flex mx-auto mb-3 bg-gray-200 w-fit">
+            <span
+              class="block px-3 py-2 text-[12px] capitalize font-medium"
+              role="button"
+              @click="activateTab(i)"
+              :class="{ 'brand-primary-clear text-white font-semibold': i === activeTab }"
+              v-for="(item, i) in tabs"
+              :key="i"
+            >
+              {{ item.label }}
+            </span>
           </span>
+          <div class="bg-white p-4">
+            <div class="flex gap-2 flex-col">
+              <div class="grid grid-cols-3 gap-2" v-if="activeTab == '1' || activeTab == '0'">
+                <div v-for="item in images" :key="item.id" class="relative">
+                  <img
+                    class="rounded-sm h-[80px] w-full object-cover object-center"
+                    @error="$handleImageError"
+                    :src="item.images[0].filepath"
+                    alt=""
+                  />
+                  <span
+                    class="bg-[#000] text-xs p-[4px] justify-end flex gap-1 items-center text-white block absolute bottom-0 w-full"
+                  >
+                    <i-icon icon="icon-park-solid:like" />
+                    {{ item.likes }}
+                  </span>
+                </div>
+              </div>
+              <div class="grid grid-cols-3 gap-2" v-if="activeTab == '2' || activeTab == '0'">
+                <div v-for="(item, index) in reels" :key="item.id">
+                  <video
+                    class="rounded-sm h-[80px] w-full object-cover object-center"
+                    v-if="!item.hasError"
+                    @error="handleVideoError(index)"
+                    autoplay
+                    muted
+                    :src="item?.videoUrl"
+                  ></video>
+                  <img
+                    v-else
+                    @error="$handleImageError"
+                    :src="item.thumbnailUrl"
+                    alt="Placeholder"
+                    class="h-[80px] w-full object-cover object-center"
+                  />
+                </div>
+              </div>
+            </div>
+            <!-- <component :is="tabs[activeTab].component" /> -->
+          </div>
         </div>
       </div>
     </div>
@@ -78,9 +137,29 @@ export default {
         gender: '',
         profile_picture_url: ''
       },
-   info: {},
+      info: {},
       activeTab: 0,
-      userID: this.$route.params.id
+      userID: this.$route.params.id,
+      images: [],
+      reels: [],
+      tabs: [
+        {
+          label: 'all'
+          // component: markRaw(Edit)
+        },
+        {
+          label: 'photos'
+          // component: markRaw(Edit)
+        },
+        {
+          label: 'videos'
+          // component: markRaw(Transactions)
+        }
+        // {
+        //   label: 'referral',
+        //   component: markRaw(Referral)
+        // }
+      ]
     }
   },
 
@@ -92,18 +171,100 @@ export default {
       this.$auth.getUser(this.userID).then((res) => {
         console.log(res)
         this.info = res.user
+        this.getUserImages()
+        this.getUserReels()
       })
     },
+
+    handleVideoError(index) {
+      this.reels[index].hasError = true
+    },
+
+    checkFavourite() {
+      let isUser = this.info.favouritedBy.find(item => item == this.user._id)
+      return isUser
+    },
+
+    checkLiked() {
+      let isUser = this.info.likedBy.find(item => item == this.user._id)
+      return isUser
+    },
+
+    favouriteAction(e) {
+      if (!this.isLoggedIn) {
+        this.$toastify({
+          text: 'Login to be favourite User.',
+          gravity: 'top', // `top` or `bottom`
+          position: 'center', // `left`, `center` or `right`
+          style: {
+            fontSize: '13px',
+            borderRadius: '4px',
+            background: '#ff0000'
+          }
+        }).showToast()
+        this.$router.push('/auth/login')
+        return
+      }
+      let payload = {
+        targetUserId: e._id, //like, unlike, favorite, unfavorite, follow, unfollow
+        action: this.checkFavourite ? 'unfavorite' : 'favorite'
+      }
+      this.$userActivity.toggleUserActions(payload).then(() => {
+        this.getUser()
+      })
+    },
+
+    likeAction(e) {
+      if (!this.isLoggedIn) {
+        this.$toastify({
+          text: 'Login to be like User.',
+          gravity: 'top', // `top` or `bottom`
+          position: 'center', // `left`, `center` or `right`
+          style: {
+            fontSize: '13px',
+            borderRadius: '4px',
+            background: '#ff0000'
+          }
+        }).showToast()
+        this.$router.push('/auth/login')
+        return
+      }
+      let payload = {
+        targetUserId: e._id, //like, unlike, favorite, unfavorite, follow, unfollow
+        action: this.checkLiked ? 'unlike' : 'like'
+      }
+      this.$userActivity.toggleUserActions(payload).then(() => {
+        this.getUser()
+      })
+    },
+
+    getUserImages() {
+      this.$appImages.getUser(this.userID).then((res) => {
+        console.log(res)
+        this.images = res.data
+        // this.info = res.user
+      })
+    },
+
+    getUserReels() {
+      this.$appImages.getUserReels(this.userID).then((res) => {
+        console.log(res)
+        this.reels = res.reels
+        // this.images = res.data
+        // this.info = res.user
+      })
+    },
+
     getBackgroundStyle(image) {
-      const img = new Image();
-      img.src = image;
+      const img = new Image()
+      img.src = image
 
       return {
         backgroundImage: `url('${img.complete && img.naturalWidth !== 0 ? image : this.$avatar}')`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      };
-    },
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }
+    }
   },
 
   watch: {
@@ -126,6 +287,9 @@ export default {
     },
     userMeta() {
       return this.$store.getters['auth/getUserMeta']
+    },
+    isLoggedIn() {
+      return this.$store.getters['auth/getAuthenticated']
     },
     timeLeft() {
       return (
