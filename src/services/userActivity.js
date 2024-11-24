@@ -49,7 +49,7 @@ export default {
       async followFunc(formData) {
         try {
           let res = await $request.post(`/api/activity/follow`, formData)
-          catchAxiosSuccess(res.data)
+          // catchAxiosSuccess(res.data)
           return res.data
         } catch (error) {
           catchAxiosError(error)
@@ -71,7 +71,7 @@ export default {
       async toggleUserActions(formdata){
         try {
           let res = await $request.post(`api/user/action`, formdata)
-          catchAxiosSuccess(res.data)
+          // catchAxiosSuccess(res.data)
           return res.data
         } catch (error) {
           catchAxiosError(error)

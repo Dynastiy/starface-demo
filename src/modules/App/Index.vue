@@ -22,7 +22,6 @@
               @error="handleVideoError(index)"
               :src="item.videoUrl"
               loop
-              muted
               autoplay
               playsInline
             ></video>
@@ -71,7 +70,7 @@
                 <div class="reel-actions flex flex-col gap-4">
                   <span class="flex gap-1 items-center flex-col" @click="like(item)">
                     <i-icon
-                      class="text-[30px]"
+                      :class="[checkLiked(item) ? 'text-red-500' : '', 'text-[30px]']"
                       :icon="checkLiked(item) ? 'icon-park-solid:like' : 'icon-park-outline:like'"
                     />
                     <span class="text-xs">{{ item.likes }}</span>
@@ -131,7 +130,7 @@
           <img
             role="button"
             @click.once="redeem"
-            src="@/assets/img/icons/coin_claim.png"
+            src="@/assets/img/icons/claim.svg"
             alt=""
             :class="isLoading ? 'heartbeat' : 'fadeIn'"
           />

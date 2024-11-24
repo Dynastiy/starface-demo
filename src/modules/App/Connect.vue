@@ -1,8 +1,20 @@
 <template>
   <div class="reels-page p-4">
-    <!-- <div class="bg-white">
-      Hello World. this is the space for search
-    </div> -->
+    <div
+      class="input-field bg-white mb-4 w-full border-neutral-500 rounded-md border-[2px] w-full gap-2 items-center"
+    >
+      <span class="password-iccon">
+        <i-icon icon="ph:magnifying-glass" class="form-icon" />
+      </span>
+      <input
+        type="text"
+        name="search"
+        id="search"
+        @keyup="updateUrl"
+        v-model="search"
+        placeholder="Search Users"
+      />
+    </div>
     <el-skeleton :loading="loading" animated>
       <template #template>
         <div class="flex flex-col w-full gap-4">
@@ -15,7 +27,7 @@
             <div class="card-wrapper">
               <img
                 class="rounded-[10px] swiper-img"
-                :src="item.profilePicture ? item.profilePicture : $avatar"
+                :src="item.profilePicture || $avatar"
                 @error="$handleImageError"
                 alt="Image"
               />
@@ -57,6 +69,7 @@ import { Swiper, SwiperSlide } from 'swiper/vue'
 import 'swiper/css'
 import 'swiper/css/effect-cards'
 import { EffectCards } from 'swiper/modules'
+import { debounce } from 'lodash'
 // import StarIcon from '@/components/UI/StarIcon.vue';
 
 export default {
@@ -69,14 +82,23 @@ export default {
     return {
       loading: true,
       images: [],
-      EffectCards
+      EffectCards,
+      search: ''
     }
   },
   methods: {
+    updateUrl: debounce(function () {
+      this.$router.push({ query: { search: this.search } })
+      this.getConnect('refresh')
+    }, 500),
+
     async getConnect(value) {
       if (!value) this.loading = true
+      let payload = {
+        search: this.search
+      }
       try {
-        const res = await this.$appImages.connect()
+        const res = await this.$appImages.connect(payload)
         this.images = res.users
       } catch (error) {
         console.error('Error fetching images:', error)
@@ -109,7 +131,6 @@ export default {
         console.log(res)
         this.$router.push(`chat/message/${res._id}?uid=${e._id}`)
       })
-      // http://localhost:5173/chat/message/6741ea01be0c5fe2c3ecb0f2?uid=6719073ad1f3a149b460412e
     },
 
     followAction(e) {
@@ -136,12 +157,27 @@ export default {
       return this.user.following.includes(item._id)
     }
   },
+
+  watch: {
+    queryParams: {
+      immediate: true, // Ensure it runs on component mount
+      handler(newQuery) {
+        this.search = newQuery || ''
+        this.getConnect('refresh') // Fetch data based on the query
+      }
+    }
+  },
+
   computed: {
     user() {
       return this.$store.getters['auth/getUser']
     },
     isLoggedIn() {
       return this.$store.getters['auth/getAuthenticated']
+    },
+
+    queryParams() {
+      return this.$route.query.search
     }
   },
   mounted() {

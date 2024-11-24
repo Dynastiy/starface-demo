@@ -63,7 +63,7 @@ export default {
       async like(formData, id) {
         try {
           let res = await $request.post(`api/reel/reels/${id}/like`, formData)
-          catchAxiosSuccess(res.data)
+          // catchAxiosSuccess(res.data)
           return res.data
         } catch (error) {
           catchAxiosError(error)
@@ -74,7 +74,7 @@ export default {
       async share(id) {
         try {
           let res = await $request.post(`api/reel/reels/${id}/share`)
-          catchAxiosSuccess(res.data)
+          // catchAxiosSuccess(res.data)
           return res.data
         } catch (error) {
           catchAxiosError(error)
