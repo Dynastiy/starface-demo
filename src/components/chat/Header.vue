@@ -5,8 +5,8 @@
     </span>
     <div class="flex gap-2 items-center">
       <img
-        class="h-[35px] w-[35px] rounded-full ring ring-[#fff]"
-        :src="info.profilePicture"
+        class="h-[35px] w-[35px] rounded-full object-cover object-top ring ring-[#fff]"
+        :src="info.profilePicture ? info.profilePicture : $avatar"
         @error="$handleProfileError"
         alt=""
       />

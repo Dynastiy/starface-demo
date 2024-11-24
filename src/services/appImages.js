@@ -8,9 +8,9 @@ import { catchAxiosError } from './response'
 
 export default {
 
-    async connect() {
+    async connect(params) {
         try {
-          let res = await $request.get(`api/connect`)
+          let res = await $request.get(`api/connect`, {params})
           return res.data
         } catch (error) {
           catchAxiosError(error)

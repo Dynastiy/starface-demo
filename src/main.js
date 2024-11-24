@@ -61,6 +61,10 @@ app.component('vForm', Form)
 app.component('vField', Field)
 app.component('ErrorMessage', ErrorMessage)
 
+import VueSelect  from "vue-select";
+app.component("vSelect", VueSelect)
+import "vue-select/dist/vue-select.css";
+
 import Vue3FormWizard from 'vue3-form-wizard'
 import 'vue3-form-wizard/dist/style.css'
 app.use(Vue3FormWizard)

@@ -284,3 +284,46 @@ form label, .form label {
 .p-inputwrapper-focus, .p-focus {
     border: 1px solid var(--gray-500) !important;
 }
+
+/* V-SELECT STYLES */
+.vs__dropdown-toggle {
+  background: var(---gray-100) !important;
+  border: 1px solid var(---gray-500) !important;
+  min-height: 40px ;
+  color: #333 !important;
+  font-size: 14px !important;
+  font-weight: 500;
+}
+
+.vs__dropdown-menu {
+  font-size: 14px;
+  color: #333 !important;
+  text-transform: capitalize;
+  min-width: 20px !important;
+}
+
+.vs--single .vs__selected{
+  font-size: 14px;
+  color: #333 !important;
+}
+
+.vs__search::placeholder{
+  font-size: 14px;
+  color: #BDBDBD !important;
+}
+
+.vs__search {
+  font-size:14px !important;
+  color: #333 !important;
+}
+
+.vs__search:focus {
+  font-size:14px !important;
+  color: #333 !important;
+}
+
+.vs__selected {
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: capitalize;
+}

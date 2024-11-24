@@ -6,10 +6,7 @@
     <el-skeleton :loading="loading" animated>
       <template #template>
         <div class="flex flex-col w-full gap-4">
-          <el-skeleton-item
-            variant="image"
-            class="skeleton-slide"
-          />
+          <el-skeleton-item variant="image" class="skeleton-slide" />
         </div>
       </template>
       <template #default>
@@ -18,36 +15,28 @@
             <div class="card-wrapper">
               <img
                 class="rounded-[10px] swiper-img"
-                :src="item.profilePicture ? item.profilePicture : $avatar "
+                :src="item.profilePicture ? item.profilePicture : $avatar"
                 @error="$handleImageError"
                 alt="Image"
               />
               <div class="overlay">
                 <div class="flex flex-col gap-2 p-4">
                   <button class="brand-btn-md brand-outline text-white w-fit">
-                    <router-link :to="`/user/profile/${item._id}`">
-                      View More
-                    </router-link>
+                    <router-link :to="`/user/profile/${item._id}`"> View More </router-link>
                   </button>
                   <h4 class="font-semibold text-xl text-white">{{ item.userName }}</h4>
                   <div class="flex gap-2">
-                    <button
-                      class="brand-btn-md brand-outline text-white"
-                      @click="likeImage(item)"
-                    >
-                    {{ checkLiked(item) ? "Unlike" : "like" }}
+                    <button class="brand-btn-md brand-outline text-white" @click="likeImage(item)">
+                      {{ checkLiked(item) ? 'Unlike' : 'like' }}
                     </button>
-                    <button
-                      class="brand-btn-md brand-outline text-white"
-                      @click="startChat(item)"
-                    >
+                    <button class="brand-btn-md brand-outline text-white" @click="startChat(item)">
                       Chat
                     </button>
                     <button
                       class="brand-btn-md brand-outline text-white"
                       @click="followAction(item)"
                     >
-                      {{ checkFollowing(item) ? "Unfollow" : "Follow" }}
+                      {{ checkFollowing(item) ? 'Unfollow' : 'Follow' }}
                     </button>
                   </div>
                 </div>
@@ -64,16 +53,16 @@
 </template>
 
 <script>
-import { Swiper, SwiperSlide } from 'swiper/vue';
-import 'swiper/css';
-import 'swiper/css/effect-cards';
-import { EffectCards } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import 'swiper/css'
+import 'swiper/css/effect-cards'
+import { EffectCards } from 'swiper/modules'
 // import StarIcon from '@/components/UI/StarIcon.vue';
 
 export default {
   components: {
     Swiper,
-    SwiperSlide,
+    SwiperSlide
     // StarIcon,
   },
   data() {
@@ -81,23 +70,23 @@ export default {
       loading: true,
       images: [],
       EffectCards
-    };
+    }
   },
   methods: {
     async getConnect(value) {
-      if (!value) this.loading = true;
+      if (!value) this.loading = true
       try {
-        const res = await this.$appImages.connect();
+        const res = await this.$appImages.connect()
         this.images = res.users
       } catch (error) {
-        console.error('Error fetching images:', error);
+        console.error('Error fetching images:', error)
       } finally {
-        this.loading = false;
+        this.loading = false
       }
     },
 
     checkLiked(e) {
-      return e.following.includes(this.user._id);
+      return e.following.includes(this.user._id)
     },
 
     likeImage(e) {
@@ -109,6 +98,18 @@ export default {
         this.getUser()
         this.getConnect('value')
       })
+    },
+
+    startChat(e) {
+      let payload = {
+        userId: this.user._id,
+        recipientId: e._id
+      }
+      this.$chat.startChat(payload).then((res) => {
+        console.log(res)
+        this.$router.push(`chat/message/${res._id}?uid=${e._id}`)
+      })
+      // http://localhost:5173/chat/message/6741ea01be0c5fe2c3ecb0f2?uid=6719073ad1f3a149b460412e
     },
 
     followAction(e) {
@@ -124,29 +125,29 @@ export default {
 
     async getUser() {
       try {
-        const res = await this.$auth.getUser(this.user._id);
-        this.$store.commit('auth/setUser', res.user);
+        const res = await this.$auth.getUser(this.user._id)
+        this.$store.commit('auth/setUser', res.user)
       } catch (error) {
-        console.error('Error fetching user:', error);
+        console.error('Error fetching user:', error)
       }
     },
 
     checkFollowing(item) {
-      return this.user.following.includes(item._id);
-    },
+      return this.user.following.includes(item._id)
+    }
   },
   computed: {
     user() {
-      return this.$store.getters['auth/getUser'];
+      return this.$store.getters['auth/getUser']
     },
     isLoggedIn() {
       return this.$store.getters['auth/getAuthenticated']
     }
   },
   mounted() {
-    this.getConnect();
-  },
-};
+    this.getConnect()
+  }
+}
 </script>
 
 <style scoped>
