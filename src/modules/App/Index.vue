@@ -198,16 +198,14 @@ export default {
       if (!e) {
         this.loading = true
       }
-      this.$reels
-        .list()
-        .then((res) => {
-          console.table(res)
-          this.reels = res.reels
-          this.fetchUser()
-        })
-        // .finally(() => {
-        //   this.loading = false
-        // })
+      this.$reels.list().then((res) => {
+        console.table(res)
+        this.reels = res.reels
+        this.fetchUser()
+      })
+      // .finally(() => {
+      //   this.loading = false
+      // })
     },
 
     getUser() {
@@ -273,7 +271,7 @@ export default {
         .redeem()
         .then((res) => {
           this.getEarnWallet()
-
+          this.showContainer = false
           return res
         })
         .finally(() => {
