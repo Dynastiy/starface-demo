@@ -33,9 +33,9 @@ export default {
       // catchAxiosSuccess(res)
       return res.data
     } catch (error) {
-      catchAxiosError(error)
-      // return error
-      throw error
+      // catchAxiosError(error)
+      return error
+      // throw error
     }
   },
 

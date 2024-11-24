@@ -1,5 +1,8 @@
 <template>
   <div class="reels-page p-4">
+    <!-- <div class="bg-white">
+      Hello World. this is the space for search
+    </div> -->
     <el-skeleton :loading="loading" animated>
       <template #template>
         <div class="flex flex-col w-full gap-4">
@@ -48,9 +51,9 @@
                     </button>
                   </div>
                 </div>
-                <button class="brand-primary brand-btn rounded-full shadow">
+                <!-- <button class="brand-primary brand-btn rounded-full shadow">
                   <star-icon />
-                </button>
+                </button> -->
               </div>
             </div>
           </swiper-slide>
@@ -65,13 +68,13 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
 import 'swiper/css/effect-cards';
 import { EffectCards } from 'swiper/modules';
-import StarIcon from '@/components/UI/StarIcon.vue';
+// import StarIcon from '@/components/UI/StarIcon.vue';
 
 export default {
   components: {
     Swiper,
     SwiperSlide,
-    StarIcon,
+    // StarIcon,
   },
   data() {
     return {

@@ -39,8 +39,12 @@
                 <div>
                   <div class="user-info flex gap-2 items-center">
                     <img
-                      class="h-[35px] w-[35px] rounded-full ring ring-[#fff]"
-                      :src="item.avartar ? item.avartar : $avatar"
+                      class="h-[35px] w-[35px] rounded-full object-cover object-top ring ring-[#fff]"
+                      :src="
+                        item.user && userInfo[item.user].profilePicture
+                          ? userInfo[item.user].profilePicture
+                          : $avatar
+                      "
                       @error="$handleProfileError"
                       alt=""
                     />
@@ -66,7 +70,10 @@
                 </div>
                 <div class="reel-actions flex flex-col gap-4">
                   <span class="flex gap-1 items-center flex-col" @click="like(item)">
-                    <i-icon class="text-[30px]" :icon="checkLiked(item) ? 'icon-park-solid:like' : 'icon-park-outline:like'" />
+                    <i-icon
+                      class="text-[30px]"
+                      :icon="checkLiked(item) ? 'icon-park-solid:like' : 'icon-park-outline:like'"
+                    />
                     <span class="text-xs">{{ item.likes }}</span>
                   </span>
                   <span class="flex gap-1 items-center flex-col" role="button">
@@ -181,24 +188,26 @@ export default {
       comments: [],
       reel: {},
       starBalance: 0,
-      isLoading: false
+      isLoading: false,
+      userInfo: {}
     }
   },
 
   methods: {
     getReels(e) {
-      if(!e) {
+      if (!e) {
         this.loading = true
       }
       this.$reels
         .list()
         .then((res) => {
-          console.log(res)
+          console.table(res)
           this.reels = res.reels
+          this.fetchUser()
         })
-        .finally(() => {
-          this.loading = false
-        })
+        // .finally(() => {
+        //   this.loading = false
+        // })
     },
 
     getUser() {
@@ -264,7 +273,7 @@ export default {
         .redeem()
         .then((res) => {
           this.getEarnWallet()
-          
+
           return res
         })
         .finally(() => {
@@ -288,7 +297,7 @@ export default {
         // toast.error('Login to be able gift user.', {
         //   timeout: 4000
         // })
-        
+
         this.$router.push('/auth/login')
         return
       }
@@ -389,8 +398,37 @@ export default {
     },
 
     checkLiked(e) {
-      let isUser = e.likedBy.find(item => item == this.user._id)
+      let isUser = e.likedBy.find((item) => item == this.user._id)
       return isUser
+    },
+
+    async fetchUser() {
+      // this.loading = true;
+      // this.error = null;
+
+      // Create an array of Axios requests
+      const requests = this.reels
+        .filter((item) => item.user)
+        .map((item) => {
+          return this.$auth
+            .getUser(`${item.user}`)
+            .then((response) => {
+              this.userInfo[item.user] = response.user
+            })
+            .catch((err) => {
+              // this.error = 'An error occurred while fetching reviewer data.';
+              console.log(err)
+            })
+        })
+
+      // Wait for all requests to complete
+      try {
+        await Promise.all(requests)
+      } catch (err) {
+        this.error = 'An error occurred while fetching reviewer data.'
+      } finally {
+        this.loading = false
+      }
     },
 
     timeLeft(value) {
@@ -400,7 +438,7 @@ export default {
       )
     },
 
-    completeShare(e){
+    completeShare(e) {
       if (!this.isLoggedIn) {
         this.$toastify({
           text: 'Login to be able gift user.',
@@ -451,9 +489,7 @@ export default {
     closeContainer() {
       this.showContainer = false
       this.showContainerAtRandomTime()
-    },
-
-  
+    }
   },
 
   beforeMount() {
