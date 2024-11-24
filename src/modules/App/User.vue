@@ -181,11 +181,17 @@ export default {
     },
 
     checkFavourite() {
+      if (!this.isLoggedIn) {
+        return
+      }
       let isUser = this.info.favouritedBy.find(item => item == this.user._id)
       return isUser
     },
 
     checkLiked() {
+      if (!this.isLoggedIn) {
+        return
+      }
       let isUser = this.info.likedBy.find(item => item == this.user._id)
       return isUser
     },
@@ -193,7 +199,7 @@ export default {
     favouriteAction(e) {
       if (!this.isLoggedIn) {
         this.$toastify({
-          text: 'Login to be favourite User.',
+          text: 'Login to continue.',
           gravity: 'top', // `top` or `bottom`
           position: 'center', // `left`, `center` or `right`
           style: {
@@ -217,7 +223,7 @@ export default {
     likeAction(e) {
       if (!this.isLoggedIn) {
         this.$toastify({
-          text: 'Login to be like User.',
+          text: 'Login to continue.',
           gravity: 'top', // `top` or `bottom`
           position: 'center', // `left`, `center` or `right`
           style: {

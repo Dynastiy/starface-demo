@@ -370,7 +370,7 @@ export default {
     like(e) {
       if (!this.isLoggedIn) {
         this.$toastify({
-          text: 'Login to be able gift user.',
+          text: 'Login to like reel.',
           gravity: 'top', // `top` or `bottom`
           position: 'center', // `left`, `center` or `right`
           style: {
@@ -395,6 +395,9 @@ export default {
     },
 
     checkLiked(e) {
+      if (!this.isLoggedIn) {
+        return
+      }
       let isUser = e.likedBy.find((item) => item == this.user._id)
       return isUser
     },

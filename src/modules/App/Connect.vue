@@ -108,10 +108,27 @@ export default {
     },
 
     checkLiked(e) {
+      if (!this.isLoggedIn) {
+        return
+      }
       return e.following.includes(this.user._id)
     },
 
     likeImage(e) {
+      if (!this.isLoggedIn) {
+        this.$toastify({
+          text: 'Login to continue.',
+          gravity: 'top', // `top` or `bottom`
+          position: 'center', // `left`, `center` or `right`
+          style: {
+            fontSize: '13px',
+            borderRadius: '4px',
+            background: '#ff0000'
+          }
+        }).showToast()
+        this.$router.push('/auth/login')
+        return
+      }
       let payload = {
         targetUserId: e._id, //like, unlike, favorite, unfavorite, follow, unfollow
         action: this.checkLiked(e) ? 'unlike' : 'like'
@@ -123,6 +140,20 @@ export default {
     },
 
     startChat(e) {
+      if (!this.isLoggedIn) {
+        this.$toastify({
+          text: 'Login to continue.',
+          gravity: 'top', // `top` or `bottom`
+          position: 'center', // `left`, `center` or `right`
+          style: {
+            fontSize: '13px',
+            borderRadius: '4px',
+            background: '#ff0000'
+          }
+        }).showToast()
+        this.$router.push('/auth/login')
+        return
+      }
       let payload = {
         userId: this.user._id,
         recipientId: e._id
@@ -134,6 +165,20 @@ export default {
     },
 
     followAction(e) {
+      if (!this.isLoggedIn) {
+        this.$toastify({
+          text: 'Login to continue.',
+          gravity: 'top', // `top` or `bottom`
+          position: 'center', // `left`, `center` or `right`
+          style: {
+            fontSize: '13px',
+            borderRadius: '4px',
+            background: '#ff0000'
+          }
+        }).showToast()
+        this.$router.push('/auth/login')
+        return
+      }
       let payload = {
         targetUserId: e._id, //like, unlike, favorite, unfavorite, follow, unfollow
         action: this.checkFollowing(e) ? 'unfollow' : 'follow'
@@ -154,6 +199,9 @@ export default {
     },
 
     checkFollowing(item) {
+      if (!this.isLoggedIn) {
+        return
+      }
       return this.user.following.includes(item._id)
     }
   },
