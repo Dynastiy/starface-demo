@@ -32,7 +32,7 @@
                       class="brand-btn-md brand-outline text-white"
                       @click="likeImage(item)"
                     >
-                      Like
+                    {{ checkLiked(item) ? "Unlike" : "like" }}
                     </button>
                     <button
                       class="brand-btn-md brand-outline text-white"
@@ -44,7 +44,7 @@
                       class="brand-btn-md brand-outline text-white"
                       @click="followAction(item)"
                     >
-                      {{ checkFollowing(item) ? "Following" : "Follow" }}
+                      {{ checkFollowing(item) ? "Unfollow" : "Follow" }}
                     </button>
                   </div>
                 </div>
@@ -81,8 +81,8 @@ export default {
     };
   },
   methods: {
-    async getConnect() {
-      this.loading = true;
+    async getConnect(value) {
+      if (!value) this.loading = true;
       try {
         const res = await this.$appImages.connect();
         this.images = res.users
@@ -92,36 +92,33 @@ export default {
         this.loading = false;
       }
     },
-    likeImage(image) {
-      this.$userActivity.likeImage(image.imageId).then((res) => {
-        console.log('Image liked:', res);
-      });
+
+    checkLiked(e) {
+      return e.following.includes(this.user._id);
     },
-    async followAction(item) {
-      if (this.checkFollowing(item)) {
-        await this.unfollow(item);
-      } else {
-        await this.follow(item);
+
+    likeImage(e) {
+      let payload = {
+        targetUserId: e._id, //like, unlike, favorite, unfavorite, follow, unfollow
+        action: this.checkLiked(e) ? 'unlike' : 'like'
       }
+      this.$userActivity.toggleUserActions(payload).then(() => {
+        this.getUser()
+        this.getConnect('value')
+      })
     },
-    async follow(item) {
-      try {
-        await this.$userActivity.followFunc({ followId: item.userId });
-        console.log('Followed:', item.userId);
-        await this.getUser();
-      } catch (error) {
-        console.error('Error following:', error);
+
+    followAction(e) {
+      let payload = {
+        targetUserId: e._id, //like, unlike, favorite, unfavorite, follow, unfollow
+        action: this.checkFollowing(e) ? 'unfollow' : 'follow'
       }
+      this.$userActivity.toggleUserActions(payload).then(() => {
+        this.getUser()
+        this.getConnect('value')
+      })
     },
-    async unfollow(item) {
-      try {
-        await this.$userActivity.unfollowfollowFunc({ unfollowId: item.userId });
-        console.log('Unfollowed:', item.userId);
-        await this.getUser();
-      } catch (error) {
-        console.error('Error unfollowing:', error);
-      }
-    },
+
     async getUser() {
       try {
         const res = await this.$auth.getUser(this.user._id);
@@ -130,8 +127,9 @@ export default {
         console.error('Error fetching user:', error);
       }
     },
+
     checkFollowing(item) {
-      return this.user.following.includes(item.userId);
+      return this.user.following.includes(item._id);
     },
   },
   computed: {
