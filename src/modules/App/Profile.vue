@@ -143,7 +143,6 @@
                 class="rounded-sm h-[80px] w-full object-cover object-center"
                 v-if="!item.hasError"
                 @error="handleVideoError(index)"
-                autoplay
                 muted
                 :src="item?.videoUrl"
               ></video>

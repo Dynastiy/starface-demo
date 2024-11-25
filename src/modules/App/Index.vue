@@ -14,6 +14,7 @@
       <template #default>
         <div>
           <wallet-data class="z-2" :starBalance="starBalance" />
+
           <!-- <wallet-data -->
           <div class="reel-container h-[100dvh]" v-for="(item, index) in reels" :key="index">
             <video
@@ -22,8 +23,9 @@
               @error="handleVideoError(index)"
               :src="item.videoUrl"
               loop
-              autoplay
               playsInline
+              :ref="`video-${index}`"
+              preload="auto"
             ></video>
             <img
               v-else
@@ -32,6 +34,14 @@
               alt="Placeholder"
               class="reel-video"
             />
+            <div class="absolute text-white toggleMute">
+              <button @click="toggleMute(index)">
+                <i-icon
+                  :icon="item.muted ? 'fluent:speaker-off-16-filled' : 'fluent:speaker-2-32-filled'"
+                />
+              </button>
+              <!-- {{ item.muted ? 'Unmute' : 'Mute' }} -->
+            </div>
             <!-- <img v-else src="@/assets/img/video.jpg" alt="Placeholder" class="reel-video" /> -->
             <div class="inner-content">
               <div class="reel-section">
@@ -39,11 +49,7 @@
                   <div class="user-info flex gap-2 items-center">
                     <img
                       class="h-[35px] w-[35px] rounded-full object-cover object-top ring ring-[#fff]"
-                      :src="
-                        item.user && userInfo[item.user].profilePicture
-                          ? userInfo[item.user].profilePicture
-                          : $avatar
-                      "
+                      :src="userInfo[item.user]?.profilePicture || $avatar"
                       @error="$handleProfileError"
                       alt=""
                     />
@@ -188,7 +194,11 @@ export default {
       reel: {},
       starBalance: 0,
       isLoading: false,
-      userInfo: {}
+      userInfo: {},
+      observer: null,
+      videoElements: [],
+      videoElement: null,
+      isMuted: false
     }
   },
 
@@ -198,13 +208,24 @@ export default {
         this.loading = true
       }
       this.$reels.list().then((res) => {
-        console.table(res)
-        this.reels = res.reels
+        // console.table(res)
+        // this.reels = [{muted: true, ...res.reels}]
+        this.reels = res.reels.map((item) => ({
+          ...item,
+          muted: true // Default state: videos are muted
+        }))
         this.fetchUser()
       })
-      // .finally(() => {
-      //   this.loading = false
-      // })
+    },
+
+    toggleMute(index) {
+      const video = this.$refs[`video-${index}`][0] // Access video element
+      if (video) {
+        this.reels[index].muted = !this.reels[index].muted
+        video.muted = this.reels[index].muted
+      } else {
+        console.error(`Video element for index ${index} not found`)
+      }
     },
 
     getUser() {
@@ -342,7 +363,7 @@ export default {
       }
       this.$wallet.earnWallet().then((res) => {
         console.log(res)
-        this.starBalance = res.star.balance
+        this.starBalance = res.star
       })
     },
 
@@ -362,7 +383,6 @@ export default {
     viewMore(e, value) {
       this.visibleBottom = true
       this.actionable = e
-      console.log(value)
       this.getReel(value._id)
       // this.comments = value
     },
@@ -427,15 +447,47 @@ export default {
       } catch (err) {
         this.error = 'An error occurred while fetching reviewer data.'
       } finally {
+        // Add event listeners for scroll and visibility
+        window.addEventListener('scroll', this.handlePlayback)
+        document.addEventListener('visibilitychange', this.handleVisibilityChange)
+        this.$nextTick(() => {
+          this.handlePlayback() // Initial playback check
+        })
         this.loading = false
       }
     },
 
-    timeLeft(value) {
-      return (
-        value.subscription_fee_expiration_time_of_last_payment -
-        value.subscription_fee_transaction_time_of_last_payment
-      )
+    handlePlayback() {
+      this.reels.forEach((item, index) => {
+        const video = this.$refs[`video-${index}`]
+        console.log(video)
+        if (video) {
+          const rect = video[0].getBoundingClientRect()
+          const isVisible = rect.top >= 0 && rect.bottom <= window.innerHeight
+          if (isVisible) {
+            video[0]
+              .play()
+              .catch((error) => console.warn(`Playback failed for video-${index}:`, error))
+          } else {
+            video[0].pause()
+            video[0].muted = true
+          }
+        }
+      })
+    },
+
+    handleVisibilityChange() {
+      if (document.visibilityState === 'visible') {
+        this.handlePlayback() // Play videos if the page is visible
+      } else {
+        this.reels.forEach((item, index) => {
+          let video = this.$refs[`video-${index}`] && this.$refs[`video-${index}`][0]
+          if (video) {
+            video.pause() // Pause the video when the page is not visible
+            video.muted = true // Optionally mute the video
+          }
+        })
+      }
     },
 
     completeShare(e) {
@@ -500,11 +552,20 @@ export default {
   mounted() {
     // Start the process when the component is mounted
     this.showContainerModified()
+
+    this.$nextTick(() => {
+      this.handlePlayback()
+      window.addEventListener('scroll', this.handlePlayback)
+      document.addEventListener('visibilitychange', this.handleVisibilityChange)
+    })
   },
 
   beforeUnmount() {
     // Clear the timer when the component is destroyed
     clearTimeout(this.timer)
+
+    window.removeEventListener('scroll', this.handlePlayback)
+    document.removeEventListener('visibilitychange', this.handleVisibilityChange)
   },
 
   computed: {
@@ -519,6 +580,12 @@ export default {
 </script>
 
 <style scoped>
+.toggleMute {
+  z-index: 99999999999;
+  top: 20px;
+  right: 20px;
+}
+
 .reels-page {
   background-color: #000;
   /* height: 100; */
