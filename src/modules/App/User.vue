@@ -10,15 +10,15 @@
             <div class="flex items-center justify-between w-full">
               <h4 class="font-bold text-white text-xl">{{ info.userName }}</h4>
               <div class="flex items-center gap-2">
-                <!-- <button class="brand-primary brand-btn rounded-full shadow">
-                  <i-icon icon="fontisto:close-a" class="text-xl text-white" />
-                </button> -->
-                <button
+                <button class="brand-primary brand-btn rounded-full shadow" @click="startChat">
+                  <i-icon icon="majesticons:chat" class="text-xl text-white" />
+                </button>
+                <!-- <button
                   @click="favouriteAction(info)"
                   :class="[checkFavourite ? 'bg-gray-400' : 'brand-primary' , 'brand-btn rounded-full shadow']"
                 >
                   <i-icon icon="streamline:star-1-solid" class="text-xl text-white" />
-                </button>
+                </button> -->
                 <button
                   @click="likeAction(info)"
                   :class="[checkLiked ? 'bg-gray-400' : 'brand-primary' , 'brand-btn rounded-full shadow']"
@@ -194,6 +194,31 @@ export default {
       }
       let isUser = this.info.likedBy.find(item => item == this.user._id)
       return isUser
+    },
+
+    startChat() {
+      if (!this.isLoggedIn) {
+        this.$toastify({
+          text: 'Login to continue.',
+          gravity: 'top', // `top` or `bottom`
+          position: 'center', // `left`, `center` or `right`
+          style: {
+            fontSize: '13px',
+            borderRadius: '4px',
+            background: '#ff0000'
+          }
+        }).showToast()
+        this.$router.push('/auth/login')
+        return
+      }
+      let payload = {
+        userId: this.user._id,
+        recipientId: this.info._id
+      }
+      this.$chat.startChat(payload).then((res) => {
+        // console.log(res)
+        this.$router.push(`chat/message/${res._id}?uid=${this.info._id}`)
+      })
     },
 
     favouriteAction(e) {

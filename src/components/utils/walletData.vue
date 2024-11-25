@@ -3,17 +3,17 @@
     <span class="flex gap-3 items-center font-medium p-1 rounded-md">
       <router-link to="/wallet" class="flex items-center">
         <img src="@/assets/img/icons/blue-starface.png" class="w-8" alt="" />
-        <span class="text-[14px] text-white font-medium">{{ balance.balance }}</span>
+        <span class="text-[14px] text-white font-medium">{{ balance.balance || 0 }}</span>
       </router-link>
 
       <router-link to="/wallet" class="flex items-center">
         <img src="@/assets/img/icons/yellow-starface.png" class="w-8" />
-        <span class="text-[14px] text-white font-medium">{{ $convertToDollar(balance.balance) }}</span>
+        <span class="text-[14px] text-white font-medium">{{ $convertToDollar(balance.balance)  }}</span>
       </router-link>
 
       <router-link to="/wallet" class="flex items-center gap-1">
         <span class="text-white">DEMO:</span>
-        <span class="text-[14px] text-white font-medium">{{ balance.demoStarBalance }}</span>
+        <span class="text-[14px] text-white font-medium">{{ balance.demoStarBalance || 0 }}</span>
       </router-link>
     </span>
   </div>

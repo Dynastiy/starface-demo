@@ -22,7 +22,7 @@
         </div>
       </template>
       <template #default>
-        <swiper :modules="[EffectCards]" effect="cards" grabCursor>
+        <swiper :modules="modules" :navigation="true">
           <swiper-slide v-for="(item, i) in images" :key="i">
             <div class="card-wrapper">
               <img
@@ -67,8 +67,10 @@
 <script>
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import 'swiper/css'
-import 'swiper/css/effect-cards'
-import { EffectCards } from 'swiper/modules'
+import 'swiper/css/navigation';
+// import { EffectCards } from 'swiper/modules'
+  // import required modules
+  import { Navigation } from 'swiper/modules';
 import { debounce } from 'lodash'
 // import StarIcon from '@/components/UI/StarIcon.vue';
 
@@ -82,7 +84,7 @@ export default {
     return {
       loading: true,
       images: [],
-      EffectCards,
+      modules: [Navigation],
       search: ''
     }
   },
