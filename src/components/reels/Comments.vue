@@ -18,9 +18,8 @@
       </div>
       <div v-for="comment in comments" :key="comment.id" class="flex gap-2">
         <img
-          v-if="Object.keys(user).length > 0"
           class="h-[30px] w-[30px] rounded-full ring ring-[#fff]"
-          :src="user[comment.user].profilePicture"
+          :src="comment.avartar"
           @error="$handleProfileError"
           alt=""
         />
@@ -94,14 +93,14 @@ export default {
   },
 
   beforeMount() {
-    this.fetchUser()
+    // this.fetchUser()
   },
 
   watch: {
     items: {
       handler(val) {
         this.comments = val
-        this.fetchUser()
+        // this.fetchUser()
       },
       immediate: true
     }

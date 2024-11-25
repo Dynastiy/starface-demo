@@ -49,7 +49,7 @@
                   <div class="user-info flex gap-2 items-center">
                     <img
                       class="h-[35px] w-[35px] rounded-full object-cover object-top ring ring-[#fff]"
-                      :src="userInfo[item.user]?.profilePicture || $avatar"
+                      :src="item.avartar || $avatar"
                       @error="$handleProfileError"
                       alt=""
                     />
@@ -68,7 +68,7 @@
                       class="brand-btn-md brand-outline text-white"
                       @click="followAction(item)"
                     >
-                      {{ checkFollowing(item) ? 'Following' : 'Follow' }}
+                      {{ checkFollowing(item) ? 'Unfollow' : 'Follow' }}
                     </button>
                   </div>
                   <p class="mt-2 text-sm">{{ item.description }}</p>
@@ -192,7 +192,7 @@ export default {
       actionable: null,
       comments: [],
       reel: {},
-      starBalance: 0,
+      starBalance: {},
       isLoading: false,
       userInfo: {},
       observer: null,
@@ -207,15 +207,23 @@ export default {
       if (!e) {
         this.loading = true
       }
-      this.$reels.list().then((res) => {
-        // console.table(res)
-        // this.reels = [{muted: true, ...res.reels}]
-        this.reels = res.reels.map((item) => ({
-          ...item,
-          muted: true // Default state: videos are muted
-        }))
-        this.fetchUser()
-      })
+      this.$reels
+        .list()
+        .then((res) => {
+          this.reels = res.reels.map((item) => ({
+            ...item,
+            muted: true // Default state: videos are muted
+          }))
+          // this.fetchUser()
+        })
+        .finally(() => {
+          window.addEventListener('scroll', this.handlePlayback)
+          document.addEventListener('visibilitychange', this.handleVisibilityChange)
+          this.$nextTick(() => {
+            this.handlePlayback() // Initial playback check
+          })
+          this.loading = false
+        })
     },
 
     toggleMute(index) {
@@ -236,11 +244,6 @@ export default {
       })
     },
 
-    followAction(e) {
-      if (!this.checkFollowing(e)) this.follow(e)
-      return
-    },
-
     likeAction(e) {
       if (!this.checkFollowing(e)) this.follow(e)
       return
@@ -253,16 +256,14 @@ export default {
       let following = this.user.following
       let isFollowing = following.find((item) => item == e.user)
       return isFollowing
-      // console.log(isFollowing)
     },
 
-    follow(e) {
-      console.log(e, 'follow')
+    followAction(e) {
       let payload = {
-        followId: e.user
+        targetUserId: e.user, //like, unlike, favorite, unfavorite, follow, unfollow
+        action: this.checkFollowing(e) ? 'unfollow' : 'follow'
       }
-      this.$userActivity.followFunc(payload).then((res) => {
-        console.log(res)
+      this.$userActivity.toggleUserActions(payload).then(() => {
         this.getUser()
       })
     },

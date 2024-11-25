@@ -40,6 +40,7 @@ export function handleProfileError() {
 
 export function convertToDollar(value) {
   const RATE = 10
-  return `$ ${value/RATE}`
+  if(!value) return 0
+  return `$ ${(value/RATE).toFixed(2)}`
 }
 
