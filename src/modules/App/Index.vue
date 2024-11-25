@@ -214,14 +214,13 @@ export default {
             ...item,
             muted: true // Default state: videos are muted
           }))
-          // this.fetchUser()
-        })
-        .finally(() => {
           window.addEventListener('scroll', this.handlePlayback)
           document.addEventListener('visibilitychange', this.handleVisibilityChange)
           this.$nextTick(() => {
             this.handlePlayback() // Initial playback check
           })
+        })
+        .finally(() => {
           this.loading = false
         })
     },
@@ -410,9 +409,7 @@ export default {
         console.log(res)
         this.getReels('refresh')
       })
-      // .finally(() => {
-      //   this.loading = false
-      // })
+     
     },
 
     checkLiked(e) {
@@ -421,41 +418,6 @@ export default {
       }
       let isUser = e.likedBy.find((item) => item == this.user._id)
       return isUser
-    },
-
-    async fetchUser() {
-      // this.loading = true;
-      // this.error = null;
-
-      // Create an array of Axios requests
-      const requests = this.reels
-        .filter((item) => item.user)
-        .map((item) => {
-          return this.$auth
-            .getUser(`${item.user}`)
-            .then((response) => {
-              this.userInfo[item.user] = response.user
-            })
-            .catch((err) => {
-              // this.error = 'An error occurred while fetching reviewer data.';
-              console.log(err)
-            })
-        })
-
-      // Wait for all requests to complete
-      try {
-        await Promise.all(requests)
-      } catch (err) {
-        this.error = 'An error occurred while fetching reviewer data.'
-      } finally {
-        // Add event listeners for scroll and visibility
-        window.addEventListener('scroll', this.handlePlayback)
-        document.addEventListener('visibilitychange', this.handleVisibilityChange)
-        this.$nextTick(() => {
-          this.handlePlayback() // Initial playback check
-        })
-        this.loading = false
-      }
     },
 
     handlePlayback() {
@@ -554,11 +516,11 @@ export default {
     // Start the process when the component is mounted
     this.showContainerModified()
 
-    this.$nextTick(() => {
-      this.handlePlayback()
-      window.addEventListener('scroll', this.handlePlayback)
-      document.addEventListener('visibilitychange', this.handleVisibilityChange)
-    })
+    // this.$nextTick(() => {
+    //   this.handlePlayback()
+    //   window.addEventListener('scroll', this.handlePlayback)
+    //   document.addEventListener('visibilitychange', this.handleVisibilityChange)
+    // })
   },
 
   beforeUnmount() {

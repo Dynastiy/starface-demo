@@ -217,7 +217,7 @@ export default {
       }
       this.$chat.startChat(payload).then((res) => {
         // console.log(res)
-        this.$router.push(`chat/message/${res._id}?uid=${this.info._id}`)
+        this.$router.push(`/chat/message/${res._id}?uid=${this.info._id}`)
       })
     },
 
