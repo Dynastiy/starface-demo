@@ -31,27 +31,25 @@
         </template>
       </vSelect>
       <div>
-        <h4 class="font-semibold">Message Requests</h4>
-        <div class="flex gap-3 overflow-y-scroll">
-          <div v-if="unreadMessages.length == 0"  class="flex flex-col w-full gap-1 items-center">
+        <h4 class="font-semibold">Message Requests <span class="text-xs font-semibold text-primary">{{ `(${unreadMessages.length})` }}</span></h4>
+        <div class="flex gap-3 overflow-x-scroll mt-3">
+          <div v-if="unreadMessages.length == 0" class="flex flex-col w-full gap-1 items-center">
             <i-icon icon="lucide:messages-square" class="text-4xl" />
             <span class="text-xl font-semibold">No Pending Message Requests!</span>
           </div>
-          <div
-            v-for="item in unreadMessages"
-            :key="item"
-            class="flex flex-col overflow-x-scroll items-center"
-          >
-            <span @click="updateStatus(item)" role="button" class="w-fit relative">
+          <div v-for="item in unreadMessages" :key="item" class="flex flex-col items-center w-full">
+            <span
+              @click="item.sender.senderId !== userID ? updateStatus(item) : ''"
+              role="button"
+              class="w-fit relative flex items-center flex-col gap-1"
+            >
               <img
                 class="h-[42px] w-[42px] rounded-full"
-                :src="getOtherUser(item).profilePicture || $avatar"
+                :src="item.user.profilePicture || $avatar"
                 @error="$handleProfileError"
                 alt=""
               />
-              <span class="text-xs text-gray-500 capitalize">{{
-                getOtherUser(item).userName
-              }}</span>
+              <span class="text-[10px] block leading-tight text-gray-500 capitalize text-center">{{ item.user.userName || "Starface User" }}</span>
             </span>
           </div>
         </div>
@@ -63,18 +61,18 @@
       <div class="flex flex-col gap-4 mt-2">
         <div class="bg-white p-2 rounded-md" v-for="item in messages" :key="item">
           <router-link
-            :to="`/chat/message/${item._id}?uid=${getOtherUser(item)._id}`"
+            :to="`/chat/message/${item._id}?uid=${item.user.receiverId}`"
             class="flex justify-between"
           >
             <span class="flex gap-2 items-center">
               <img
                 class="h-[42px] w-[42px] rounded-full"
-                :src="getOtherUser(item).profilePicture || $avatar"
+                :src="item.user.profilePicture || $avatar"
                 @error="$handleProfileError"
                 alt=""
               />
               <span>
-                <h5 class="font-semibold text-md capitalize">{{ getOtherUser(item).userName }}</h5>
+                <h5 class="font-semibold text-md capitalize">{{ item.user.userName || "Starface User" }}</h5>
                 <h6 class="text-xs" v-if="item.lastMessage">
                   {{ (item.lastMessage.sender == userID ? 'You: ' : '') + item.lastMessage.text }}
                 </h6>
@@ -87,8 +85,8 @@
         </div>
         <div v-if="messages.length == 0" class="flex flex-col gap-1 items-center">
           <i-icon icon="lucide:messages-square" class="text-4xl" />
-          <span class="text-xl font-semibold">No messages yet!</span>
-          <span>Search for a user and send your first message</span>
+          <span class="text-xl font-semibold">No Messages yet!</span>
+          <span class="text-sm">Search for a user and send your first message</span>
         </div>
       </div>
     </div>
@@ -113,8 +111,21 @@ export default {
       this.$chat
         .conversations()
         .then((res) => {
-          this.unreadMessages = res.filter((item) => item.status == 'pending')
-          this.messages = res.filter((item) => item.status === 'accepted')
+          let messages = []
+          res.forEach((item) => {
+            let messageData = {
+              ...item,
+              user:
+                item.sender == null
+                  ? {}
+                  : item.sender.senderId == this.userID
+                    ? item.receiver
+                    : item.sender
+            }
+            messages.push(messageData)
+          })
+          this.unreadMessages = messages.filter((item) => item.status == 'pending')
+          this.messages = messages.filter((item) => item.status == 'accepted')
         })
         .finally(() => {
           this.loading = false
@@ -135,7 +146,6 @@ export default {
       } finally {
         loading(false)
       }
-      //  ... do some asynchronous stuff!
     },
 
     setSelected(e) {
@@ -156,7 +166,7 @@ export default {
             background: '#333'
           }
         }).showToast()
-        return 
+        return
         // this.$router.push(`chat/message/${res._id}?uid=${e._id}`)
       })
     },
