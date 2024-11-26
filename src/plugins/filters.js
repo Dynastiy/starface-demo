@@ -34,6 +34,11 @@ export function handleImageError(event) {
     event.target.src = placeholder;
 }
 
+export function handleFallbackError(event) {
+  // Handle the error, e.g., set a default image or log the error
+  event.target.src = placeholder;
+}
+
 export function handleProfileError() {
   event.target.src = image;
 }

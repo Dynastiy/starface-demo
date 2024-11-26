@@ -61,7 +61,9 @@
 
         <h6 class="text-center text-[14px] capitalize text-center mb-2">
           {{ `Status | ${userData.role}` }}
-          <span class="text-sm text-primary underline"><router-link to="/become-a-creator">Become a Creator</router-link></span>
+          <span class="text-sm text-primary underline"
+            ><router-link to="/become-a-creator">Become a Creator</router-link></span
+          >
         </h6>
 
         <span class="flex gap-1 justify-center" v-if="userData.hasCountry">
@@ -90,7 +92,7 @@
             <span class="text-xs">{{ followers }} Followers</span>
           </span>
         </div>
-        <div class="flex gap-4 mt-4 w-full">
+        <div class="flex gap-3 mt-4 w-full">
           <button
             class="brand-btn brand-primary-clear py-2 text-xs w-full"
             @click="$router.push('/wallet')"
@@ -103,6 +105,13 @@
           >
             Invite Friends
           </button>
+          <a
+            class="w-full"
+            target="_blank"
+            href="https://pancakeswap.finance/?inputCurrency=0x55d398326f99059fF775485246999027B3197955&outputCurrency=0x6AC86549e40edc13EC8A884756Afa019942EE92b"
+          >
+            <button class="brand-btn brand-primary-clear py-2 text-xs">Trade Starface</button>
+          </a>
         </div>
       </div>
     </div>
@@ -123,17 +132,18 @@
       <div class="bg-white p-4">
         <div class="flex gap-2 flex-col">
           <div class="grid grid-cols-3 gap-2" v-if="activeTab == '1' || activeTab == '0'">
-            <div v-for="item in posts.images"
-            :key="item.id" class="relative">
+            <div v-for="item in posts.images" :key="item.id" class="relative">
               <img
                 class="rounded-sm h-[80px] w-full object-cover object-center"
                 @error="$handleImageError"
                 :src="item.filepaths[0]"
                 alt=""
               />
-              <span class="bg-[#000] text-xs p-[4px] justify-end flex gap-1 items-center text-white block absolute bottom-0 w-full">
+              <span
+                class="bg-[#000] text-xs p-[4px] justify-end flex gap-1 items-center text-white block absolute bottom-0 w-full"
+              >
                 <i-icon icon="icon-park-solid:like" />
-                {{item.likes}}
+                {{ item.likes }}
               </span>
             </div>
           </div>

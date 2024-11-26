@@ -1,4 +1,4 @@
-import Home from '@/modules/App/Index.vue'
+// import Home from '@/modules/App/Index.vue'
 import Claim from '@/modules/App/Claim.vue'
 import Upgrade from '@/modules/App/Upgrade.vue'
 import Profile from '@/modules/App/Profile.vue'
@@ -11,12 +11,14 @@ import ChatArea from '@/modules/App/chat/chatArea.vue'
 import Invite from '@/modules/App/Invite.vue'
 import Edit from '@/modules/App/profile/Edit.vue'
 import BecomeACreator from '@/modules/App/profile/BecomeACreator.vue'
+import Reels from '@/modules/App/Reels.vue'
 
 const routes = [
   {
     path: '/',
     name: 'feeds',
-    component: Home,
+    // component: Home,
+    component: Reels,
     meta: {
       layout: 'Dashboard',
       requiresAuth: false,

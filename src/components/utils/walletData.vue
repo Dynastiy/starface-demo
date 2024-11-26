@@ -55,13 +55,4 @@ export default {
 </script>
 
 <style>
-.wallet-data {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  /* right: 10px; */
-  z-index: 99;
-  background-color: #00000080;
-  border-radius: 4px;
-}
 </style>

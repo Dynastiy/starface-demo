@@ -17,8 +17,11 @@
     </div>
     <el-skeleton :loading="loading" animated>
       <template #template>
-        <div class="flex flex-col w-full gap-4">
-          <el-skeleton-item variant="image" class="skeleton-slide" />
+        <div
+          v-if="loading"
+          class="!bg-[#191819] h-[100dvh] absolute inset-0 flex items-center justify-center"
+        >
+          <img src="@/assets/animation/load.gif" alt="" />
         </div>
       </template>
       <template #default>
@@ -67,10 +70,10 @@
 <script>
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import 'swiper/css'
-import 'swiper/css/navigation';
+import 'swiper/css/navigation'
 // import { EffectCards } from 'swiper/modules'
-  // import required modules
-  import { Navigation } from 'swiper/modules';
+// import required modules
+import { Navigation } from 'swiper/modules'
 import { debounce } from 'lodash'
 // import StarIcon from '@/components/UI/StarIcon.vue';
 
@@ -171,7 +174,7 @@ export default {
             background: '#333'
           }
         }).showToast()
-        return 
+        return
         // console.log(res)
         // this.$router.push(`chat/message/${res._id}?uid=${e._id}`)
       })

@@ -16,6 +16,13 @@
           </button>
         </div>
       </div>
+      <div v-if="comments.length == 0">
+        <div class="flex justify-center">
+          <i-icon icon="ant-design:comment-outlined" class="text-[55px]" />
+        </div>
+        <h4 class="font-semibold text-center">No comments yet</h4>
+        <h6 class="text-xs text-center">Be the first to comment</h6>
+      </div>
       <div v-for="comment in comments" :key="comment.id" class="flex gap-2">
         <img
           class="h-[30px] w-[30px] rounded-full ring ring-[#fff]"
@@ -24,7 +31,11 @@
           alt=""
         />
         <span class="p-2 bg-gray-50 block w-full rounded-lg">
-          <h6 class="text-xs font-semibold"><router-link :to="`/user/profile/${comment.user}`"> {{ comment.userName }} </router-link> </h6>
+          <h6 class="text-xs font-semibold">
+            <router-link :to="`/user/profile/${comment.user}`">
+              {{ comment.userName }}
+            </router-link>
+          </h6>
           <p class="text-xs">{{ comment.comment }}</p>
         </span>
       </div>
@@ -48,36 +59,6 @@ export default {
   },
 
   methods: {
-    async fetchUser() {
-      // this.loading = true;
-      // this.error = null;
-
-      // Create an array of Axios requests
-      const requests = this.items.map((item) => {
-        console.log(item)
-        return this.$auth
-          .getUser(`${item.user}`)
-          .then((response) => {
-            console.log(response, 'testing')
-            // this.$set(this.reviewers, item.user_id, response.user);
-            this.user[item.user] = response.user
-          })
-          .catch((err) => {
-            // this.error = 'An error occurred while fetching reviewer data.';
-            console.log(err)
-          })
-      })
-
-      // Wait for all requests to complete
-      try {
-        await Promise.all(requests)
-      } catch (err) {
-        this.error = 'An error occurred while fetching reviewer data.'
-      } finally {
-        this.loading = false
-      }
-    },
-
     sendComment() {
       let payload = {
         userId: this.userID,
@@ -86,7 +67,7 @@ export default {
       console.log(payload)
       this.$reels.comment(payload, this.reel._id).then((res) => {
         console.log(res)
-        this.$emit('refresh')
+        this.$emit('refreshReel', this.reel._id)
         this.content = ''
       })
     }
