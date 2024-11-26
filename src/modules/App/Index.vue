@@ -2,13 +2,14 @@
   <div class="reels-page h-[100dvh]">
     <el-skeleton style="width: 100%" :loading="loading" animated>
       <template #template>
-        <div class="">
-          <div class="flex flex-col w-full gap-4">
+        <div class="bg-[#191819] h-[100dvh] flex items-center justify-center w-full">
+          <img class="" src="@/assets/animation/load.gif" alt="">
+          <!-- <div class="flex flex-col w-full gap-4">
             <el-skeleton-item
               variant="image"
               style="height: 100vh; border-radius: 10px; width: 100%"
             />
-          </div>
+          </div> -->
         </div>
       </template>
       <template #default>
