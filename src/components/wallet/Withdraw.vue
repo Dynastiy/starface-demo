@@ -4,8 +4,8 @@
       <h3 class="lg:text-2xl text-center md:text-2xl text-xl font-bold mb-0">
         WITHDRAW YOUR ASSET
       </h3>
-      <span class="text-[15px] block font-regular text-gray2 text-center"
-        >Please ensure you input the right USDT (BEP20) wallet address.</span
+      <span class="text-[15px] block font-regular text-gray-400 text-center"
+        >Please ensure you input the right starface coin wallet address.</span
       >
     </div>
 
@@ -24,7 +24,7 @@
         </div>
       </div>
 
-      <div class="text-center mt-12">
+      <div class="text-center mt-8">
         <button
           class="brand-btn w-full flex justify-center items-center gap-2"
           :disabled="isLoading || !meta.valid"
@@ -40,6 +40,18 @@
           <span v-else>Withdraw </span>
         </button>
       </div>
+
+      <span class="text-[15px] block font-semibold text-gray2 mt-5 text-center"
+        >* Add Starfacecoin (SFC) to your trust wallet using contract address
+        <span
+          v-clipboard:copy="walletAddress"
+          role="button"
+          v-clipboard:success="onCopy"
+          v-clipboard:error="onError"
+          class="underline text-primary font-semibold"
+          >{{ walletAddress }}</span
+        >, then proceed to withdraw.</span
+      >
     </vForm>
   </div>
 </template>
@@ -58,7 +70,8 @@ export default {
     return {
       typePassword: true,
       isLoading: false,
-      validationErrors: {}
+      validationErrors: {},
+      walletAddress: '0x6AC86549e40edc13EC8A884756Afa019942EE92b'
     }
   },
 
@@ -108,6 +121,23 @@ export default {
         .finally(() => {
           this.isLoading = false
         })
+    },
+
+    onCopy: function () {
+      this.$toastify({
+        text: `Copied`,
+        gravity: 'top', // `top` or `bottom`
+        position: 'center', // `left`, `center` or `right`
+        style: {
+          fontSize: '13px',
+          borderRadius: '4px',
+          background: '#333'
+        }
+      }).showToast()
+    },
+
+    onError: function () {
+      alert('Failed to copy texts')
     }
   },
 

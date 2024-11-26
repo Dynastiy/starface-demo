@@ -14,7 +14,11 @@
       <template #default>
         <div>
           <wallet-data class="z-2" :starBalance="starBalance" />
-
+          <div class="absolute right-[20px] z-20 top-[30%]">
+            <a href="https://faq.starface.chat" target="_blank" class=" shadow bg-white block p-2 rounded-full">
+              <i-icon icon="emojione-v1:spiral-notepad" class="text-xl" />
+            </a>
+          </div>
           <!-- <wallet-data -->
           <div class="reel-container h-[100dvh]" v-for="(item, index) in reels" :key="index">
             <video

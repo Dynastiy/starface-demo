@@ -1,9 +1,6 @@
 <template>
   <div class="p-4">
     <div>
-      <!-- <div>
-        {{ user }}
-      </div> -->
       <div
         class="flex lg:flex-row md:flex-row flex-col justify-between lg:items-end md:items-end gap-4"
       >
@@ -20,7 +17,7 @@
             </div>
 
             <button
-            v-if="user.demo"
+              v-if="user.demo"
               class="brand-btn bg-red-600 text-white wiggle text-xs py-[8px] rounded-full flex items-center gap-1 justify-center"
               @click="$router.push('/upgrade')"
             >
@@ -45,7 +42,9 @@
         <div class="flex lg:w-fit md:w-fit w-full gap-2">
           <button
             role="button"
-            :class="['border w-full whitespace-nowrap bg-gray-100 flex flex-col items-center gap-1 rounded-[5px] px-1 py-[5px] text-[11px] capitalize font-sembold']"
+            :class="[
+              'border w-full whitespace-nowrap bg-gray-100 flex flex-col items-center gap-1 rounded-[5px] px-1 py-[5px] text-[11px] capitalize font-sembold'
+            ]"
             v-for="item in actions"
             :disabled="isDemoAccount(item)"
             :key="item.label"
@@ -53,13 +52,20 @@
           >
             <i-icon
               :icon="item.icon"
-              :class="[' block rounded-full text-xl p-[2px]', isDemoAccount(item) ? 'text-gray-600 bg-gray-400' : ' bg-primary text-white']"
+              :class="[
+                ' block rounded-full text-xl p-[2px]',
+                isDemoAccount(item) ? 'text-gray-600 bg-gray-400' : ' bg-primary text-white'
+              ]"
             />
-            <span :class="['text-[9px]', isDemoAccount(item) ? 'text-gray-400' : '']">{{ item.label.split('_').join(' ') }}</span></button
-          >
+            <span :class="['text-[9px]', isDemoAccount(item) ? 'text-gray-400' : '']">{{
+              item.label.split('_').join(' ')
+            }}</span>
+          </button>
         </div>
         <div v-if="user.demo">
-          <span class="text-red-500 block text-[11px] font-medium">*Please, upgrade account to activate withdrawal</span>
+          <span class="text-red-500 block text-[11px] font-medium"
+            >*Please, upgrade account to activate withdrawal</span
+          >
         </div>
       </div>
     </div>
@@ -97,7 +103,7 @@ export default {
       this.$emit('actionClick', item)
     },
 
-    isDemoAccount(item){
+    isDemoAccount(item) {
       let isDemo = this.user.demo && item.label == 'withdraw'
       return isDemo
     },
@@ -121,8 +127,7 @@ export default {
   computed: {
     user() {
       return this.$store.getters['auth/getUser']
-    },
-   
+    }
   }
 }
 </script>

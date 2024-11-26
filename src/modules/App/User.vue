@@ -21,7 +21,10 @@
                 </button> -->
                 <button
                   @click="likeAction(info)"
-                  :class="[checkLiked ? 'bg-gray-400' : 'brand-primary' , 'brand-btn rounded-full shadow']"
+                  :class="[
+                    checkLiked ? 'bg-gray-400' : 'brand-primary',
+                    'brand-btn rounded-full shadow'
+                  ]"
                 >
                   <i-icon icon="icon-park-solid:like" class="text-xl text-white" />
                 </button>
@@ -184,7 +187,7 @@ export default {
       if (!this.isLoggedIn) {
         return
       }
-      let isUser = this.info.favouritedBy.find(item => item == this.user._id)
+      let isUser = this.info.favouritedBy.find((item) => item == this.user._id)
       return isUser
     },
 
@@ -192,7 +195,7 @@ export default {
       if (!this.isLoggedIn) {
         return
       }
-      let isUser = this.info.likedBy.find(item => item == this.user._id)
+      let isUser = this.info.likedBy.find((item) => item == this.user._id)
       return isUser
     },
 
@@ -215,9 +218,20 @@ export default {
         userId: this.user._id,
         recipientId: this.info._id
       }
-      this.$chat.startChat(payload).then((res) => {
+      this.$chat.startChat(payload).then(() => {
+        this.$toastify({
+          text: 'Chat request sent, Pending approval.',
+          gravity: 'top', // `top` or `bottom`
+          position: 'center', // `left`, `center` or `right`
+          style: {
+            fontSize: '13px',
+            borderRadius: '4px',
+            background: '#333'
+          }
+        }).showToast()
+        return
         // console.log(res)
-        this.$router.push(`/chat/message/${res._id}?uid=${this.info._id}`)
+        // this.$router.push(`/chat/message/${res._id}?uid=${this.info._id}`)
       })
     },
 

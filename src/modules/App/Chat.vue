@@ -31,7 +31,7 @@
         </template>
       </vSelect>
       <div>
-        <h4 class="font-semibold">Chat Request</h4>
+        <h4 class="font-semibold">Message Requests</h4>
         <div class="flex gap-3 overflow-y-scroll">
           <div v-if="unreadMessages.length == 0"  class="flex flex-col w-full gap-1 items-center">
             <i-icon icon="lucide:messages-square" class="text-4xl" />
@@ -42,10 +42,10 @@
             :key="item"
             class="flex flex-col overflow-x-scroll items-center"
           >
-            <span @click="readMessage(item)" role="button" class="w-fit relative">
+            <span @click="updateStatus(item)" role="button" class="w-fit relative">
               <img
                 class="h-[42px] w-[42px] rounded-full"
-                :src="getOtherUser(item).profilePicture"
+                :src="getOtherUser(item).profilePicture || $avatar"
                 @error="$handleProfileError"
                 alt=""
               />
@@ -69,7 +69,7 @@
             <span class="flex gap-2 items-center">
               <img
                 class="h-[42px] w-[42px] rounded-full"
-                :src="getOtherUser(item).profilePicture"
+                :src="getOtherUser(item).profilePicture || $avatar"
                 @error="$handleProfileError"
                 alt=""
               />
@@ -113,8 +113,8 @@ export default {
       this.$chat
         .conversations()
         .then((res) => {
-          this.unreadMessages = res.filter((item) => item.readStatus == 'unread')
-          this.messages = res.filter((item) => item.readStatus !== 'unread')
+          this.unreadMessages = res.filter((item) => item.status == 'pending')
+          this.messages = res.filter((item) => item.status === 'accepted')
         })
         .finally(() => {
           this.loading = false
@@ -144,9 +144,20 @@ export default {
         userId: this.userID,
         recipientId: e._id
       }
-      this.$chat.startChat(payload).then((res) => {
-        console.log(res)
-        this.$router.push(`chat/message/${res._id}?uid=${e._id}`)
+      this.$chat.startChat(payload).then(() => {
+        // console.log(res)
+        this.$toastify({
+          text: 'Chat request sent, Pending approval.',
+          gravity: 'top', // `top` or `bottom`
+          position: 'center', // `left`, `center` or `right`
+          style: {
+            fontSize: '13px',
+            borderRadius: '4px',
+            background: '#333'
+          }
+        }).showToast()
+        return 
+        // this.$router.push(`chat/message/${res._id}?uid=${e._id}`)
       })
     },
 
@@ -155,6 +166,15 @@ export default {
         userId: this.userID
       }
       this.$chat.readChat(payload, item._id).then(() => {
+        this.$router.push(`/chat/message/${item._id}?uid=${this.getOtherUser(item)._id}`)
+      })
+    },
+
+    updateStatus(item) {
+      let payload = {
+        status: 'accepted'
+      }
+      this.$chat.updateStatus(payload, item._id).then(() => {
         this.$router.push(`/chat/message/${item._id}?uid=${this.getOtherUser(item)._id}`)
       })
     },

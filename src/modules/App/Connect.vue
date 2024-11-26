@@ -160,9 +160,20 @@ export default {
         userId: this.user._id,
         recipientId: e._id
       }
-      this.$chat.startChat(payload).then((res) => {
-        console.log(res)
-        this.$router.push(`chat/message/${res._id}?uid=${e._id}`)
+      this.$chat.startChat(payload).then(() => {
+        this.$toastify({
+          text: 'Chat request sent, Pending approval.',
+          gravity: 'top', // `top` or `bottom`
+          position: 'center', // `left`, `center` or `right`
+          style: {
+            fontSize: '13px',
+            borderRadius: '4px',
+            background: '#333'
+          }
+        }).showToast()
+        return 
+        // console.log(res)
+        // this.$router.push(`chat/message/${res._id}?uid=${e._id}`)
       })
     },
 

@@ -56,5 +56,15 @@ export default {
     }
   },
 
+  async updateStatus(formdata, id){
+    try {
+      let res = await $request.post(`api/chat/startConversation/status/${id}`, formdata)
+      return res.data
+    } catch (error) {
+      catchAxiosError(error)
+      throw error
+    }
+  }
+
   
 }

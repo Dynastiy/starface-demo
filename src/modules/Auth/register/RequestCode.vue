@@ -21,6 +21,11 @@
           <label for="">Referral Code</label>
           <vField v-model="ref" name="referralCode" class="input" type="text"> </vField>
         </div>
+
+        <div>
+          <label class="block leading-tight" for="">By registering, you have agreed to our <a target="_blank" href="https://termsandcondition.starface.chat" class="text-primary underline">terms and conditions</a></label>
+          <!-- <vField v-model="ref" name="referralCode" class="input" type="text"> </vField> -->
+        </div>
       </div>
 
       <div class="text-center mt-12">

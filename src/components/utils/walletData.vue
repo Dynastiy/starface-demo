@@ -1,20 +1,23 @@
 <template>
-  <div class="wallet-data w-fit ">
+  <div class="wallet-data w-fit">
+    <!-- {{user}} -->
     <span class="flex gap-3 items-center font-medium p-1 rounded-md">
       <router-link to="/wallet" class="flex items-center">
         <img src="@/assets/img/icons/blue-starface.png" class="w-8" alt="" />
-        <span class="text-[14px] text-white font-medium">{{ balance.balance || 0 }}</span>
+        <span class="text-[14px] text-white font-medium">{{ !isLoggedIn ? 0 : user.demo ? balance.demoStarBalance : balance.balance }}</span>
       </router-link>
 
       <router-link to="/wallet" class="flex items-center">
         <img src="@/assets/img/icons/yellow-starface.png" class="w-8" />
-        <span class="text-[14px] text-white font-medium">{{ $convertToDollar(balance.balance)  }}</span>
+        <span class="text-[14px] text-white font-medium">{{
+          $convertToDollar(user.demo ? balance.demoStarBalance : balance.balance)
+        }}</span>
       </router-link>
 
-      <router-link to="/wallet" class="flex items-center gap-1">
+      <!-- <router-link to="/wallet" class="flex items-center gap-1">
         <span class="text-white">DEMO:</span>
         <span class="text-[14px] text-white font-medium">{{ balance.demoStarBalance || 0 }}</span>
-      </router-link>
+      </router-link> -->
     </span>
   </div>
 </template>
@@ -29,6 +32,7 @@ export default {
       balance: {}
     }
   },
+
   watch: {
     starBalance: {
       handler(val) {
@@ -36,6 +40,16 @@ export default {
       },
       immediate: true
     }
+  },
+
+  computed: {
+    user() {
+      return this.$store.getters['auth/getUser']
+    },
+
+    isLoggedIn() {
+      return this.$store.getters['auth/getAuthenticated']
+    },
   }
 }
 </script>
@@ -48,6 +62,6 @@ export default {
   /* right: 10px; */
   z-index: 99;
   background-color: #00000080;
-  border-radius: 4px
+  border-radius: 4px;
 }
 </style>
