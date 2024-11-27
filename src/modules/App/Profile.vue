@@ -209,7 +209,7 @@
             :src="item.filepaths[0]"
             alt=""
           />
-          {{ item }}
+          <!-- {{ item }} -->
           <div v-if="type == 'video'">
             <h5 class="font-semibold text-sm capitalize">title</h5>
             <h6>{{ item.title }}</h6>
