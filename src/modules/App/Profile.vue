@@ -134,6 +134,7 @@
           <div class="grid grid-cols-3 gap-2" v-if="activeTab == '1' || activeTab == '0'">
             <div v-for="item in posts.images" :key="item.id" class="relative">
               <img
+                @click="view('image', item)"
                 class="rounded-sm h-[80px] w-full object-cover object-center"
                 @error="$handleImageError"
                 :src="item.filepaths[0]"
@@ -150,6 +151,7 @@
           <div class="grid grid-cols-3 gap-2" v-if="activeTab == '2' || activeTab == '0'">
             <div v-for="(item, index) in posts.reels" :key="item.id">
               <video
+                @click="view('video', item)"
                 class="rounded-sm h-[80px] w-full object-cover object-center"
                 v-if="!item.hasError"
                 @error="handleVideoError(index)"
@@ -158,6 +160,7 @@
               ></video>
               <img
                 v-else
+                @click="view('video', item)"
                 @error="$handleImageError"
                 :src="item.thumbnailUrl"
                 alt="Placeholder"
@@ -169,6 +172,58 @@
         <!-- <component :is="tabs[activeTab].component" /> -->
       </div>
     </div>
+
+    <vDialog
+      v-model:visible="showContainer"
+      modal
+      :style="{ width: '80%' }"
+      @hide="closeContainer"
+      @after-hide="closeContainer"
+      :showHeader="false"
+      unstyled
+      :pt="{
+        root: 'border-none',
+        mask: {
+          style: 'backdrop-filter: blur(4px)'
+        }
+      }"
+    >
+      <div class="bg-white p-4 rounded-lg">
+        <div class="flex justify-between mb-2">
+          <h4 class="font-semibold text-lg">Preview</h4>
+          <span class="text-red-500 text-sm underline" @click="closeContainer">Close</span>
+        </div>
+        <div class="flex flex-col gap-3 w-full">
+          <video
+            @error="handleVideoError(index)"
+            v-if="type == 'video'"
+            muted
+            class="rounded-sm h-[250px] w-[100%] object-cover object-center"
+            :src="item?.videoUrl"
+            controls
+          ></video>
+          <img
+            v-if="type == 'image'"
+            class="rounded-sm h-[250px] w-full object-cover object-center"
+            @error="$handleImageError"
+            :src="item.filepaths[0]"
+            alt=""
+          />
+          {{ item }}
+          <div v-if="type == 'video'">
+            <h5 class="font-semibold text-sm capitalize">title</h5>
+            <h6>{{ item.title }}</h6>
+          </div>
+          <div>
+            <h5 class="font-semibold text-sm capitalize">description</h5>
+            <p>{{ item.description }}</p>
+          </div>
+          <div class="w-full">
+            <button @click="deleteRecord" class="brand-btn bg-red-500 w-full text-white">Delete</button>
+          </div>
+        </div>
+      </div>
+    </vDialog>
   </div>
 </template>
 
@@ -220,11 +275,78 @@ export default {
       followers: 0,
       following: 0,
       isUploading: false,
-      posts: {}
+      posts: {},
+      showContainer: false,
+      type: null,
+      item: {}
     }
   },
 
   methods: {
+    view(e, obj) {
+      console.log(e)
+      this.type = e
+      this.item = obj
+      this.showContainer = true
+    },
+
+    deleteRecord() {
+      this.$swal
+        .fire({
+          title: 'Uhhhh! 😔',
+          text: 'Complete Delete process?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, delete!'
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.completeDelete()
+          }
+        })
+    },
+
+    completeDelete() {
+      // this.isDeleting == true
+      if(this.type == 'video') {
+        this.$reels.delete(this.item.videoId)
+        .then(()=> {
+          this.closeContainer()
+          this.getPosts()
+        })
+        return 
+      };
+
+      if(this.type == 'image') {
+        this.$appImages.delete(this.item.ImageId)
+        .then(()=> {
+          this.closeContainer()
+          this.getPosts()
+        })
+      }
+    },
+
+    // userLogout() {
+    //   this.$store.dispatch('auth/logout')
+    //   this.$swal
+    //     .fire({
+    //       title: 'Woo hoo 😫',
+    //       text: 'Logged out succesfully',
+    //       icon: 'success',
+    //       confirmButtonText: 'Ok!'
+    //     })
+    //     .then((result) => {
+    //       console.log(result, 'kkk')
+    //       if (result.isConfirmed) {
+    //         this.$router.go()
+    //       }
+    //     })
+    // },
+
+    closeContainer() {
+      this.showContainer = false
+    },
+
     activateTab(e) {
       this.activeTab = e
     },

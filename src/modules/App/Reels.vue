@@ -154,7 +154,7 @@ export default {
       videoLoaded: [], // Tracks video loading status
       videoError: [], // Tracks if a video fails to load
       loading: false, // Global loading state
-      muteAll: true, // Global mute state for all videos
+      muteAll: false, // Global mute state for all videos
       userInteracted: false, // Tracks whether the user has interacted
       starBalance: {},
       isLoading: false, //Loader for coin

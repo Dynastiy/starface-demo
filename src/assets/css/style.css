@@ -327,3 +327,7 @@ form label, .form label {
   font-weight: 500;
   text-transform: capitalize;
 }
+
+.swal2-container {
+    z-index: 99999999999 !important; /* Set a higher z-index */
+  }

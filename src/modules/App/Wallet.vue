@@ -107,7 +107,7 @@ export default {
       this.$wallet.earnWallet().then((res) => {
         console.log(res)
         this.walletData = {
-          starBalance: res.star.balance,
+          starBalance: this.user.demo ? res.star.demoStarBalance : res.star.balance,
           otherBalances: {
             ...this.walletData.otherBalances,
             gift_balance: res.flower.balance,
@@ -145,7 +145,9 @@ export default {
   },
 
   computed: {
-    
+    user() {
+      return this.$store.getters['auth/getUser']
+    },
   }
 }
 </script>

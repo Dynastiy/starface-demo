@@ -71,8 +71,8 @@ export default {
         reelsOwnerId: e.user
       }
       // this.isLoading = true
-      this.$wallet.gift().then((res) => {
-        this.getEarnWallet()
+      this.$wallet.gift(payload).then((res) => {
+        // this.()
         return res
       })
       console.log(payload)
