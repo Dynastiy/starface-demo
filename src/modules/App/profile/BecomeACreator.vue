@@ -106,6 +106,14 @@ export default {
       this.plan = e
     },
 
+    getUser() {
+      this.$auth.getUser(this.user._id).then((res) => {
+        console.log(res)
+        this.$store.commit('auth/setUser', res.user)
+        return res
+      })
+    },
+
     payUpgradeFees(e) {
       this.loading = true
       let payload = {
@@ -115,6 +123,7 @@ export default {
         .becomeACreator(payload)
         .then((res) => {
           this.getAllWallets()
+          this.getUser()
           return res
         })
         .finally(() => {
@@ -168,6 +177,7 @@ export default {
     user() {
       return this.$store.getters['auth/getUser']
     },
+    
     hasCompleteData() {
       return this.plan && this.wallet ? true : false
     }

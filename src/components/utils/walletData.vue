@@ -9,9 +9,9 @@
 
       <router-link to="/wallet" class="flex items-center">
         <img src="@/assets/img/icons/yellow-starface.png" class="w-8" />
-        <span class="text-[14px] text-white font-medium">{{
+        <span class="text-[14px] text-white font-medium" v-if="user">{{
           $convertToDollar(user.demo ? balance.demoStarBalance : balance.balance)
-        }}</span>
+         }}</span>
       </router-link>
 
       <!-- <router-link to="/wallet" class="flex items-center gap-1">

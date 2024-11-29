@@ -171,6 +171,14 @@ export default {
       
     },
 
+    getUser() {
+      this.$auth.getUser(this.user._id).then((res) => {
+        console.log(res)
+        this.$store.commit('auth/setUser', res.user)
+        return res
+      })
+    },
+
     closeContainer() {
       this.showContainer = false
     },
@@ -184,6 +192,7 @@ export default {
       .then((res)=> {
         this.showContainer = false
         this.$emit('refreshBalance')
+        this.getUser()
         return res
       })
       .finally(()=> {

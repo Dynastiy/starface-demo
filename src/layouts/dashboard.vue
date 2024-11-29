@@ -7,8 +7,6 @@
 
     <bottom-navigation class="" @routeClick="routeClick" :menu="menu" />
 
-    
-
     <!-- SideBar -->
     <Sidebar
       v-model:visible="visibleBottom"
