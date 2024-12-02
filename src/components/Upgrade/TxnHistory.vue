@@ -18,7 +18,7 @@
               class="bg-white p-3 flex justify-between rounded-lg"
             >
               <div class="flex gap-2">
-                <span
+                <!-- <span
                   class="h-8 w-8 flex items-center justify-center font-weight-bold rounded"
                   :class="[item.transaction_type === 'CREDIT' ? 'bg-green-100' : 'bg-red-100']"
                 >
@@ -27,22 +27,21 @@
                       item.transaction_type === 'CREDIT' ? 'carbon:arrow-down' : 'iconoir:arrow-tr'
                     "
                   />
-                </span>
+                </span> -->
                 <span class="flex flex-col">
                   <span class="font-semibold text-sm break-all">
                     {{
-                      `${item.transaction_type} #${item.transaction_id}` +
-                      (item.note !== '' ? `~ ${item.note}` : '')
+                      `${item.transactionType} #${item._id}`
                     }}
                   </span>
-                  <span class="text-xs" v-html="item.date_time"> </span>
+                  <span class="text-xs" v-html="$formatDate(item.createdAt)"> </span>
                 </span>
               </div>
               <div class="flex flex-col items-end">
                 <span class="text-sm font-semibold">
-                  {{ item.amount + ' ' + item.wallet_symbol }}
+                  {{ item.amount + ' ' + item.asset }}
                 </span>
-                <span class="text-xs text-uppercase">{{ item.wallet_id }}</span>
+                <!-- <span class="text-xs text-uppercase">{{ item.recipientAddress }}</span> -->
               </div>
             </div>
           </div>
@@ -68,8 +67,8 @@ export default {
       this.$wallet
         .transactionHistory()
         .then((res) => {
-          console.log(res)
-          this.items = res.data
+          console.log(res, 'txn history')
+          this.items = res
         })
         .finally(() => {
           this.loading = false

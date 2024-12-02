@@ -40,6 +40,7 @@
         </template>
       </el-skeleton>
     </div>
+    
     <txn-history />
 
     <vDialog
