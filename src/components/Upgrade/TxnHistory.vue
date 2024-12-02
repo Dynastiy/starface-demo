@@ -1,6 +1,6 @@
 <template>
   <div class="p-4">
-    <h4 class="font-semibold mb-2">Recent Transactions</h4>
+    <h4 class="font-semibold mb-2">Transaction History</h4>
     <el-skeleton :loading="loading" animated>
       <template #template>
         <div class="flex flex-col gap-4">
