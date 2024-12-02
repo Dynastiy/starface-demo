@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="bottom-nav"
-  >
+  <div class="bottom-nav">
     <div class="flex justify-between h-full w-full items-center container">
       <ul class="flex items-center w-full justify-between h-full mb-0">
         <li
@@ -11,6 +9,7 @@
           :key="idx"
         >
           <span
+            role="button"
             class="flex flex-col items-center gap-1 w-full text-sm font-semibold"
             @click="routeClick(item)"
           >

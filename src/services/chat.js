@@ -1,6 +1,6 @@
 import $request from '@/axios/index'
 // import { catchAxiosError, catchAxiosSuccess } from './response'
-import { catchAxiosError } from './response'
+import { catchAxiosError, catchAxiosSuccess } from './response'
 import store from '@/store'
 
 
@@ -59,6 +59,7 @@ export default {
   async updateStatus(formdata, id){
     try {
       let res = await $request.post(`api/chat/startConversation/status/${id}`, formdata)
+      catchAxiosSuccess(res.data)
       return res.data
     } catch (error) {
       catchAxiosError(error)

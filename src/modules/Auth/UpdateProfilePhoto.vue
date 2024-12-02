@@ -70,8 +70,8 @@
         <button
           @click="onSubmit"
           class="brand-btn w-full flex justify-center items-center gap-2"
-          :disabled="isLoading"
-          :class="[isLoading ? 'bg-gray-300 text-gray' : 'brand-primary-clear']"
+          :disabled="notValid"
+          :class="[notValid ? 'bg-gray-300 text-gray' : 'brand-primary-clear']"
         >
           <i-icon v-if="isLoading" icon="eos-icons:three-dots-loading" class="text-xl text-gray2" />
           <span v-else> Complete </span>
@@ -161,6 +161,9 @@ export default {
   computed: {
     uid() {
       return this.$route.query.uid
+    },
+    notValid(){
+      return this.isLoading || Object.keys(this.files).length <= 0
     }
   }
 }
