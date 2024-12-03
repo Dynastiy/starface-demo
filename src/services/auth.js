@@ -114,5 +114,17 @@ export default {
       catchAxiosError(error)
       throw error
     }
+  },
+
+  async deleteAccount() {
+    try {
+      let res = await $request.delete(`api/user/delete-user`)
+      catchAxiosSuccess(res)
+      return res.data
+    } catch (error) {
+      catchAxiosError(error)
+      throw error
+    }
   }
 }
+

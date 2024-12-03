@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col justify-between">
     <div class="">
-      <h3 class="lg:text-2xl text-center md:text-2xl text-xl font-bold mb-0">TRANSFER</h3>
+      <h3 class="lg:text-2xl text-center md:text-2xl text-xl font-bold mb-0">PURCHASE</h3>
       <span class="text-[15px] block font-regular text-gray2 text-center"
         >Transfer your USDT to flower or chat wallet.</span
       >

@@ -269,7 +269,7 @@ export default {
               const videoContainers = this.$refs.videoContainer
               const options = {
                 root: null,
-                threshold: 0.6 // 80% visibility triggers
+                threshold: 0.4 // 80% visibility triggers
               }
 
               this.observer = new IntersectionObserver(this.handleIntersection, options)

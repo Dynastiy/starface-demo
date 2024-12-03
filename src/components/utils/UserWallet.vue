@@ -93,7 +93,7 @@ export default {
         { label: 'fund_wallet', icon: 'mingcute:send-fill' },
         { label: 'withdraw', icon: 'flowbite:download-solid' },
         { label: 'convert', icon: 'simple-icons:convertio' },
-        { label: 'transfer', icon: 'mingcute:transfer-line' }
+        { label: 'purchase', icon: 'mingcute:transfer-line' }
       ],
       localLoading: true
     }

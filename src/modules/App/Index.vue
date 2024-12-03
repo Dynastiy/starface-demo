@@ -513,8 +513,9 @@ export default {
   },
 
   beforeMount() {
-    this.getReels()
     this.getEarnWallet()
+    this.getReels()
+    
   },
 
   mounted() {

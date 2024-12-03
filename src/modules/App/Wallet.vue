@@ -64,7 +64,7 @@
         </span>
         <fund v-if="action == 'fund_wallet'" />
         <withdraw v-if="action == 'withdraw'" @refresh="refreshData" :walletData="walletData" />
-        <transfer v-if="action == 'transfer'" @refresh="refreshData" :walletData="walletData"/>
+        <transfer v-if="action == 'purchase'" @refresh="refreshData" :walletData="walletData"/>
         <convert v-if="action == 'convert'" @refresh="refreshData" :walletData="walletData" />
       </div>
     </vDialog>

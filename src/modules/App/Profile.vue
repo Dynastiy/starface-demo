@@ -173,6 +173,12 @@
       </div>
     </div>
 
+    <div class="ml-auto">
+      <button @click="deleteUserAccount" class="brand-btn bg-red-600 text-white">
+        Delete Account
+      </button>
+    </div>
+
     <vDialog
       v-model:visible="showContainer"
       modal
@@ -219,7 +225,9 @@
             <p>{{ item.description }}</p>
           </div>
           <div class="w-full">
-            <button @click="deleteRecord" class="brand-btn bg-red-500 w-full text-white">Delete</button>
+            <button @click="deleteRecord" class="brand-btn bg-red-500 w-full text-white">
+              Delete
+            </button>
           </div>
         </div>
       </div>
@@ -290,6 +298,29 @@ export default {
       this.showContainer = true
     },
 
+    deleteUserAccount() {
+      this.$swal
+        .fire({
+          title: 'Uhhhh! 😔',
+          text: 'Are you sure you want to delete your account? This process is irreversible',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, delete!'
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.completeAccountDeletion()
+          }
+        })
+    },
+
+    completeAccountDeletion() {
+      this.$auth.deleteAccount().then(() => {
+        this.$router.push('/')
+      })
+      return
+    },
+
     deleteRecord() {
       this.$swal
         .fire({
@@ -308,18 +339,16 @@ export default {
 
     completeDelete() {
       // this.isDeleting == true
-      if(this.type == 'video') {
-        this.$reels.delete(this.item.videoId)
-        .then(()=> {
+      if (this.type == 'video') {
+        this.$reels.delete(this.item.videoId).then(() => {
           this.closeContainer()
           this.getPosts()
         })
-        return 
-      };
+        return
+      }
 
-      if(this.type == 'image') {
-        this.$appImages.delete(this.item.ImageId)
-        .then(()=> {
+      if (this.type == 'image') {
+        this.$appImages.delete(this.item.ImageId).then(() => {
           this.closeContainer()
           this.getPosts()
         })

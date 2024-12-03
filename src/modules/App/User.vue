@@ -1,5 +1,6 @@
 <template>
   <div class="flex gap-6 p-4 items-start lg:flex-row md:flex-row flex-col pb-[80px]">
+    <!-- {{ user }} -->
     <div class="lg:w-6/12 md:w-6/12 w-full rounded-md flex justify-center">
       <div class="w-full flex flex-col gap-4">
         <div
@@ -38,11 +39,25 @@
           <i-icon icon="ic:baseline-location-on" />
           <span class="text-xs">Montreal, Canada</span>
         </span> -->
-        <div>
-          <span class="text-sm block text-gray-500">Bio</span>
-          <p class="text-sm">
-            {{ info.bio }}
-          </p>
+        <div class="flex justify-between">
+          <div>
+            <span class="text-sm block text-gray-500">Bio</span>
+            <p class="text-sm">
+              {{ info.bio }}
+            </p>
+          </div>
+
+          <div>
+            <button
+              @click="blockFunction"
+              :class="[
+                'bg-gray-300 block px-3 font-medium py-[2px] rounded-[5px] text-red-600',
+                { '!text-green-600': isUserBlocked() }
+              ]"
+            >
+              {{ isUserBlocked() ? 'Unblock' : 'Block' }}
+            </button>
+          </div>
         </div>
 
         <div>
@@ -221,19 +236,21 @@ export default {
   },
 
   methods: {
-    closeContainer(){
+    closeContainer() {
       this.showContainer = false
     },
 
     activateTab(e) {
       this.activeTab = e
     },
+
     view(e, obj) {
       console.log(e, obj)
       this.type = e
       this.item = obj
       this.showContainer = true
     },
+
     getUser() {
       this.$auth.getUser(this.userID).then((res) => {
         console.log(res)
@@ -252,6 +269,14 @@ export default {
         return
       }
       let isUser = this.info.favouritedBy.find((item) => item == this.user._id)
+      return isUser
+    },
+
+    isUserBlocked() {
+      if (!this.isLoggedIn) {
+        return
+      }
+      let isUser = this.user.blockedUsers.find((item) => item == this.info._id)
       return isUser
     },
 
@@ -299,6 +324,14 @@ export default {
       })
     },
 
+    getMyProfile() {
+      this.$auth.getUser(this.user._id).then((res) => {
+        console.log(res)
+        this.$store.commit('auth/setUser', res.user)
+        return res
+      })
+    },
+
     favouriteAction(e) {
       if (!this.isLoggedIn) {
         this.$toastify({
@@ -320,6 +353,29 @@ export default {
       }
       this.$userActivity.toggleUserActions(payload).then(() => {
         this.getUser()
+      })
+    },
+
+    blockFunction() {
+      if (!this.isLoggedIn) {
+        this.$toastify({
+          text: 'Login to continue.',
+          gravity: 'top', // `top` or `bottom`
+          position: 'center', // `left`, `center` or `right`
+          style: {
+            fontSize: '13px',
+            borderRadius: '4px',
+            background: '#ff0000'
+          }
+        }).showToast()
+        this.$router.push('/auth/login')
+        return
+      }
+      let payload = {
+        block: this.isUserBlocked() ? false : true
+      }
+      this.$userActivity.toggleBlockActions(payload, this.info._id).then(() => {
+        this.getMyProfile()
       })
     },
 
@@ -388,18 +444,22 @@ export default {
 
   beforeMount() {
     this.getUser()
+    this.getMyProfile()
   },
 
   computed: {
     user() {
       return this.$store.getters['auth/getUser']
     },
+
     userMeta() {
       return this.$store.getters['auth/getUserMeta']
     },
+
     isLoggedIn() {
       return this.$store.getters['auth/getAuthenticated']
     },
+
     timeLeft() {
       return (
         this.userMeta.subscription_fee_expiration_time_of_last_payment -

@@ -77,6 +77,17 @@ export default {
           catchAxiosError(error)
           throw error
         }
+      },
+
+      async toggleBlockActions(formData, userIdToBlock) {
+        try {
+          let res = await $request.post(`api/user/block/${userIdToBlock}`, formData)
+          catchAxiosSuccess(res.data)
+          return res.data
+        } catch (error) {
+          catchAxiosError(error)
+          throw error
+        }
       }
       
       

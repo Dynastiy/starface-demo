@@ -37,12 +37,24 @@
             >
               <div>
                 <h2 class="font-bold text-center text-3xl">
-                  {{ `${item.USDT}` }}<span class="text-sm text-gray-400 font-medium"> USDT/{{ item.planType }}</span>
+                  {{ `${item.USDT}`
+                  }}<span class="text-sm text-gray-400 font-medium"> USDT/{{ item.planType }}</span>
                 </h2>
               </div>
               <button class="brand-btn brand-primary-clear w-full">Upgrade</button>
             </div>
           </div>
+        </div>
+
+        <div>
+          <h4 class="font-semibold my-2 text-lg">Benefits</h4>
+          <ul>
+            <li>* Access to exclusive content</li>
+            <li>* Promote content</li>
+            <li>* Earn from views</li>
+            <li>* Earn from Likes and other reactions</li>
+            <li>* Unlimited chat credit</li>
+          </ul>
         </div>
       </div>
     </div>
@@ -58,9 +70,7 @@ export default {
       loading: false,
       requestId: '',
       address: '',
-      fees: [
-       
-      ]
+      fees: []
     }
   },
 
@@ -117,7 +127,7 @@ export default {
     payUpgradeFees(e) {
       this.loading = true
       let payload = {
-       planType: e.planType
+        planType: e.planType
       }
       this.$wallet
         .becomeACreator(payload)
@@ -177,7 +187,7 @@ export default {
     user() {
       return this.$store.getters['auth/getUser']
     },
-    
+
     hasCompleteData() {
       return this.plan && this.wallet ? true : false
     }
