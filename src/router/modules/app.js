@@ -15,7 +15,7 @@ import Reels from '@/modules/App/Reels.vue'
 
 const routes = [
   {
-    path: '/',
+    path: '/feeds',
     name: 'feeds',
     // component: Home,
     component: Reels,
@@ -65,7 +65,7 @@ const routes = [
 
 
   {
-    path: '/connect',
+    path: '/',
     name: 'connect',
     component: Connect,
     meta: {

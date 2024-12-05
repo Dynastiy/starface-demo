@@ -1,6 +1,7 @@
 <template>
   <div class="p-6 pb-[80px]">
     <Loader v-if="isLoading" :loaderText="'Finalizing your registration process'" />
+
     <div class="flex flex-col justify-between">
       <div>
         <h2 class="font-bold text-2xl">Edit Profile</h2>
@@ -87,6 +88,13 @@
         </div>
       </div>
     </div>
+
+    <div class="mt-3">
+      <button @click="deleteUserAccount" class="brand-btn w-full bg-red-600 text-white">
+        Delete Account
+      </button>
+    </div>
+
   </div>
 </template>
 
@@ -111,6 +119,29 @@ export default {
   },
 
   methods: {
+    deleteUserAccount() {
+      this.$swal
+        .fire({
+          title: 'Uhhhh! 😔',
+          text: 'Are you sure you want to delete your account? This process is irreversible',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, delete!'
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.completeAccountDeletion()
+          }
+        })
+    },
+
+    completeAccountDeletion() {
+      this.$auth.deleteAccount().then(() => {
+        this.$router.push('/')
+      })
+      return
+    },
+
     getUser(value) {
       if (!value) this.isLoading = true
       this.$auth

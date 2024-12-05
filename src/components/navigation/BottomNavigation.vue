@@ -46,6 +46,7 @@ export default {
     routeName() {
       return this.$route.meta.name
     },
+    
     routeParent() {
       return this.$route.meta.parent
     }

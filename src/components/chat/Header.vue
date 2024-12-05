@@ -21,7 +21,7 @@
     </div>
 
     <span class="flex gap-1">
-      <img src="@/assets/img/icons/yellow-starface.png" class="w-8" />
+      <img src="@/assets/img/icons/yellow-starface.webp" class="w-8" />
       <span class="font-semibold text-lg block" v-if="walletData.chat">{{
         walletData.chat.balance
       }}</span>
@@ -31,6 +31,10 @@
 
 <script>
 export default {
+  props: {
+    wallet: null
+  },
+
   data() {
     return {
       userID: this.$route.query.uid,
@@ -45,18 +49,22 @@ export default {
         this.info = res.user
       })
     },
+  },
 
-    getEarnWallet() {
-      this.$wallet.earnWallet().then((res) => {
-        console.log(res)
-        this.walletData = res
-      })
+  watch: {
+    wallet: {
+      handler(val) {
+        if (val) {
+          this.walletData = val
+        }
+      },
+      immediate: true
     }
   },
 
   beforeMount() {
     this.getUser()
-    this.getEarnWallet()
+    // this.getEarnWallet()
   }
 }
 </script>

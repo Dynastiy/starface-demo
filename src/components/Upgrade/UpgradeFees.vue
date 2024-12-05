@@ -107,13 +107,13 @@
 </template>
 
 <script>
-import green from '@/assets/img/icons/green-starface.png'
-import blue from '@/assets/img/icons/blue-starface.png'
-import philemon from '@/assets/img/icons/red-coin.png'
-import bronze from '@/assets/img/icons/bronze-coin.png'
-import purple from '@/assets/img/icons/purple-coin.png'
-import gold from '@/assets/img/icons/gold-coin.png'
-import founder from '@/assets/img/icons/info-coin.png'
+import green from '@/assets/img/icons/green-starface.webp'
+import blue from '@/assets/img/icons/blue-starface.webp'
+import philemon from '@/assets/img/icons/red-coin.webp'
+import bronze from '@/assets/img/icons/bronze-coin.webp'
+import purple from '@/assets/img/icons/purple-coin.webp'
+import gold from '@/assets/img/icons/gold-coin.webp'
+import founder from '@/assets/img/icons/info-coin.webp'
 
 export default {
   data() {

@@ -1,6 +1,6 @@
 <template>
   <div class="h-[100dvh] flex flex-col overflow-y-hidden">
-    <chat-header />
+    <chat-header :wallet="walletData" />
     <div
       class="flex-1 overflow-y-auto h-full"
       ref="messagesContainer"
@@ -27,7 +27,8 @@ export default {
     return {
       isRefreshing: false,
       ID: this.$route.params.id,
-      messages: []
+      messages: [],
+      walletData: null
     }
   },
   methods: {
@@ -40,18 +41,29 @@ export default {
         console.error('Failed to fetch conversation:', err)
       }
     },
+
     scrollToEnd() {
       const container = this.$refs.messagesContainer
       if (container) {
         container.scrollTop = container.scrollHeight
       }
     },
+
     refresh() {
       this.getConversation()
+      this.getEarnWallet()
+    },
+
+    getEarnWallet() {
+      this.$wallet.earnWallet().then((res) => {
+        console.log(res)
+        this.walletData = res
+      })
     }
   },
   mounted() {
     this.getConversation()
+    this.getEarnWallet()
     this.intervalId = setInterval(this.getConversation, 10000)
   },
   beforeUnmount() {

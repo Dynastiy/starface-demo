@@ -3,12 +3,12 @@
     <!-- {{user}} -->
     <span class="flex gap-3 items-center font-medium p-1 rounded-md">
       <router-link to="/wallet" class="flex items-center">
-        <img src="@/assets/img/icons/blue-starface.png" class="w-8" alt="" />
+        <img src="@/assets/img/icons/blue-starface.webp" class="w-8" alt="" />
         <span class="text-[14px] text-white font-medium">{{ !isLoggedIn ? 0 : user.demo ? balance.demoStarBalance : balance.balance }}</span>
       </router-link>
 
       <router-link to="/wallet" class="flex items-center">
-        <img src="@/assets/img/icons/yellow-starface.png" class="w-8" />
+        <img src="@/assets/img/icons/yellow-starface.webp" class="w-8" />
         <span class="text-[14px] text-white font-medium" v-if="user">{{
           $convertToDollar(user.demo ? balance.demoStarBalance : balance.balance)
          }}</span>

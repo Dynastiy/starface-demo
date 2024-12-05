@@ -88,14 +88,14 @@ export default {
           icon: 'fluent-mdl2:photo-video-media',
           title: 'feeds',
           isLink: true,
-          url: '/'
+          url: '/feeds'
         },
         {
           parent: 'connect',
           icon: 'fluent:people-community-24-filled',
           title: 'connect',
           isLink: true,
-          url: '/connect'
+          url: '/'
         },
         {
           parent: 'create',

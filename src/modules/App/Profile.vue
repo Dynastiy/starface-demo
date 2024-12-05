@@ -173,12 +173,6 @@
       </div>
     </div>
 
-    <div class="ml-auto">
-      <button @click="deleteUserAccount" class="brand-btn bg-red-600 text-white">
-        Delete Account
-      </button>
-    </div>
-
     <vDialog
       v-model:visible="showContainer"
       modal
@@ -296,29 +290,6 @@ export default {
       this.type = e
       this.item = obj
       this.showContainer = true
-    },
-
-    deleteUserAccount() {
-      this.$swal
-        .fire({
-          title: 'Uhhhh! 😔',
-          text: 'Are you sure you want to delete your account? This process is irreversible',
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonText: 'Yes, delete!'
-        })
-        .then((result) => {
-          if (result.isConfirmed) {
-            this.completeAccountDeletion()
-          }
-        })
-    },
-
-    completeAccountDeletion() {
-      this.$auth.deleteAccount().then(() => {
-        this.$router.push('/')
-      })
-      return
     },
 
     deleteRecord() {

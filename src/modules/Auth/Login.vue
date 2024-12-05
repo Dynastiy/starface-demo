@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col justify-between">
     <div class="mb-5">
-      <img src="@/assets/img/icons/coin_claim.png" class="w-12 mx-auto" alt="" />
+      <img src="@/assets/img/icons/coin_claim.webp" class="w-12 mx-auto" alt="" />
     </div>
     <div class="">
       <h3 class="lg:text-2xl text-center md:text-2xl text-xl font-bold mb-0">Welcome back</h3>

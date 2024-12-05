@@ -106,7 +106,7 @@
           <img
             role="button"
             @click.once="redeem"
-            src="@/assets/img/icons/claim.svg"
+            src="@/assets/img/icons/claim.webp"
             alt=""
             :class="isLoading ? 'heartbeat' : 'fadeIn'"
           />
