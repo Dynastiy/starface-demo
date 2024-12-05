@@ -167,10 +167,10 @@ export default {
   },
   methods: {
     refreshReel(e) {
-        this.getReel(e)
-        this.refresh()
+      this.getReel(e)
+      this.refresh()
     },
-    
+
     refresh() {
       this.$reels.list().then((res) => {
         this.videos = res.reels.map((video) => ({
@@ -184,7 +184,7 @@ export default {
       this.visibleBottom = true
       let dataFromEntry = JSON.parse(e)
       this.actionable = dataFromEntry.e
-      if(dataFromEntry.e == 'comments') {
+      if (dataFromEntry.e == 'comments') {
         this.getReel(dataFromEntry.value._id)
       }
     },
@@ -196,7 +196,6 @@ export default {
         this.reel = res.reel
       })
     },
-
 
     openContainer() {
       this.showContainer = true
@@ -252,16 +251,23 @@ export default {
       })
     },
 
-    getReels() {
-      this.loading = true
+    getReels(append = false) {
       this.$reels
         .list()
         .then((res) => {
+          console.log(res)
           if (res && res.reels) {
-            this.videos = res.reels.map((video) => ({
+            const newReels = res.reels.map((video) => ({
               ...video,
               fallbackImage: video.fallbackImage || null // Add fallback image if available
             }))
+
+            if (append) {
+              this.videos = [...this.videos, ...newReels] // Append new reels
+            } else {
+              this.videos = newReels // Replace with initial reels
+            }
+
             this.videoLoaded = Array(res.reels.length).fill(false)
             this.videoError = Array(res.reels.length).fill(false)
 
@@ -324,16 +330,30 @@ export default {
       // Handle the error when the fallback image itself fails to load
       //   console.error(`Fallback image for video at index ${index} failed to load.`)
       this.videoError[index] = true // Mark the video as errored
+    },
+
+    // Check if user is near the end
+    handleScroll() {
+      const scrollContainer = this.$el // Root element of the template
+      if (
+        scrollContainer.scrollTop + scrollContainer.clientHeight >=
+        scrollContainer.scrollHeight - 200 // Trigger 200px before the bottom
+      ) {
+        this.getReels(true) // Load more reels
+      }
     }
   },
 
   mounted() {
+    this.loading = true
+    this.$el.addEventListener('scroll', this.handleScroll)
     this.getReels()
     this.getEarnWallet()
     this.showContainerModified()
   },
 
   unmounted() {
+    this.$el.removeEventListener('scroll', this.handleScroll)
     if (this.observer) this.observer.disconnect()
   },
 
