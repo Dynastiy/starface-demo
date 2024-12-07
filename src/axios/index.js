@@ -3,7 +3,7 @@
 // import Cookies from "js-cookie";
 import axios from "axios";
 import config from "./config";
-import store from "@/store"
+// import store from "@/store"
 // import router from "./router";
 
 const $axios = axios.create({
@@ -19,7 +19,7 @@ const $axios = axios.create({
 });
 // Add access token to header if any
 // const accessToken = Cookies.get(config.accessTokenStorageKey);
-const accessToken = store.getters['auth/getToken'];
+const accessToken = localStorage.getItem('_starface_token');
 if (accessToken) {
   $axios.defaults.headers.common["authorization"] = "Bearer " + accessToken;
 } else {
@@ -33,7 +33,7 @@ $axios.interceptors.request.use(
     // NProgress.start();
     // Add access token to header before request is sent if any
     // const accessToken = Cookies.get(config.accessTokenStorageKey);
-    const accessToken = store.getters['auth/getToken'];
+    const accessToken = localStorage.getItem('_starface_token');
     if (accessToken) {
       axiosConfig.headers.authorization = "Bearer " + accessToken;
     } else {

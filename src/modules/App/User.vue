@@ -480,7 +480,7 @@ export default {
   min-height: 200px; /* Adjust height as needed */
   background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent); /* Smooth blend */
   display: flex;
-  align-items: end;
+  align-items: flex-end;
   justify-content: space-between;
   border-radius: 0.375rem;
 }

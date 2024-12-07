@@ -4,11 +4,13 @@ import createPersistedState from "vuex-persistedstate";
 
 import auth from "./modules/auth";
 import drawer from "./drawer";
+import videos from "./videos";
 
 // initial state
 let initialState = {
   auth: auth.state,
-  drawer: drawer.state
+  drawer: drawer.state,
+  videos: videos.state
 };
 // const debug = process.env.NODE_ENV !== "production";
 let plugins = [createPersistedState({})];
@@ -16,7 +18,8 @@ let plugins = [createPersistedState({})];
 export default createStore({
   modules: {
     auth,
-    drawer
+    drawer,
+    videos
   },
   plugins,
   state: {

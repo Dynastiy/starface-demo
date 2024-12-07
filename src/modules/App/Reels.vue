@@ -1,16 +1,17 @@
 <template>
   <div class="h-screen overflow-y-auto snap-y snap-mandatory">
-    <div
+    <!-- <div
       v-if="loading"
       class="!bg-[#191819] h-[100dvh] absolute inset-0 flex items-center justify-center"
     >
       <img src="@/assets/animation/load.gif" alt="" />
-    </div>
+    </div> -->
     <div
       v-for="(video, index) in videos"
       :key="video._id"
       class="h-[100dvh] flex justify-center items-center snap-start relative"
       ref="videoContainer"
+      :data-index="index"
     >
       <!-- Video Container -->
       <div class="relative">
@@ -162,7 +163,8 @@ export default {
       actionable: null,
       comments: [],
       reel: {},
-      visibleBottom: false
+      visibleBottom: false,
+      lastThresholdHit: -1 // Prevent duplicate API calls
     }
   },
   methods: {
@@ -271,18 +273,13 @@ export default {
             this.videoLoaded = Array(res.reels.length).fill(false)
             this.videoError = Array(res.reels.length).fill(false)
 
-            this.$nextTick(() => {
-              const videoContainers = this.$refs.videoContainer
-              const options = {
-                root: null,
-                threshold: 0.4 // 80% visibility triggers
-              }
-
-              this.observer = new IntersectionObserver(this.handleIntersection, options)
-
-              if (Array.isArray(videoContainers)) {
-                videoContainers.forEach((el) => this.observer.observe(el))
-              }
+            // Trigger preloading for all videos
+            this.videos.forEach((video, index) => {
+              const videoElement = document.createElement('video')
+              videoElement.src = video.videoUrl
+              videoElement.preload = 'auto'
+              videoElement.addEventListener('loadeddata', () => this.handleLoaded(index))
+              videoElement.addEventListener('error', () => this.handleVideoError(index))
             })
           }
         })
@@ -291,6 +288,23 @@ export default {
           return error
         })
         .finally(() => {
+          // Attach IntersectionObserver
+          this.$nextTick(() => {
+            const videoContainers = this.$refs.videoContainer
+            // console.log('Video containers observed:', videoContainers) // Add this log
+
+            const options = {
+              root: null,
+              threshold: 0.4 // 40% visibility triggers
+            }
+
+            this.observer = new IntersectionObserver(this.handleIntersection, options)
+
+            if (Array.isArray(videoContainers)) {
+              videoContainers.forEach((el) => this.observer.observe(el))
+            }
+          })
+
           this.loading = false
         })
     },
@@ -309,12 +323,19 @@ export default {
     handleIntersection(entries) {
       entries.forEach((entry) => {
         const video = entry.target.querySelector('video')
-        if (entry.isIntersecting && video && !this.videoError[entry.target.dataset.index]) {
+        const index = parseInt(entry.target.dataset.index)
+
+        if (entry.isIntersecting && video && !this.videoError[index]) {
           video.play().catch((error) => {
-            // console.error('Error playing video:', error.message)
-            this.handleVideoError(entry.target.dataset.index)
-            return error
+            console.error('Error playing video:', error.message)
+            this.handleVideoError(index)
           })
+
+          // Check if we are nearing the end of the list and fetch more videos
+          if (index >= this.videos.length - 2 && this.lastThresholdHit !== index) {
+            this.lastThresholdHit = index // Avoid duplicate calls
+            this.getReels(true) // Fetch more videos
+          }
         } else if (video) {
           video.pause()
         }
@@ -337,7 +358,7 @@ export default {
       const scrollContainer = this.$el // Root element of the template
       if (
         scrollContainer.scrollTop + scrollContainer.clientHeight >=
-        scrollContainer.scrollHeight - 200 // Trigger 200px before the bottom
+        scrollContainer.scrollHeight - 400 // Trigger 200px before the bottom
       ) {
         this.getReels(true) // Load more reels
       }
@@ -346,14 +367,14 @@ export default {
 
   mounted() {
     this.loading = true
-    this.$el.addEventListener('scroll', this.handleScroll)
+    // this.$el.addEventListener('scroll', this.handleScroll)
     this.getReels()
     this.getEarnWallet()
     this.showContainerModified()
   },
 
   unmounted() {
-    this.$el.removeEventListener('scroll', this.handleScroll)
+    // this.$el.removeEventListener('scroll', this.handleScroll)
     if (this.observer) this.observer.disconnect()
   },
 

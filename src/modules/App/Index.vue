@@ -1,125 +1,90 @@
 <template>
-  <div class="reels-page h-[100dvh]">
-    <el-skeleton style="width: 100%" :loading="loading" animated>
-      <template #template>
-        <div class="bg-[#191819] h-[100dvh] flex items-center justify-center w-full">
-          <img class="" src="@/assets/animation/load.gif" alt="">
-          <!-- <div class="flex flex-col w-full gap-4">
-            <el-skeleton-item
-              variant="image"
-              style="height: 100vh; border-radius: 10px; width: 100%"
-            />
-          </div> -->
-        </div>
-      </template>
-      <template #default>
-        <div>
-          <wallet-data class="z-2" :starBalance="starBalance" />
-          <div class="absolute right-[20px] z-20 top-[30%]">
-            <a href="https://faq.starface.chat" target="_blank" class=" shadow bg-white block p-2 rounded-full">
-              <i-icon icon="emojione-v1:spiral-notepad" class="text-xl" />
-            </a>
-          </div>
-          <!-- <wallet-data -->
-          <div class="reel-container h-[100dvh]" v-for="(item, index) in reels" :key="index">
-            <video
-              class="reel-image"
-              v-if="!item.hasError"
-              @error="handleVideoError(index)"
-              :src="item.videoUrl"
-              loop
-              playsInline
-              :ref="`video-${index}`"
-              preload="auto"
-            ></video>
-            <img
-              v-else
-              @error="$handleProfileError"
-              :src="item.thumbnailUrl"
-              alt="Placeholder"
-              class="reel-video"
-            />
-            <div class="absolute text-white toggleMute">
-              <button @click="toggleMute(index)">
-                <i-icon
-                  :icon="item.muted ? 'fluent:speaker-off-16-filled' : 'fluent:speaker-2-32-filled'"
-                />
-              </button>
-              <!-- {{ item.muted ? 'Unmute' : 'Mute' }} -->
-            </div>
-            <!-- <img v-else src="@/assets/img/video.jpg" alt="Placeholder" class="reel-video" /> -->
-            <div class="inner-content">
-              <div class="reel-section">
-                <div>
-                  <div class="user-info flex gap-2 items-center">
-                    <img
-                      class="h-[35px] w-[35px] rounded-full object-cover object-top ring ring-[#fff]"
-                      :src="item.avartar || $avatar"
-                      @error="$handleProfileError"
-                      alt=""
-                    />
-                    <!-- <img
-                      class="h-[35px] w-[35px] rounded-full ring ring-[#fff]"
-                      :src="item.thumbnailUrl"
-                      @error="$handleProfileError"
-                      alt=""
-                    /> -->
-                    <span class="text-sm">
-                      <router-link :to="`/user/profile/${item.user}`">
-                        {{ `@${item.userName}` }}
-                      </router-link>
-                    </span>
-                    <button
-                      class="brand-btn-md brand-outline text-white"
-                      @click="followAction(item)"
-                    >
-                      {{ checkFollowing(item) ? 'Unfollow' : 'Follow' }}
-                    </button>
-                  </div>
-                  <p class="mt-2 text-sm">{{ item.description }}</p>
-                </div>
-                <div class="reel-actions flex flex-col gap-4">
-                  <span class="flex gap-1 items-center flex-col" @click="like(item)">
-                    <i-icon
-                      :class="[checkLiked(item) ? 'text-red-500' : '', 'text-[30px]']"
-                      :icon="checkLiked(item) ? 'icon-park-solid:like' : 'icon-park-outline:like'"
-                    />
-                    <span class="text-xs">{{ item.likes }}</span>
-                  </span>
-                  <span class="flex gap-1 items-center flex-col" role="button">
-                    <i-icon
-                      class="text-[25px]"
-                      icon="fontisto:comment"
-                      @click="viewMore('comments', item)"
-                    />
-                    <span class="text-xs">{{ item?.comments?.length }}</span>
-                  </span>
-                  <span
-                    class="flex gap-1 items-center flex-col"
-                    role="button"
-                    @click="triggerShare(item)"
-                  >
-                    <i-icon class="text-[25px]" icon="fa6-solid:share" />
-                    <span class="text-xs">{{ item?.shares }}</span>
-                  </span>
-                  <span
-                    class="flex gap-1 items-center flex-col"
-                    role="button"
-                    @click="viewMore('view')"
-                  >
-                    <i-icon class="text-[25px]" icon="uis:ellipsis-h" />
-                  </span>
-                  <span @click="gift(item)" class="flex gap-1 items-center flex-col" role="button">
-                    <i-icon class="text-[35px] heartbeat" icon="noto-v1:sunflower" />
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </template>
-    </el-skeleton>
+  <div class="h-screen overflow-y-auto snap-y snap-mandatory">
+    <!-- <div
+      v-if="loading"
+      class="!bg-[#191819] h-[100dvh] absolute inset-0 flex items-center justify-center"
+    >
+      <img src="@/assets/animation/load.gif" alt="" />
+    </div> -->
+    <div
+      v-for="(video, index) in videos"
+      :key="video._id"
+      class="h-[100dvh] flex justify-center items-center snap-start relative"
+      ref="videoContainer"
+    >
+      <!-- Video Container -->
+      <div class="relative">
+        <template v-if="!videoError[index]">
+          <!-- Video Element -->
+          <video
+            :src="video.videoUrl"
+            class="h-[100dvh] w-[100vw] object-cover"
+            @loadeddata="handleLoaded(index)"
+            @error="handleVideoError(index)"
+            playsinline
+            loop
+            :muted="muteAll"
+          ></video>
+        </template>
+        <template v-else>
+          <!-- Fallback Image -->
+          <img
+            :src="
+              video.fallbackImage || 'https://via.placeholder.com/640x360?text=Video+Unavailable'
+            "
+            @error="handleFallbackError(index)"
+            alt="Fallback"
+            class="h-[100dvh] w-[100vw] object-cover"
+          />
+        </template>
 
+        <!-- Loader for video loading -->
+        <div
+          v-if="!videoLoaded[index] && !videoError[index]"
+          class="!bg-[#191819] h-[100dvh] absolute inset-0 flex items-center justify-center"
+        >
+          <img src="@/assets/animation/load.gif" alt="" />
+        </div>
+      </div>
+
+      <!-- Title Overlay -->
+      <div
+        class="absolute bottom-0 px-4 pb-20 w-full text-white bg-gradient-to-t from-black to-transparent"
+      >
+        <div class="flex justify-between items-end">
+          <user-data :reelData="video" />
+          <actions @getActionable="getActionable" :reelData="video" @refresh="refresh" />
+        </div>
+      </div>
+    </div>
+
+    <div class="absolute top-5 px-4 flex justify-between items-center w-full">
+      <!-- Wallet Data  -->
+      <div class="bg-black text-white px-3 py-1 bg-opacity-50 rounded-md">
+        <wallet-data :starBalance="starBalance" />
+      </div>
+
+      <!-- Global Mute Toggle Button -->
+      <button class="bg-black text-white p-2 bg-opacity-50 rounded-full" @click="toggleMuteAll">
+        <!-- {{ muteAll ? 'Unmute All' : 'Mute All' }} -->
+        <i-icon
+          :icon="muteAll ? 'fluent:speaker-off-16-filled' : 'fluent:speaker-2-32-filled'"
+          class="text-xl"
+        />
+      </button>
+    </div>
+
+    <div class="absolute right-4 z-20 top-[30%]">
+      <a
+        href="https://faq.starface.chat"
+        target="_blank"
+        class="shadow bg-white block p-2 rounded-full"
+      >
+        <i-icon icon="emojione-v1:spiral-notepad" class="text-xl" />
+      </a>
+    </div>
+
+    <!-- Popup to redeem coin  -->
     <vDialog
       v-model:visible="showContainer"
       modal
@@ -141,7 +106,7 @@
           <img
             role="button"
             @click.once="redeem"
-            src="@/assets/img/icons/claim.svg"
+            src="@/assets/img/icons/claim.webp"
             alt=""
             :class="isLoading ? 'heartbeat' : 'fadeIn'"
           />
@@ -150,6 +115,7 @@
       </div>
     </vDialog>
 
+    <!-- Dropup for Comment and More Actions  -->
     <Sidebar
       v-model:visible="visibleBottom"
       :show-close-icon="false"
@@ -157,9 +123,9 @@
       class="max-h-80 h-full"
     >
       <div class="">
-        <comments
+        <Comments
           v-if="actionable == 'comments'"
-          @refresh="refresh"
+          @refreshReel="refreshReel"
           :items="comments"
           :reel="reel"
         />
@@ -174,106 +140,76 @@
 </template>
 
 <script>
-import walletData from '@/components/utils/walletData.vue'
+import Actions from '@/components/reels/Actions.vue'
+import UserData from '@/components/reels/UserData.vue'
+import WalletData from '@/components/utils/walletData.vue'
 import Comments from '@/components/reels/Comments.vue'
-/* eslint-disable no-prototype-builtins */
-// import { useToast } from 'vue-toastification'
-// const toast = useToast()
-// import { useToast } from 'vue-toastification'
+import { mapState, mapGetters, mapActions } from 'vuex'
+
 export default {
-  components: { walletData, Comments },
+  components: { Actions, UserData, WalletData, Comments },
+  name: 'Reels',
   data() {
     return {
-      filter: {
-        per_page: 1,
-        page_no: 1
-      },
-      reels: [],
-      meta: {},
-      loading: false,
-      showContainer: false,
-      timer: null,
-      visibleBottom: false,
+      muteAll: false, // Global mute state
       actionable: null,
+      showContainer: false,
       comments: [],
       reel: {},
+      visibleBottom: false,
       starBalance: {},
-      isLoading: false,
-      userInfo: {},
-      observer: null,
-      videoElements: [],
-      videoElement: null,
-      isMuted: false
+      loading: false,
+      isLoading: false
     }
   },
-
   methods: {
-    getReels(e) {
-      if (!e) {
-        this.loading = true
-      }
-      this.$reels
-        .list()
-        .then((res) => {
-          this.reels = res.reels.map((item) => ({
-            ...item,
-            muted: true // Default state: videos are muted
-          }))
-          window.addEventListener('scroll', this.handlePlayback)
-          document.addEventListener('visibilitychange', this.handleVisibilityChange)
-          this.$nextTick(() => {
-            this.handlePlayback() // Initial playback check
-          })
-        })
-        .finally(() => {
-          this.loading = false
-        })
+    ...mapActions('videos', ['fetchVideos']),
+    refreshReel(e) {
+      this.getReel(e)
+      // this.refresh()
+      this.fetchVideos()
     },
 
-    toggleMute(index) {
-      const video = this.$refs[`video-${index}`][0] // Access video element
-      if (video) {
-        this.reels[index].muted = !this.reels[index].muted
-        video.muted = this.reels[index].muted
-      } else {
-        console.error(`Video element for index ${index} not found`)
+    refresh() {
+      this.$reels.list().then((res) => {
+        this.videos = res.reels.map((video) => ({
+          ...video,
+          fallbackImage: video.fallbackImage || null // Add fallback image if available
+        }))
+      })
+    },
+
+    getActionable(e) {
+      this.visibleBottom = true
+      let dataFromEntry = JSON.parse(e)
+      this.actionable = dataFromEntry.e
+      if (dataFromEntry.e == 'comments') {
+        this.getReel(dataFromEntry.value._id)
       }
     },
 
-    getUser() {
-      this.$auth.getUser(this.user._id).then((res) => {
+    getReel(id) {
+      this.$reels.get(id).then((res) => {
         console.log(res)
-        this.$store.commit('auth/setUser', res.user)
-        return res
+        this.comments = res.reel.comments
+        this.reel = res.reel
       })
     },
 
-    likeAction(e) {
-      if (!this.checkFollowing(e)) this.follow(e)
-      return
+    openContainer() {
+      this.showContainer = true
     },
 
-    checkFollowing(e) {
-      if (!this.isLoggedIn) {
-        return
-      }
-      let following = this.user.following
-      let isFollowing = following.find((item) => item == e.user)
-      return isFollowing
+    closeContainer() {
+      this.showContainer = false
     },
 
-    followAction(e) {
-      let payload = {
-        targetUserId: e.user, //like, unlike, favorite, unfavorite, follow, unfollow
-        action: this.checkFollowing(e) ? 'unfollow' : 'follow'
-      }
-      this.$userActivity.toggleUserActions(payload).then(() => {
-        this.getUser()
-      })
-    },
-
-    handleVideoError(index) {
-      this.reels[index].hasError = true
+    showContainerModified() {
+      setTimeout(() => {
+        this.openContainer() // Run the operation immediately
+        // Then, schedule the repeated execution every 30 minutes (1,800,000 milliseconds)
+        setInterval(this.openContainer, 600000)
+      }, 60000) // 10 mi
     },
 
     redeem() {
@@ -304,64 +240,6 @@ export default {
         })
     },
 
-    gift(e) {
-      console.log(this.isLoggedIn)
-      if (!this.isLoggedIn) {
-        this.$toastify({
-          text: 'Login to be able gift user.',
-          gravity: 'top', // `top` or `bottom`
-          position: 'center', // `left`, `center` or `right`
-          style: {
-            fontSize: '13px',
-            borderRadius: '4px',
-            background: '#ff0000'
-          }
-        }).showToast()
-        // toast.error('Login to be able gift user.', {
-        //   timeout: 4000
-        // })
-
-        this.$router.push('/auth/login')
-        return
-      }
-      let payload = {
-        amountToGift: 5,
-        reelsOwnerId: e.user
-      }
-      // this.isLoading = true
-      this.$wallet.gift().then((res) => {
-        this.getEarnWallet()
-        return res
-      })
-      console.log(payload)
-    },
-
-    async onShare(callback) {
-      try {
-        await navigator.share({
-          title: `
-          Refer your friends and earn upto <b>25 SFC</b> per referral & your friends will get
-        <b>20 SFC</b>`,
-          text: 'Share referral code',
-          url: this.locat
-        })
-        // Run the callback on success
-        if (callback) callback()
-      } catch (err) {
-        alert(err)
-      }
-    },
-
-    onShareSuccess(e) {
-      // console.log('Share was successful!')
-      this.completeShare(e)
-      // Perform additional actions like showing a success message or tracking an event
-    },
-
-    triggerShare(e) {
-      this.onShare(this.onShareSuccess(e))
-    },
-
     getEarnWallet() {
       if (!this.isLoggedIn) {
         return
@@ -372,169 +250,89 @@ export default {
       })
     },
 
-    refresh() {
-      this.getReel(this.reel._id)
-      this.getReels('refresh')
+    handleLoaded(index) {
+      // this.videoLoaded[index] = true
+      this.$store.commit('videos/SET_VIDEO_LOADED', index)
     },
 
-    getReel(id) {
-      this.$reels.get(id).then((res) => {
-        console.log(res)
-        this.comments = res.reel.comments
-        this.reel = res.reel
-      })
+    handleVideoError(index) {
+      console.error(`Video failed to load at index ${index}`, this.videos[index])
+      this.$store.commit('videos/SET_VIDEO_ERROR', index)
     },
 
-    viewMore(e, value) {
-      this.visibleBottom = true
-      this.actionable = e
-      this.getReel(value._id)
-      // this.comments = value
-    },
-
-    like(e) {
-      if (!this.isLoggedIn) {
-        this.$toastify({
-          text: 'Login to like reel.',
-          gravity: 'top', // `top` or `bottom`
-          position: 'center', // `left`, `center` or `right`
-          style: {
-            fontSize: '13px',
-            borderRadius: '4px',
-            background: '#ff0000'
-          }
-        }).showToast()
-        this.$router.push('/auth/login')
-        return
-      }
-      let payload = {
-        action: this.checkLiked(e) ? 'unlike' : 'like'
-      }
-      this.$reels.like(payload, e._id).then((res) => {
-        console.log(res)
-        this.getReels('refresh')
-      })
-     
-    },
-
-    checkLiked(e) {
-      if (!this.isLoggedIn) {
-        return
-      }
-      let isUser = e.likedBy.find((item) => item == this.user._id)
-      return isUser
-    },
-
-    handlePlayback() {
-      this.reels.forEach((item, index) => {
-        const video = this.$refs[`video-${index}`]
-        console.log(video)
-        if (video) {
-          const rect = video[0].getBoundingClientRect()
-          const isVisible = rect.top >= 0 && rect.bottom <= window.innerHeight
-          if (isVisible) {
-            video[0]
-              .play()
-              .catch((error) => console.warn(`Playback failed for video-${index}:`, error))
-          } else {
-            video[0].pause()
-            video[0].muted = true
-          }
+    handleIntersection(entries) {
+      entries.forEach((entry) => {
+        const video = entry.target.querySelector('video')
+        if (entry.isIntersecting && video && !this.videoError[entry.target.dataset.index]) {
+          video.play().catch((error) => {
+            console.error('Error playing video:', error.message)
+            // this.handleVideoError(entry.target.dataset.index)
+            return error
+          })
+        } else if (video) {
+          video.pause()
         }
       })
     },
 
-    handleVisibilityChange() {
-      if (document.visibilityState === 'visible') {
-        this.handlePlayback() // Play videos if the page is visible
-      } else {
-        this.reels.forEach((item, index) => {
-          let video = this.$refs[`video-${index}`] && this.$refs[`video-${index}`][0]
-          if (video) {
-            video.pause() // Pause the video when the page is not visible
-            video.muted = true // Optionally mute the video
-          }
-        })
+    toggleMuteAll() {
+      // Toggle the mute state for all videos
+      this.muteAll = !this.muteAll
+    },
+
+    handleFallbackError(index) {
+      // Handle the error when the fallback image itself fails to load
+      //   console.error(`Fallback image for video at index ${index} failed to load.`)
+      this.videoError[index] = true // Mark the video as errored
+    },
+
+    // Check if user is near the end
+    handleScroll() {
+      const scrollContainer = this.$el
+      if (
+        scrollContainer.scrollTop + scrollContainer.clientHeight >=
+        scrollContainer.scrollHeight - 200
+      ) {
+        this.fetchVideos(true) // Load more videos when near the end
       }
-    },
-
-    completeShare(e) {
-      if (!this.isLoggedIn) {
-        this.$toastify({
-          text: 'Login to be able gift user.',
-          gravity: 'top', // `top` or `bottom`
-          position: 'center', // `left`, `center` or `right`
-          style: {
-            fontSize: '13px',
-            borderRadius: '4px',
-            background: '#ff0000'
-          }
-        }).showToast()
-        this.$router.push('/auth/login')
-        return
-      }
-      this.$reels.share(e._id).then((res) => {
-        console.log(res)
-        this.getReels('refresh')
-      })
-      console.log(e)
-    },
-
-    // Method to display the container at a random time
-    showContainerAtRandomTime() {
-      // Clear any existing timer
-      clearTimeout(this.timer)
-
-      // Set a new random time between 1 and 60 seconds
-      const randomTime = Math.floor(Math.random() * 60000)
-
-      // Set a timeout to show the container
-      this.timer = setTimeout(() => {
-        console.log('alert')
-      }, randomTime)
-    },
-
-    openContainer() {
-      this.showContainer = true
-    },
-
-    showContainerModified() {
-      setTimeout(() => {
-        this.openContainer() // Run the operation immediately
-        // Then, schedule the repeated execution every 30 minutes (1,800,000 milliseconds)
-        setInterval(this.openContainer, 600000)
-      }, 60000) // 10 mi
-    },
-    // Method to close the container and restart the process
-    closeContainer() {
-      this.showContainer = false
-      this.showContainerAtRandomTime()
     }
   },
 
-  beforeMount() {
-    this.getEarnWallet()
-    this.getReels()
-    
-  },
-
   mounted() {
-    // Start the process when the component is mounted
+    // this.loading = true
+    this.$el.addEventListener('scroll', this.handleScroll)
+    this.fetchVideos() // Fetch initial videos
+    this.getEarnWallet()
     this.showContainerModified()
 
-    // this.$nextTick(() => {
-    //   this.handlePlayback()
-    //   window.addEventListener('scroll', this.handlePlayback)
-    //   document.addEventListener('visibilitychange', this.handleVisibilityChange)
-    // })
+    this.$nextTick(() => {
+      const videoContainers = this.$refs.videoContainer
+
+      if (!this.observer) {
+        const options = {
+          root: null, // Viewport
+          threshold: 0.4 // Trigger when 40% of the element is visible
+        }
+
+        this.observer = new IntersectionObserver(this.handleIntersection, options)
+      }
+
+      // Ensure videoContainers is an array before observing
+      if (Array.isArray(videoContainers)) {
+        videoContainers.forEach((el) => {
+          if (el) {
+            this.observer.observe(el)
+          }
+        })
+      } else {
+        console.error('videoContainers is not an array', videoContainers)
+      }
+    })
   },
 
-  beforeUnmount() {
-    // Clear the timer when the component is destroyed
-    clearTimeout(this.timer)
-
-    window.removeEventListener('scroll', this.handlePlayback)
-    document.removeEventListener('visibilitychange', this.handleVisibilityChange)
+  unmounted() {
+    this.$el.removeEventListener('scroll', this.handleScroll)
+    if (this.observer) this.observer.disconnect()
   },
 
   computed: {
@@ -543,87 +341,15 @@ export default {
     },
     isLoggedIn() {
       return this.$store.getters['auth/getAuthenticated']
-    }
+    },
+    ...mapState('videos', ['videoLoaded', 'videoError']),
+    ...mapGetters('videos', ['videos'])
   }
 }
 </script>
 
 <style scoped>
-.toggleMute {
-  z-index: 99999999999;
-  top: 20px;
-  right: 20px;
-}
-
-.reels-page {
-  background-color: #000;
-  /* height: 100; */
-  overflow-y: scroll;
-  scroll-snap-type: y mandatory;
-  width: 100%;
-}
-
-.reel-container {
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  position: relative;
-  scroll-snap-align: start;
-  width: 100%;
-}
-
-.reel-video {
-  height: 100%;
-  right: 50%;
-  transform: translate(50%, 0%);
-  object-fit: cover;
-  object-position: bottom;
-  position: absolute;
-  top: 0;
-  width: auto;
-  z-index: 0;
-}
-
-.reel-image {
-  height: 100%;
-  right: 50%;
-  transform: translate(50%, 0%);
-  object-fit: cover;
-  object-position: center center;
-  position: absolute;
-  top: 0;
-  width: auto;
-  z-index: 0;
-}
-
-.inner-content {
-  color: #fff;
-  flex-direction: column;
-  height: 100%;
-  padding: 0 15px;
-  position: absolute;
-  z-index: 1;
-}
-
-.inner-content,
-.reel-section {
-  display: flex;
-  display: inline-flex;
-  display: -webkit-flex;
-  justify-content: space-between;
-  width: 100%;
-}
-
-.reel-section {
-  align-items: flex-end;
-  margin-top: auto;
-  padding: 15px 0 80px;
-}
-
-.reel-section .user-item {
-  align-items: center;
-  display: flex;
-  flex: 1 1;
-  margin-bottom: 1rem;
+html {
+  scroll-behavior: smooth;
 }
 </style>
