@@ -25,6 +25,7 @@
             playsinline
             loop
             :muted="muteAll"
+            preload="auto"
           ></video>
         </template>
         <template v-else>
@@ -332,7 +333,7 @@ export default {
           })
 
           // Check if we are nearing the end of the list and fetch more videos
-          if (index >= this.videos.length - 2 && this.lastThresholdHit !== index) {
+          if (index >= this.videos.length - 4 && this.lastThresholdHit !== index) {
             this.lastThresholdHit = index // Avoid duplicate calls
             this.getReels(true) // Fetch more videos
           }
