@@ -194,6 +194,10 @@ import 'vue-toastification/dist/index.css'
 // const options = {
 // };
 
+import useObserver from './directives/useObserver';
+
+app.directive('observe', useObserver);
+
 import Tooltip from 'primevue/tooltip';
 app.directive('tooltip', Tooltip);
 

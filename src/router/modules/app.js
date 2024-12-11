@@ -11,7 +11,7 @@ import ChatArea from '@/modules/App/chat/chatArea.vue'
 import Invite from '@/modules/App/Invite.vue'
 import Edit from '@/modules/App/profile/Edit.vue'
 import BecomeACreator from '@/modules/App/profile/BecomeACreator.vue'
-import Reels from '@/modules/App/Reels.vue'
+import Reels from '@/modules/App/Index.vue'
 
 const routes = [
   {

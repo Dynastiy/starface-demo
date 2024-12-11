@@ -43,9 +43,10 @@
         <!-- Loader for video loading -->
         <div
           v-if="!videoLoaded[index] && !videoError[index]"
-          class="!bg-[#191819] h-[100dvh] absolute inset-0 flex items-center justify-center"
+          class="!bg-[#fff] bg-opacity-50 h-[100dvh] absolute inset-0 flex items-center justify-center"
         >
-          <img src="@/assets/animation/load.gif" alt="" />
+          <!-- <img src="@/assets/animati+on/load.gif" alt="" /> -->
+           <span>Loading</span>
         </div>
       </div>
 
