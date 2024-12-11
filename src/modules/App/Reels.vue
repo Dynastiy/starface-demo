@@ -46,7 +46,8 @@
           class="!bg-[#fff] bg-opacity-50 h-[100dvh] absolute inset-0 flex items-center justify-center"
         >
           <!-- <img src="@/assets/animati+on/load.gif" alt="" /> -->
-           <span>Loading</span>
+           <!-- <span>Loading</span> -->
+            <i-icon icon="eos-icons:loading" />
         </div>
       </div>
 
