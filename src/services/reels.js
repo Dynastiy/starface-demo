@@ -5,9 +5,9 @@ import { catchAxiosError, catchAxiosSuccess } from './response'
 // const toast = useToast();
 
 export default {
-  async list() {
+  async list(params) {
     try {
-      let res = await $request.get(`api/reel/get-reels`)
+      let res = await $request.get(`api/reel/get-reels`, { params })
       return res.data
     } catch (error) {
       catchAxiosError(error)

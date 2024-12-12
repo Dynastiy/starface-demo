@@ -1,11 +1,5 @@
 <template>
   <div class="h-screen overflow-y-auto snap-y snap-mandatory">
-    <!-- <div
-      v-if="loading"
-      class="!bg-[#191819] h-[100dvh] absolute inset-0 flex items-center justify-center"
-    >
-      <img src="@/assets/animation/load.gif" alt="" />
-    </div> -->
     <div
       v-for="(video, index) in videos"
       :key="video._id"
@@ -46,8 +40,8 @@
           class="!bg-[#fff] bg-opacity-50 h-[100dvh] absolute inset-0 flex items-center justify-center"
         >
           <!-- <img src="@/assets/animati+on/load.gif" alt="" /> -->
-           <!-- <span>Loading</span> -->
-            <i-icon icon="eos-icons:loading" />
+          <!-- <span>Loading</span> -->
+          <i-icon icon="eos-icons:loading" />
         </div>
       </div>
 
@@ -167,7 +161,9 @@ export default {
       comments: [],
       reel: {},
       visibleBottom: false,
-      lastThresholdHit: -1 // Prevent duplicate API calls
+      lastThresholdHit: -1, // Prevent duplicate API calls
+      currentPage: 1,
+      totalPages: 1
     }
   },
   methods: {
@@ -257,8 +253,9 @@ export default {
     },
 
     getReels(append = false) {
+      let page = this.currentPage
       this.$reels
-        .list()
+        .list({ page })
         .then((res) => {
           console.log(res)
           if (res && res.reels) {
@@ -272,7 +269,8 @@ export default {
             } else {
               this.videos = newReels // Replace with initial reels
             }
-
+            this.currentPage = res.currentPage
+            this.totalPages = res.totalPages
             this.videoLoaded = Array(res.reels.length).fill(false)
             this.videoError = Array(res.reels.length).fill(false)
 
@@ -335,9 +333,15 @@ export default {
           })
 
           // Check if we are nearing the end of the list and fetch more videos
-          if (index >= this.videos.length - 4 && this.lastThresholdHit !== index) {
+
+
+          if (index >= this.videos.length - 1 && this.lastThresholdHit !== index) {
             this.lastThresholdHit = index // Avoid duplicate calls
-            this.getReels(true) // Fetch more videos
+
+            console.log(this.currentPage, this.totalPages)
+            this.nextPage()
+            // this.getReels(true)
+            // Fetch more videos
           }
         } else if (video) {
           video.pause()
@@ -363,8 +367,17 @@ export default {
         scrollContainer.scrollTop + scrollContainer.clientHeight >=
         scrollContainer.scrollHeight - 400 // Trigger 200px before the bottom
       ) {
-        this.getReels(true) // Load more reels
+        this.nextPage()
+        console.log(this.currentPage, this.totalPages)
       }
+    },
+
+    nextPage() {
+      console.log(this.currentPage, this.totalPages)
+      if (this.currentPage < this.totalPages) {
+        this.currentPage++
+      }
+      return
     }
   },
 
@@ -379,6 +392,16 @@ export default {
   unmounted() {
     // this.$el.removeEventListener('scroll', this.handleScroll)
     if (this.observer) this.observer.disconnect()
+  },
+
+  watch: {
+    currentPage: {
+      handler(val) {
+        if (val) {
+          this.getReels(true) // Load more reels
+        }
+      }
+    }
   },
 
   computed: {
