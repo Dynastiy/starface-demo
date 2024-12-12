@@ -1,7 +1,8 @@
 import { jwtDecode } from 'jwt-decode'
 import $toastify from 'toastify-js'
 // import Vue from "vue";
-// import store from '@/store'
+import store from '@/store'
+import router from '@/router'
 
 export function checkTokenExpiration() {
   const token = localStorage.getItem('_starface_token')
@@ -29,6 +30,8 @@ export function checkTokenExpiration() {
           background: '#ff0000'
         }
       }).showToast()
+      store.dispatch('auth/logout')
+      router.push('/auth/login')
       console.log('expired')
     }
   }
