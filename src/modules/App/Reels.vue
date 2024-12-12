@@ -335,13 +335,10 @@ export default {
           // Check if we are nearing the end of the list and fetch more videos
 
 
-          if (index >= this.videos.length - 1 && this.lastThresholdHit !== index) {
+          if (index >= this.videos.length - 4 && this.lastThresholdHit !== index) {
             this.lastThresholdHit = index // Avoid duplicate calls
-
             console.log(this.currentPage, this.totalPages)
             this.nextPage()
-            // this.getReels(true)
-            // Fetch more videos
           }
         } else if (video) {
           video.pause()
