@@ -1,26 +1,14 @@
 import { jwtDecode } from 'jwt-decode'
+import $toastify from 'toastify-js'
 // import Vue from "vue";
-import store from '@/store'
-import appDomain from '@/services/appDomain'
-
-function loginUser() {
-  const user = store.getters['auth/getUserMeta']
-  let payload = {
-    chat_id: user.telegram_chat_id
-  }
-  appDomain.getUser(payload).then((res) => {
-    console.log(res, 'from:checking expired data')
-    store.commit('auth/setUser', res.data)
-    localStorage.setItem('_mangomeet_token', res.data.access_token)
-  })
-}
+// import store from '@/store'
 
 export function checkTokenExpiration() {
-  const token = localStorage.getItem('_mangomeet_token')
+  const token = localStorage.getItem('_starface_token')
   if (token) {
     // Decode the token to get the expiration time
     const tokenData = jwtDecode(token)
-    // console.log(tokenData, 'ommmmmo')
+    console.log(tokenData, 'ommmmmo')
 
     // Check if the token has expired
     if (tokenData.exp * 1000 < Date.now()) {
@@ -30,7 +18,17 @@ export function checkTokenExpiration() {
       //     type: "error",
       //     position: "top",
       //   });
-      loginUser()
+      // loginUser()
+      $toastify({
+        text: 'Session Expired, login',
+        gravity: 'top', // `top` or `bottom`
+        position: 'center', // `left`, `center` or `right`
+        style: {
+          fontSize: '13px',
+          borderRadius: '4px',
+          background: '#ff0000'
+        }
+      }).showToast()
       console.log('expired')
     }
   }
