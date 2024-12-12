@@ -32,7 +32,6 @@ export function checkTokenExpiration() {
       }).showToast()
       store.dispatch('auth/logout')
       router.push('/auth/login')
-      console.log('expired')
     }
   }
 }
