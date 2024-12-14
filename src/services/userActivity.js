@@ -13,6 +13,16 @@ export default {
     }
   },
 
+  async getNotifications() {
+    try {
+      let res = await $request.get(`api/chat/notification`)
+      return res.data
+    } catch (error) {
+      // catchAxiosError(error)
+      return error
+    }
+  },
+
   async views() {
     try {
       let res = await $request.get(`api/activity/views-like`)
@@ -85,5 +95,39 @@ export default {
       catchAxiosError(error)
       throw error
     }
+  },
+
+  async getStakes() {
+    try {
+      let res = await $request.get(`api/staking/get-stakes`)
+      // catchAxiosSuccess(res.data)
+      return res.data
+    } catch (error) {
+      // catchAxiosError(error)
+      return error
+    }
+  },
+
+  async stake(payload) {
+    try {
+      let res = await $request.post(`api/staking/stake`, payload)
+      catchAxiosSuccess(res.data)
+      return res.data
+    } catch (error) {
+      catchAxiosError(error)
+      return error
+    }
+  },
+
+  async unstake(ID) {
+    try {
+      let res = await $request.get(`api/staking/unstake/${ID}`)
+      catchAxiosSuccess(res.data)
+      return res.data
+    } catch (error) {
+      catchAxiosError(error)
+      return error
+    }
   }
+  
 }

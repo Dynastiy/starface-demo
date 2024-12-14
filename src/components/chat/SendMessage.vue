@@ -9,10 +9,16 @@
         <span class="capitalize text-gray-500 text-[14px]">{{ `(@${info.userName})?` }}</span>
       </h4>
       <div class="flex justify-center gap-3 mt-2">
-        <button @click="updateStatus('rejected')" class="bg-gray-200 px-4 font-semibold text-red-600 rounded-md py-2 text-[16px]">
+        <button
+          @click="updateStatus('rejected')"
+          class="bg-gray-200 px-4 font-semibold text-red-600 rounded-md py-2 text-[16px]"
+        >
           Delete
         </button>
-        <button @click="updateStatus('accepted')" class="bg-gray-200 px-4 font-semibold text-green-600 rounded-md py-2 text-[16px]">
+        <button
+          @click="updateStatus('accepted')"
+          class="bg-gray-200 px-4 font-semibold text-green-600 rounded-md py-2 text-[16px]"
+        >
           Accept
         </button>
       </div>
@@ -44,6 +50,7 @@
 </template>
 
 <script>
+import socket from '@/plugins/socket'
 export default {
   props: {
     isRefreshing: Boolean
@@ -66,10 +73,18 @@ export default {
         text: this.content
       }
       this.$chat.send(payload).then((res) => {
-        console.log(res)
+        // console.log(res)
         this.content = ''
         this.$emit('refresh')
+        return res
       })
+      // socket.emit('sendMessage', this.chatID, payload)
+      // this.content = ''
+    },
+
+    joinConversation() {
+      // Join the conversation room
+      socket.emit('join', this.chatID)
     },
 
     getUser() {
@@ -85,9 +100,9 @@ export default {
       }
       console.log(payload)
       this.$chat.updateStatus(payload, this.chatID).then(() => {
-        if(status == 'rejected') {
+        if (status == 'rejected') {
           this.$router.go(-1)
-          return 
+          return
         }
         this.$router.replace({
           query: {
@@ -102,6 +117,7 @@ export default {
 
   mounted() {
     this.getUser()
+    this.joinConversation()
   },
 
   computed: {

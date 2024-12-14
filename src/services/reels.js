@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import $request from '@/axios/index'
 import { catchAxiosError, catchAxiosSuccess } from './response'
 // import { catchAxiosError } from './response'
@@ -36,6 +37,8 @@ export default {
   },
 
   async create(formData) {
+    // eslint-disable-next-line no-undef
+    NProgress.start();
     try {
       let res = await $request.post(`api/reel/post-reels`, formData)
       catchAxiosSuccess(res.data)
@@ -44,9 +47,13 @@ export default {
       catchAxiosError(error)
       throw error
     }
+    finally {
+      NProgress.done();
+    }
   },
 
   async uploadImage(formData) {
+    NProgress.start();
     try {
       let res = await $request.post(`api/images/upload`, formData)
       catchAxiosSuccess(res.data)
@@ -54,6 +61,9 @@ export default {
     } catch (error) {
       catchAxiosError(error)
       throw error
+    }
+    finally {
+      NProgress.done();
     }
   },
 

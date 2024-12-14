@@ -48,7 +48,7 @@
           role="button"
           v-clipboard:success="onCopy"
           v-clipboard:error="onError"
-          class="underline text-primary font-semibold"
+          class="underline text-primary break-all font-semibold"
           >{{ walletAddress }}</span
         >, then proceed to withdraw.</span
       >

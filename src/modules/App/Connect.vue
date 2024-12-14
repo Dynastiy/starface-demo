@@ -1,19 +1,25 @@
 <template>
   <div class="reels-page p-4">
-    <div
-      class="input-field bg-white mb-4 w-full border-neutral-500 rounded-md border-[2px] w-full gap-2 items-center"
-    >
-      <span class="password-iccon">
-        <i-icon icon="ph:magnifying-glass" class="form-icon" />
-      </span>
-      <input
-        type="text"
-        name="search"
-        id="search"
-        @keyup="updateUrl"
-        v-model="search"
-        placeholder="Search Users"
-      />
+    <div class="flex gap-4 items-center mb-4">
+      <div
+        class="input-field bg-white w-full border-neutral-500 rounded-md border-[2px] w-full gap-2 items-center"
+      >
+        <span class="password-iccon">
+          <i-icon icon="ph:magnifying-glass" class="form-icon" />
+        </span>
+        <input
+          type="text"
+          name="search"
+          id="search"
+          @keyup="updateUrl"
+          v-model="filterData.search"
+          placeholder="Search Users"
+          class="bg-transparent"
+        />
+      </div>
+      <button class="text-white" @click="showContainer = true">
+        <i-icon icon="mi:filter" class="text-2xl" />
+      </button>
     </div>
     <el-skeleton :loading="loading" animated>
       <template #template>
@@ -64,6 +70,27 @@
         </swiper>
       </template>
     </el-skeleton>
+
+    <!-- Filter  -->
+    <vDialog
+      v-model:visible="showContainer"
+      modal
+      :style="{ width: '80%' }"
+      @hide="closeContainer"
+      @after-hide="closeContainer"
+      :showHeader="false"
+      unstyled
+      :pt="{
+        root: 'border-none',
+        mask: {
+          style: 'backdrop-filter: blur(4px)'
+        }
+      }"
+    >
+      <div class="bg-white p-6 shadow rounded-lg">
+        <ConnectFilter @closeFilterModal="closeContainer" @applyFilter="applyFilter" />
+      </div>
+    </vDialog>
   </div>
 </template>
 
@@ -75,12 +102,14 @@ import 'swiper/css/navigation'
 // import required modules
 import { Navigation } from 'swiper/modules'
 import { debounce } from 'lodash'
+import ConnectFilter from '@/components/filters/connectFilter.vue'
 // import StarIcon from '@/components/UI/StarIcon.vue';
 
 export default {
   components: {
     Swiper,
-    SwiperSlide
+    SwiperSlide,
+    ConnectFilter
     // StarIcon,
   },
   data() {
@@ -88,19 +117,33 @@ export default {
       loading: true,
       images: [],
       modules: [Navigation],
-      search: ''
+      filterData: {
+        search: ''
+      },
+      showContainer: false
     }
   },
   methods: {
     updateUrl: debounce(function () {
-      this.$router.push({ query: { search: this.search } })
+      let queryData = this.$route.query
+      this.$router.push({ query: { ...queryData, ...this.filterData } })
       this.getConnect('refresh')
     }, 500),
+
+    closeContainer() {
+      this.showContainer = false
+    },
+
+    applyFilter(e) {
+      let filterParams = JSON.parse(e)
+      this.filterData = {...filterParams}
+      this.updateUrl()
+    },
 
     async getConnect(value) {
       if (!value) this.loading = true
       let payload = {
-        search: this.search
+        ...this.filterData
       }
       try {
         const res = await this.$appImages.connect(payload)
@@ -226,8 +269,10 @@ export default {
     queryParams: {
       immediate: true, // Ensure it runs on component mount
       handler(newQuery) {
-        this.search = newQuery || ''
-        this.getConnect('refresh') // Fetch data based on the query
+        if (newQuery) {
+          this.search = newQuery || ''
+          this.getConnect('refresh') // Fetch data based on the query
+        }
       }
     }
   },

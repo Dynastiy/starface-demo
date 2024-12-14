@@ -53,6 +53,7 @@
 
 <script>
 import image from '@/assets/img/no-user.png'
+import socket from "@/plugins/socket";
 export default {
   props: {
     menu: {
@@ -78,6 +79,14 @@ export default {
         this.drawer = false
         this.$router.push(item.url).catch(() => {})
       }
+    },
+
+    getNotifications() {
+      // socket.emit('allMessages', this.userID)
+      // Emit the event to fetch user messages
+      socket.emit("allNotifications", this.userID, (response) => {
+        console.log(response)
+      });
     },
 
     logout() {
@@ -113,6 +122,10 @@ export default {
           }
         })
     }
+  },
+
+  mounted(){
+    this.getNotifications()
   },
 
   computed: {

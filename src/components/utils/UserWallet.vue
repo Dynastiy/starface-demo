@@ -26,7 +26,7 @@
             </button>
           </div>
 
-          <div class="flex flex-col gap-3 w-full">
+          <div class="grid grid-cols-2 gap-3 w-full">
             <div
               class="bg-secondary w-full p-3 rounded-md flex flex-col"
               v-for="(value, name) in walletData.otherBalances"
@@ -93,7 +93,8 @@ export default {
         { label: 'fund_wallet', icon: 'mingcute:send-fill' },
         { label: 'withdraw', icon: 'flowbite:download-solid' },
         { label: 'convert', icon: 'simple-icons:convertio' },
-        { label: 'purchase', icon: 'mingcute:transfer-line' }
+        { label: 'purchase', icon: 'mingcute:transfer-line' },
+        { label: 'staking', icon: 'streamline:investment-selection-solid' }
       ],
       localLoading: true
     }

@@ -104,7 +104,7 @@
     border-radius: 4px;
 }
 
-.canceled,
+.canceled, .cancelled,
 .deactivated,
 .rejected,
 .banned,

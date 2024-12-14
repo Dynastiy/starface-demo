@@ -91,8 +91,13 @@ export default {
 
   methods: {
     actionClick(e) {
-      this.showContainer = true
-      this.action = e.label
+      console.log(e)
+      if(e.label !== 'staking') {
+        this.showContainer = true
+        this.action = e.label
+        return
+      }
+      this.$router.push('/staking')
     },
 
     refreshData(){

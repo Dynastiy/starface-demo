@@ -138,6 +138,7 @@
 </template>
 
 <script>
+import socket from "@/plugins/socket";
 export default {
   data() {
     return {
@@ -277,7 +278,20 @@ export default {
       let participants = e.participants
       let user = participants.find((user) => user._id !== this.userID)
       return user
-    }
+    },
+
+    getMessages() {
+      // socket.emit('allMessages', this.userID)
+      // Emit the event to fetch user messages
+      socket.emit("allMessages", this.userID, (response) => {
+        this.loading = false;
+        if (response.success) {
+          this.messages = response.messages;
+        } else {
+          this.error = response.error || "Failed to fetch messages.";
+        }
+      });
+    },
   },
 
   beforeMount() {
@@ -285,7 +299,12 @@ export default {
   },
 
   mounted() {
-    this.intervalId = setInterval(this.getConversations, 10000)
+    socket.on("notification", (notification) => {
+      console.log(notification)
+    });
+    
+    this.getMessages()
+    // this.intervalId = setInterval(this.getConversations, 10000)
   },
 
   beforeUnmount() {

@@ -12,6 +12,7 @@ import Invite from '@/modules/App/Invite.vue'
 import Edit from '@/modules/App/profile/Edit.vue'
 import BecomeACreator from '@/modules/App/profile/BecomeACreator.vue'
 import Reels from '@/modules/App/Reels.vue'
+import Staking from '@/modules/App/Staking.vue'
 
 const routes = [
   {
@@ -48,6 +49,18 @@ const routes = [
       requiresAuth: true,
       parent: 'chat',
       name: 'chat'
+    }
+  },
+
+  {
+    path: '/staking',
+    name: 'staking',
+    component: Staking,
+    meta: {
+      layout: 'Dashboard',
+      requiresAuth: true,
+      parent: 'staking',
+      name: 'staking'
     }
   },
 

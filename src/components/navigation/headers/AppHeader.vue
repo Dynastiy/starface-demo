@@ -17,28 +17,24 @@
         </div>
       </div>
       <div class="flex gap-2 items-center">
-        <!-- {{user}} -->
+        <el-dropdown trigger="click">
+          <span class="el-dropdown-link">
+            <i-icon icon="ion:notifcations" class="" width="20px" />
+          </span>
+          <template #dropdown>
+            <el-dropdown-menu class="p-3 w-[200px]">
+              <span v-for="(item, idx) in notifications" :key="idx">Pending Request from {{item}}</span>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
         <img
           v-if="user"
           :src="user.profilePicture ? user.profilePicture : image"
-          class="w-[45px] h-[45px] border-2 p-[2px] border-gray-300 rounded-full object-fit object-top"
+          class="w-[40px] h-[40px] border-2 p-[2px] border-gray-300 rounded-full object-fit object-top"
           role="button"
           @click="$router.push('/profile')"
           @error="$handleProfileError"
         />
-        <!-- <div>
-          <span class="text-sm capitalize font-semibold block">Vendor</span>
-          <span class="text-xs block text-gray-400">{{
-            `${user.first_name} ${user.last_name}`
-          }}</span>
-        </div> -->
-        <!-- <button
-          v-if="routeName === 'home'"
-          class="brand-btn brand-primary rounded-full flex items-center gap-2 justify-center"
-          @click="$router.push('/upgrade')"
-        >
-          <i-icon icon="icomoon-free:fire" />
-        </button> -->
       </div>
     </div>
   </div>
@@ -46,11 +42,40 @@
 
 <script>
 import image from '@/assets/img/no-user.png'
+import socket from '@/plugins/socket'
 export default {
   data() {
     return {
-      image
+      image,
+      notifications: []
     }
+  },
+
+  methods: {
+    async getNotification() {
+      // Emit event to fetch all messages for the conversation
+      console.log('Fetching notifications for user ID:', this.user.id)
+      try {
+        let res = await this.$userActivity.getNotifications()
+        console.log(res)
+        this.notifications = res
+      } catch (error) {
+          return error
+      }
+      
+      // Emit the event to fetch all messages
+      socket.emit('getAllNotifications', { userId: this.user.id })
+    }
+  },
+
+  mounted() {
+    this.getNotification()
+    // Listen for messages when component mounts
+    socket.on('allNotifications', (data) => {
+      console.log('Notifications received:', data)
+    })
+
+    
   },
 
   watch: {
@@ -61,6 +86,10 @@ export default {
     //     }
     //   }
     // }
+  },
+
+  beforeUnmount() {
+    socket.off('allNotifications')
   },
 
   computed: {
