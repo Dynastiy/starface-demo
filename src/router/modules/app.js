@@ -13,6 +13,7 @@ import Edit from '@/modules/App/profile/Edit.vue'
 import BecomeACreator from '@/modules/App/profile/BecomeACreator.vue'
 import Reels from '@/modules/App/Reels.vue'
 import Staking from '@/modules/App/Staking.vue'
+import Notifications from '@/modules/App/Notifications.vue'
 
 const routes = [
   {
@@ -63,6 +64,19 @@ const routes = [
       name: 'staking'
     }
   },
+
+  {
+    path: '/notifications',
+    name: 'notifications',
+    component: Notifications,
+    meta: {
+      layout: 'Dashboard',
+      requiresAuth: true,
+      parent: 'notifications',
+      name: 'notifications'
+    }
+  },
+
 
   {
     path: '/chat/message/:id',

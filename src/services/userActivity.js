@@ -23,6 +23,16 @@ export default {
     }
   },
 
+  async readNotification(ID) {
+    try {
+      let res = await $request.post(`api/chat/notification/${ID}`, {})
+      return res.data
+    } catch (error) {
+      // catchAxiosError(error)
+      return error
+    }
+  },
+
   async views() {
     try {
       let res = await $request.get(`api/activity/views-like`)

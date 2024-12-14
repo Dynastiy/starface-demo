@@ -1,6 +1,7 @@
 <template>
   <div class="py-2 px-4 bg-white z-10 rounded-bl-3xl rounded-br-3xl">
     <div class="flex justify-between items-center">
+      <!-- {{ user }} -->
       <!-- <span v-if="routeName === 'home'" class="brand-icon block text-2xl">
 
       </span> -->
@@ -17,16 +18,35 @@
         </div>
       </div>
       <div class="flex gap-2 items-center">
-        <el-dropdown trigger="click">
-          <span class="el-dropdown-link">
-            <i-icon icon="ion:notifcations" class="" width="20px" />
+        <!-- <el-dropdown trigger="click" placement="bottom-end">
+          <span class="el-dropdown-link relative">
+            <i-icon icon="ion:notifcations" class="text-[#000]" width="25px" />
+            <span class="absolute block bg-red-600 top-0 right-0 text-white font-medium w-3 h-3 ring ring-[2px] ring-white rounded-full text-[8px] flex items-center justify-center">
+              {{unreadNotifications.length}}
+            </span>
           </span>
           <template #dropdown>
             <el-dropdown-menu class="p-3 w-[200px]">
-              <span v-for="(item, idx) in notifications" :key="idx">Pending Request from {{item}}</span>
+              <template v-if="notifications.length">
+                <div class="flex flex-col" v-for="(item, idx) in unreadNotifications" :key="idx">
+                  <span> {{ item.type }} from {{ item.senderName || 'user' }}</span>
+                  <span>{{ item.text }}</span>
+                </div>
+              </template>
+              <template v-else>
+                <div>No notifications</div>
+              </template>
             </el-dropdown-menu>
           </template>
-        </el-dropdown>
+        </el-dropdown> -->
+        <router-link to="/notifications" class="relative">
+          <i-icon icon="ion:notifcations" class="text-[#000]" width="25px" />
+          <span
+            class="absolute block bg-red-600 top-0 right-0 text-white font-medium w-3 h-3 ring ring-[2px] ring-white rounded-full p-[3px] text-[10px] flex items-center justify-center"
+          >
+            {{ unreadNotifications.length }}
+          </span>
+        </router-link>
         <img
           v-if="user"
           :src="user.profilePicture ? user.profilePicture : image"
@@ -47,35 +67,40 @@ export default {
   data() {
     return {
       image,
-      notifications: []
+      notifications: [],
+      unreadNotifications: []
     }
   },
 
   methods: {
     async getNotification() {
-      // Emit event to fetch all messages for the conversation
+      // Emit event to fetch all notifications for the conversation
       console.log('Fetching notifications for user ID:', this.user.id)
       try {
         let res = await this.$userActivity.getNotifications()
-        console.log(res)
         this.notifications = res
+        this.unreadNotifications = res.filter((item) => !item.isRead)
       } catch (error) {
-          return error
+        return error
       }
-      
       // Emit the event to fetch all messages
-      socket.emit('getAllNotifications', { userId: this.user.id })
+      // socket.emit('getAllNotifications', { userId: this.user.id })
     }
   },
 
   mounted() {
     this.getNotification()
     // Listen for messages when component mounts
-    socket.on('allNotifications', (data) => {
-      console.log('Notifications received:', data)
-    })
 
-    
+    socket.on('newNotification', (notification) => {
+      console.log('Notification received:', notification)
+      // console.log(message)
+      this.unreadNotifications.unshift(notification)
+      // this.$nextTick(this.scrollToEnd)
+    })
+    //  socket.on('newNotification', (data) => {
+    //   console.log('Notifications received:', data)
+    // })
   },
 
   watch: {
@@ -89,7 +114,7 @@ export default {
   },
 
   beforeUnmount() {
-    socket.off('allNotifications')
+    socket.off('newNotification')
   },
 
   computed: {

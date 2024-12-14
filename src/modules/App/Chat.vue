@@ -186,6 +186,8 @@ export default {
         .finally(() => {
           this.loading = false
         })
+        // Emit the event to fetch all messages
+      socket.emit('getAllConversations', { userId: this.userID })
     },
 
     openChat(item) {
@@ -299,11 +301,11 @@ export default {
   },
 
   mounted() {
-    socket.on("notification", (notification) => {
-      console.log(notification)
-    });
-    
     this.getMessages()
+
+     socket.on('allConversations', (data) => {
+      console.log('conversations received:', data)
+    })
     // this.intervalId = setInterval(this.getConversations, 10000)
   },
 
