@@ -2,6 +2,7 @@
   <div class="">
     <Loader v-if="isLoading" />
     <div class="flex flex-col justify-between">
+      <!-- <span>{{ uploadProgress }}</span> -->
       <div class="mt-4">
         <div
           class="dropzone-container group relative flex flex-col items-center justify-center text-center"
@@ -9,7 +10,7 @@
           @dragleave="dragleave"
           @drop="drop"
         >
-          <input
+          <input  
             type="file"
             name="file"
             id="fileInput"
@@ -83,7 +84,8 @@ export default {
       isDragging: false,
       file: null,
       description: '',
-      title: ''
+      title: '',
+      uploadProgress: 0
     }
   },
 

@@ -84,7 +84,8 @@ export default {
         return error
       }
       // Emit the event to fetch all messages
-      // socket.emit('getAllNotifications', { userId: this.user.id })
+      let userId = this.user._id
+      socket.emit('getAllNotifications', { userId })
     }
   },
 
@@ -98,9 +99,9 @@ export default {
       this.unreadNotifications.unshift(notification)
       // this.$nextTick(this.scrollToEnd)
     })
-    //  socket.on('newNotification', (data) => {
-    //   console.log('Notifications received:', data)
-    // })
+    socket.on('allNotifications', (data) => {
+      console.log('Notifications received:', data)
+    })
   },
 
   watch: {
@@ -115,6 +116,7 @@ export default {
 
   beforeUnmount() {
     socket.off('newNotification')
+    socket.off('allNotifications')
   },
 
   computed: {
