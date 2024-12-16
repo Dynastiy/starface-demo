@@ -34,7 +34,7 @@ export default {
   methods: {
     async getConversation() {
       // Emit event to fetch all messages for the conversation
-      console.log("Fetching messages for conversation ID:", this.ID);
+      // console.log("Fetching messages for conversation ID:", this.ID);
       try {
         const res = await this.$chat.conversation(this.ID)
         this.messages = res

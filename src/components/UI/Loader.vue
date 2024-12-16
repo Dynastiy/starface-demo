@@ -3,9 +3,15 @@
       <div class="">
       <div class="flex flex-col items-center">
         <i-icon icon="line-md:loading-twotone-loop" class="text-[80px] text-primary" />
-        <span class="font-sm font-medium text-white">
+        <div>
+          <span class="font-sm font-medium text-white">
           {{ loaderText }}
         </span>
+        <span class="text-white font-bold">
+          <!-- 10%  -->
+          <slot name="counter"></slot>
+        </span>
+        </div>
       </div>
     </div>
     </div>

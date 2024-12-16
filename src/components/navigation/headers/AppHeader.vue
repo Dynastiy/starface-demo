@@ -75,7 +75,7 @@ export default {
   methods: {
     async getNotification() {
       // Emit event to fetch all notifications for the conversation
-      console.log('Fetching notifications for user ID:', this.user.id)
+      // console.log('Fetching notifications for user ID:', this.user.id)
       try {
         let res = await this.$userActivity.getNotifications()
         this.notifications = res
@@ -84,24 +84,24 @@ export default {
         return error
       }
       // Emit the event to fetch all messages
-      let userId = this.user._id
-      socket.emit('getAllNotifications', { userId })
+      let data = { userId: this.user._id }
+      socket.emit('getAllNotifications', data)
     }
   },
 
   mounted() {
-    this.getNotification()
-    // Listen for messages when component mounts
 
+    // Listen for messages when component mounts
     socket.on('newNotification', (notification) => {
       console.log('Notification received:', notification)
-      // console.log(message)
       this.unreadNotifications.unshift(notification)
-      // this.$nextTick(this.scrollToEnd)
     })
+
     socket.on('allNotifications', (data) => {
       console.log('Notifications received:', data)
     })
+
+    this.getNotification()
   },
 
   watch: {
@@ -115,8 +115,8 @@ export default {
   },
 
   beforeUnmount() {
-    socket.off('newNotification')
-    socket.off('allNotifications')
+    // socket.off('newNotification')
+    // socket.off('allNotifications')
   },
 
   computed: {

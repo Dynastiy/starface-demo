@@ -1,6 +1,11 @@
 <template>
   <div class="">
-    <Loader v-if="isLoading" />
+    <!-- <Loader v-if="isLoading" /> -->
+     <Loader v-if="isLoading">
+      <template #counter>
+        <span v-if="uploadProgress > 0">{{ `${Math.ceil(uploadProgress)}%` }}</span>
+      </template>
+      </Loader>
     <div class="flex flex-col justify-between">
       <!-- <span>{{ uploadProgress }}</span> -->
       <div class="mt-4">
@@ -10,7 +15,7 @@
           @dragleave="dragleave"
           @drop="drop"
         >
-          <input  
+          <input
             type="file"
             name="file"
             id="fileInput"
@@ -76,7 +81,11 @@
 </template>
 
 <script>
+import socket from '@/plugins/socket'
 export default {
+  props: {
+    uploadProgressValue: Number
+  },
   data() {
     return {
       isLoading: false,
@@ -112,7 +121,6 @@ export default {
     onChange() {
       this.files = this.$refs.file.files
       this.image = this.files[0]
-      console.log(this.files[0], 'from:photo Upload')
     },
 
     dragover(e) {
@@ -132,16 +140,13 @@ export default {
     },
 
     removeImage() {
-      //   ) {
       this.image = null
-      //   }
     },
 
     generateURL() {
       let fileSrc = URL.createObjectURL(this.files[0])
       console.log(fileSrc)
       this.file = fileSrc
-      // return { backgroundImage: `url(${fileSrc})` }
       return fileSrc
     },
 
@@ -157,7 +162,28 @@ export default {
   },
 
   mounted() {
-    // this.getUser()
+    // Listen for progress updates
+    socket.on('uploadProgress', (data) => {
+      if (data.step == 'started') {
+        console.log('Upload started')
+      } else if (data.step == 'processing' || data.step == 'hlsProcessing' ) {
+        // console.log(`Processing: ${data.progress}%`)
+        this.uploadProgress = data.progress
+      } else if (data.step == 'completed') {
+        console.log('Upload completed successfully!')
+      } else if (data.step == 'error') {
+        console.error('Error during upload:', data.error)
+      }
+    })
+  },
+
+  watch: {
+    // uploadProgressValue: {
+    //   handler(val) {
+    //     console.log('uploadProgressValue changed:', val)
+    //   },
+    //   immediate: true
+    // }
   },
 
   computed: {

@@ -16,7 +16,7 @@ const filters = ref({
   minAge: ageValue.value[0],
   maxAge: ageValue.value[1],
   gender: '',
-  search: ''
+  // search: ''
 })
 
 const applyFilter = async () => {
@@ -50,7 +50,7 @@ const clearFilter = () => {
 
       <form class="flex flex-col space-y-4" @submit.prevent="applyFilter">
         <!-- Name Input -->
-        <div>
+        <!-- <div>
           <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
           <input
             type="text"
@@ -59,7 +59,7 @@ const clearFilter = () => {
             placeholder="Enter name"
             class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:ring-primary"
           />
-        </div>
+        </div> -->
 
         <div>
           <label for="age" class="block text-sm font-medium text-gray-700">Age Range</label>

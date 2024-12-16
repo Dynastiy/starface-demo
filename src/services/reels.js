@@ -30,7 +30,7 @@ export default {
 
   async comment(formData, id) {
     try {
-      let res = await $request.post(`api/reel/reels/${id}/comment`, formData)
+      let res = await $request.post(`api/reels-action/comment/${id}`, formData)
       return res.data
     } catch (error) {
       catchAxiosError(error)
@@ -87,7 +87,7 @@ export default {
 
   async like(formData, id) {
     try {
-      let res = await $request.post(`api/reel/reels/${id}/like`, formData)
+      let res = await $request.post(`api/reels-action/like/${id}`, formData)
       // catchAxiosSuccess(res.data)
       return res.data
     } catch (error) {
@@ -98,7 +98,7 @@ export default {
 
   async share(id) {
     try {
-      let res = await $request.post(`api/reel/reels/${id}/share`)
+      let res = await $request.post(`api/reels-action/share/${id}`)
       // catchAxiosSuccess(res.data)
       return res.data
     } catch (error) {

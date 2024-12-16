@@ -20,6 +20,7 @@
             loop
             :muted="muteAll"
             preload="auto"
+            ref="videoPlayers"
           ></video>
         </template>
         <template v-else>
@@ -51,7 +52,7 @@
       >
         <div class="flex justify-between items-end">
           <user-data :reelData="video" />
-          <actions @getActionable="getActionable" :reelData="video" @refresh="refresh" />
+          <actions @getActionable="getActionable" :reelData="video" />
         </div>
       </div>
     </div>
@@ -123,9 +124,9 @@
       <div class="">
         <Comments
           v-if="actionable == 'comments'"
-          @refreshReel="refreshReel"
           :items="comments"
           :reel="reel"
+          @refreshReel="refreshReel"
         />
       </div>
       <div class="">
@@ -142,7 +143,8 @@ import Actions from '@/components/reels/Actions.vue'
 import UserData from '@/components/reels/UserData.vue'
 import WalletData from '@/components/utils/walletData.vue'
 import Comments from '@/components/reels/Comments.vue'
-
+import socket from '@/plugins/socket'
+import Hls from 'hls.js'
 export default {
   components: { Actions, UserData, WalletData, Comments },
   name: 'Reels',
@@ -169,17 +171,17 @@ export default {
   methods: {
     refreshReel(e) {
       this.getReel(e)
-      this.refresh()
+      // this.refresh()
     },
 
-    refresh() {
-      this.$reels.list().then((res) => {
-        this.videos = res.reels.map((video) => ({
-          ...video,
-          fallbackImage: video.fallbackImage || null // Add fallback image if available
-        }))
-      })
-    },
+    // refresh() {
+    //   this.$reels.list().then((res) => {
+    //     this.videos = res.reels.map((video) => ({
+    //       ...video,
+    //       fallbackImage: video.fallbackImage || null // Add fallback image if available
+    //     }))
+    //   })
+    // },
 
     getActionable(e) {
       this.visibleBottom = true
@@ -269,6 +271,11 @@ export default {
             } else {
               this.videos = newReels // Replace with initial reels
             }
+
+            this.videos.forEach((reel) => {
+              socket.emit('joinReelRoom', reel._id)
+            })
+
             this.currentPage = res.currentPage
             this.totalPages = res.totalPages
             this.videoLoaded = Array(res.reels.length).fill(false)
@@ -281,6 +288,26 @@ export default {
               videoElement.preload = 'auto'
               videoElement.addEventListener('loadeddata', () => this.handleLoaded(index))
               videoElement.addEventListener('error', () => this.handleVideoError(index))
+            })
+
+            this.$nextTick(() => {
+              if (this.videos) {
+                this.videos.forEach((reel, index) => {
+                  const videoElement = this.$refs.videoPlayers[index]
+                  console.log(videoElement, 'ommmo')
+                  if (videoElement) {
+                    if (Hls.isSupported()) {
+                      const hls = new Hls()
+                      hls.loadSource(reel.videoUrl)
+                      hls.attachMedia(videoElement)
+                    } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
+                      videoElement.src = reel.videoUrl
+                    } else {
+                      console.error(`HLS not supported on video ${index + 1}`)
+                    }
+                  }
+                })
+              }
             })
           }
         })
@@ -334,7 +361,6 @@ export default {
 
           // Check if we are nearing the end of the list and fetch more videos
 
-
           if (index >= this.videos.length - 4 && this.lastThresholdHit !== index) {
             this.lastThresholdHit = index // Avoid duplicate calls
             console.log(this.currentPage, this.totalPages)
@@ -384,11 +410,19 @@ export default {
     this.getReels()
     this.getEarnWallet()
     this.showContainerModified()
+
+    socket.on('reelUpdated', ({ reelId, updatedData }) => {
+      console.log(updatedData, reelId, 'updated data')
+      this.videos = this.videos.map((reel) =>
+        reel._id == reelId ? { ...reel, ...updatedData } : reel
+      )
+    })
   },
 
   unmounted() {
     // this.$el.removeEventListener('scroll', this.handleScroll)
     if (this.observer) this.observer.disconnect()
+    socket.off('reelUpdated')
   },
 
   watch: {

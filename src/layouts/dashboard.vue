@@ -61,7 +61,11 @@
         </div>
         <div class="mt-2">
           <upload-image v-if="type == 'image'" @completed="completed" />
-          <upload-video v-if="type == 'video'" @completed="completed" />
+          <upload-video
+            v-if="type == 'video'"
+            :uploadProgressValue="uploadProgress"
+            @completed="completed"
+          />
         </div>
       </div>
     </vDialog>
@@ -74,6 +78,9 @@ import BottomNavigation from '@/components/navigation/BottomNavigation.vue'
 import UploadImage from '@/components/upload/UploadImage.vue'
 import UploadVideo from '@/components/upload/UploadVideo.vue'
 import AppHeader from '@/components/navigation/headers/AppHeader.vue'
+
+import socket from '@/plugins/socket'
+// import { onBeforeUnmount } from 'vue'
 // import WalletData from '@/components/utils/walletData.vue'
 export default {
   components: { BottomNavigation, UploadImage, UploadVideo, AppHeader },
@@ -121,7 +128,8 @@ export default {
       ],
       visibleBottom: false,
       showContainer: false,
-      type: ''
+      type: '',
+      uploadProgress: 0
     }
   },
 
@@ -147,14 +155,25 @@ export default {
 
     closeContainer() {
       this.showContainer = false
+    },
+
+    joinUploadRoom() {
+      // Join the user's room
+      const userId = this.user._id
+      socket.emit('joinUploadReelsRoom', userId)
     }
   },
 
   mounted() {
-    // this.enterFullscreen()
+    this.joinUploadRoom()
+    
   },
 
   created() {},
+
+  onBeforeUnmount() {
+    socket.off('uploadProgress')
+  },
 
   computed: {
     isNotVisible() {

@@ -9,7 +9,7 @@ export function checkTokenExpiration() {
   if (token) {
     // Decode the token to get the expiration time
     const tokenData = jwtDecode(token)
-    console.log(tokenData, 'ommmmmo')
+    // console.log(tokenData, 'ommmmmo')
 
     // Check if the token has expired
     if (tokenData.exp * 1000 < Date.now()) {
