@@ -111,8 +111,8 @@
                     class="rounded-sm h-[80px] w-full object-cover object-center"
                     v-if="!item.hasError"
                     @error="handleVideoError(index)"
-                    autoplay
                     muted
+                    ref="videoPlayers"
                     :src="item?.videoUrl"
                   ></video>
                   <img
@@ -160,6 +160,7 @@
             class="rounded-sm h-[250px] w-[100%] object-cover object-center"
             :src="item?.videoUrl"
             controls
+            ref="videoInfo"
           ></video>
           <img
             v-if="type == 'image'"
@@ -188,7 +189,7 @@
 // import Referral from '@/components/profile/Referral.vue'
 // import { markRaw } from 'vue'
 import image from '@/assets/img/no-user.png'
-
+import Hls from 'hls.js'
 export default {
   // components: { Edit, Transactions },
   data() {
@@ -415,6 +416,25 @@ export default {
       this.$appImages.getUserReels(this.userID).then((res) => {
         console.log(res)
         this.reels = res.reels
+        this.$nextTick(() => {
+          if (this.reels) {
+            this.reels.forEach((reel, index) => {
+              const videoElement = this.$refs.videoPlayers[index]
+              console.log(videoElement, 'ommmo')
+              if (videoElement) {
+                if (Hls.isSupported()) {
+                  const hls = new Hls()
+                  hls.loadSource(reel.videoUrl)
+                  hls.attachMedia(videoElement)
+                } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
+                  videoElement.src = reel.videoUrl
+                } else {
+                  console.error(`HLS not supported on video ${index + 1}`)
+                }
+              }
+            })
+          }
+        })
         // this.images = res.data
         // this.info = res.user
       })
@@ -439,6 +459,22 @@ export default {
       },
       immediate: true,
       deep: true
+    },
+
+    showContainer(newVal) {
+      if (newVal && this.type === 'video' && Hls.isSupported()) {
+        this.$nextTick(() => {
+          const videoElement = this.$refs.videoInfo
+          if (videoElement) {
+            // console.log(videoElement, 'Video element found')
+            const hls = new Hls()
+            hls.loadSource(this.item?.videoUrl)
+            hls.attachMedia(videoElement)
+          } else {
+            console.error('Video element is still null')
+          }
+        })
+      }
     }
   },
 
