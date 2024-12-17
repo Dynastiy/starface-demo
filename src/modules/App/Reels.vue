@@ -193,7 +193,7 @@ export default {
 
     getReel(id) {
       this.$reels.get(id).then((res) => {
-        console.log(res)
+        // console.log(res)
         this.comments = res.reel.comments
         this.reel = res.reel
       })
@@ -248,7 +248,7 @@ export default {
         return
       }
       this.$wallet.earnWallet().then((res) => {
-        console.log(res)
+        // console.log(res)
         this.starBalance = res.star
       })
     },
@@ -258,7 +258,7 @@ export default {
       this.$reels
         .list({ page })
         .then((res) => {
-          console.log(res)
+          // console.log(res)
           if (res && res.reels) {
             const newReels = res.reels.map((video) => ({
               ...video,
@@ -293,7 +293,7 @@ export default {
               if (this.videos) {
                 this.videos.forEach((reel, index) => {
                   const videoElement = this.$refs.videoPlayers[index]
-                  console.log(videoElement, 'ommmo')
+                  // console.log(videoElement, 'ommmo')
                   videoElement.addEventListener('loadeddata', () => this.handleLoaded(index))
                   videoElement.addEventListener('error', () => this.handleVideoError(index))
                   if (videoElement) {
@@ -356,15 +356,16 @@ export default {
 
         if (entry.isIntersecting && video && !this.videoError[index]) {
           video.play().catch((error) => {
-            console.error('Error playing video:', error.message)
+            // console.error('Error playing video:', error.message)
             this.handleVideoError(index)
+            return error
           })
 
           // Check if we are nearing the end of the list and fetch more videos
 
           if (index >= this.videos.length - 4 && this.lastThresholdHit !== index) {
             this.lastThresholdHit = index // Avoid duplicate calls
-            console.log(this.currentPage, this.totalPages)
+            // console.log(this.currentPage, this.totalPages)
             this.nextPage()
           }
         } else if (video) {
@@ -392,12 +393,12 @@ export default {
         scrollContainer.scrollHeight - 400 // Trigger 200px before the bottom
       ) {
         this.nextPage()
-        console.log(this.currentPage, this.totalPages)
+        // console.log(this.currentPage, this.totalPages)
       }
     },
 
     nextPage() {
-      console.log(this.currentPage, this.totalPages)
+      // console.log(this.currentPage, this.totalPages)
       if (this.currentPage < this.totalPages) {
         this.currentPage++
       }
@@ -413,7 +414,7 @@ export default {
     this.showContainerModified()
 
     socket.on('reelUpdated', ({ reelId, updatedData }) => {
-      console.log(updatedData, reelId, 'updated data')
+      // console.log(updatedData, reelId, 'updated data')
       this.videos = this.videos.map((reel) =>
         reel._id == reelId ? { ...reel, ...updatedData } : reel
       )
