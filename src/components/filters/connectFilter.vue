@@ -12,16 +12,24 @@ const emit = defineEmits(['applyFilter', 'closeFilterModal'])
 const ageValue = ref([18, 34])
 
 const filters = ref({
-  location: '',
-  minAge: '',
-  maxAge: '',
-  gender: ''
+  location: null,
+  minAge: null,
+  maxAge: null,
+  gender: null
   // search: ''
 })
 
+const filterEmptyValues = (obj) =>  {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([key, value]) => value !== '' && value !== null)
+  );
+}
+
 const applyFilter = async () => {
   console.log('Applied Filters:', filters.value)
-  emit('applyFilter', JSON.stringify(filters.value))
+  const filteredData = filterEmptyValues(filters.value)
+  console.log(filteredData)
+  emit('applyFilter', JSON.stringify(filteredData))
   emit('closeFilterModal')
 }
 
