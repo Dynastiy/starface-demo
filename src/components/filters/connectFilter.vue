@@ -1,6 +1,6 @@
 <script setup>
-import { ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router';
+import { ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 // import { getCountries } from "@/services/auth";
 
 // import Slider from 'primevue/slider';
@@ -13,9 +13,9 @@ const ageValue = ref([18, 34])
 
 const filters = ref({
   location: '',
-  minAge: ageValue.value[0],
-  maxAge: ageValue.value[1],
-  gender: '',
+  minAge: '',
+  maxAge: '',
+  gender: ''
   // search: ''
 })
 
@@ -29,14 +29,27 @@ const closeFilter = () => {
   emit('closeFilterModal')
 }
 
+// watch(()=> {
+//   ageValue[1]
+// })
+
+watch(
+  () => ageValue.value,
+  (newVal, oldVal) => {
+    // console.log(`${oldVal} Count: ${newVal}`)
+    filters.value.minAge = newVal[0]
+    filters.value.maxAge = newVal[1]
+  },
+  { immediate: true } // Triggers the watcher immediately
+)
+
 const clearFilter = () => {
-    emit('closeFilterModal')
-    // console.log(route)
+  emit('closeFilterModal')
+  // console.log(route)
   router.replace({
     path: route.path, // Keep the current path
     query: {} // Clear the query parameters
   })
-  
 }
 </script>
 
@@ -111,7 +124,11 @@ const clearFilter = () => {
           >
             Apply Filter
           </button>
-          <span role="button" class="mt-3 block text-red-600 underline text-sm" @click="clearFilter">
+          <span
+            role="button"
+            class="mt-3 block text-red-600 underline text-sm"
+            @click="clearFilter"
+          >
             Clear Filter
           </span>
         </div>
