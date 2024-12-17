@@ -19,7 +19,6 @@
             playsinline
             loop
             :muted="muteAll"
-            preload="auto"
             ref="videoPlayers"
           ></video>
         </template>
@@ -282,19 +281,21 @@ export default {
             this.videoError = Array(res.reels.length).fill(false)
 
             // Trigger preloading for all videos
-            this.videos.forEach((video, index) => {
-              const videoElement = document.createElement('video')
-              videoElement.src = video.videoUrl
-              videoElement.preload = 'auto'
-              videoElement.addEventListener('loadeddata', () => this.handleLoaded(index))
-              videoElement.addEventListener('error', () => this.handleVideoError(index))
-            })
+            // this.videos.forEach((video, index) => {
+            //   const videoElement = document.createElement('video')
+            //   videoElement.src = video.videoUrl
+            //   videoElement.preload = 'auto'
+            //   videoElement.addEventListener('loadeddata', () => this.handleLoaded(index))
+            //   videoElement.addEventListener('error', () => this.handleVideoError(index))
+            // })
 
             this.$nextTick(() => {
               if (this.videos) {
                 this.videos.forEach((reel, index) => {
                   const videoElement = this.$refs.videoPlayers[index]
                   console.log(videoElement, 'ommmo')
+                  videoElement.addEventListener('loadeddata', () => this.handleLoaded(index))
+                  videoElement.addEventListener('error', () => this.handleVideoError(index))
                   if (videoElement) {
                     if (Hls.isSupported()) {
                       const hls = new Hls()
