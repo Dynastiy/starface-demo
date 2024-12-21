@@ -13,11 +13,11 @@
       v-model:visible="visibleBottom"
       :show-close-icon="false"
       position="bottom"
-      class="rounded-tr-xl h-max rounded-tl-xl"
+      class="rounded-tr-xl h-max rounded-tl-xl dark:bg-black3"
     >
       <div>
-        <h4 class="text-center font-semibold">Create New Post</h4>
-        <h6 class="text-xs text-gray-600 text-center">What would you like to upload today?</h6>
+        <h4 class="text-center dark:text-white font-semibold">Create New Post</h4>
+        <h6 class="text-xs text-gray-600 text-center dark:text-gray-200">What would you like to upload today?</h6>
         <div class="flex gap-3 mt-3">
           <div
             role="button"

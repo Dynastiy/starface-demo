@@ -32,12 +32,12 @@
         />
         <span class="p-2 block w-full">
           <h6 class="text-[11px] flex gap-1">
-            <router-link class="font-semibold" :to="`/user/profile/${comment.user}`">
+            <router-link class="font-semibold dark:text-white" :to="`/user/profile/${comment.user}`">
               {{ comment.userName }}
             </router-link>
             <span class="text-gray-400">{{ $formatRelativeTimeShort(comment.createdAt) }}</span>
           </h6>
-          <p class="text-xs">{{ comment.comment }}</p>
+          <p class="text-xs dark:text-gray-200">{{ comment.comment }}</p>
         </span>
       </div>
     </div>
