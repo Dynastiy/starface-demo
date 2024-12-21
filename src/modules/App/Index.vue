@@ -211,7 +211,7 @@ const initializeVideos = () => {
         return 
       }
       // Explicitly pause all videos at initialization
-      videoElement.pause()
+      // videoElement.pause()
     }
   })
 }
