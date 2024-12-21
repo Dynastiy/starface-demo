@@ -5,8 +5,8 @@
         class="bg-gray-100 border-gray-200 text-[13px] px-2 rounded-md py-[2px] block w-fit font-medium text-gray-500"
         >STEP 2</span
       >
-      <h2 class="font-bold text-2xl">Verify Code</h2>
-      <h3 class="font-medium text-gray-400 text-sm">
+      <h2 class="font-bold text-2xl dark:text-white">Verify Code</h2>
+      <h3 class="font-medium text-gray-400 dark:text-white text-sm">
         Enter token sent to your email to verify email
       </h3>
     </div>
@@ -28,7 +28,7 @@
             @end="onCountdownEnd"
             v-slot="{ minutes, seconds, totalSeconds }"
           >
-            <span class="font-medium text-[13.6px]" :class="{ 'text-red-600': totalSeconds <= 10 }">
+            <span class="font-medium dark:text-white text-[13.6px]" :class="{ 'text-red-600': totalSeconds <= 10 }">
               Resend OTP in {{ '0' + minutes }}:{{ seconds < 10 ? `0${seconds}` : seconds }}
             </span>
           </vue-countdown>

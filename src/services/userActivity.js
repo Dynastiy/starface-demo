@@ -43,9 +43,9 @@ export default {
     }
   },
 
-  async allPosts() {
+  async allPosts(ID) {
     try {
-      let res = await $request.get(`api/activity/all-posts`)
+      let res = await $request.get(`api/post/get-posts/user/${ID}`)
       return res.data
     } catch (error) {
       catchAxiosError(error)

@@ -1,6 +1,8 @@
 <template>
   <div class="flex gap-6 p-4 pb-[80px] items-start lg:flex-row md:flex-row flex-col">
-    <div class="bg-white p-4 lg:w-6/12 md:w-6/12 w-full rounded-md flex justify-center">
+    <div
+      class="bg-white dark:bg-black3 p-4 lg:w-6/12 md:w-6/12 w-full rounded-md flex justify-center"
+    >
       <div class="w-full">
         <div
           @click="logout"
@@ -15,7 +17,7 @@
           <img
             :src="userData.profilePicture ? userData.profilePicture : $avatar"
             @error="$handleProfileError"
-            class="w-[100px] h-[100px] mx-auto border-2 p-1 border-gray-200 rounded-full object-fit object-top relative"
+            class="w-[100px] h-[100px] mx-auto border-2 p-1 dark:border-black2 border-gray-200 rounded-full object-fit object-top relative"
           />
           <input
             type="file"
@@ -38,13 +40,15 @@
         </div>
 
         <div class="">
-          <h5 class="text-lg justify-center font-bold mt-2 flex gap-1 items-center">
+          <h5
+            class="text-lg justify-center dark:text-gray-100 font-bold mt-2 flex gap-1 items-center"
+          >
             {{
               userData.firstName && userData.lastName
                 ? `${userData.firstName} ${userData.lastName}`
                 : ''
             }}
-            <span class="text-[12px]">
+            <span class="text-[12px] dark:text-gray-400">
               {{ `@${userData.userName}` }}
             </span>
             <router-link
@@ -55,39 +59,45 @@
             /></router-link>
           </h5>
         </div>
-        <h6 class="text-center text-[12px] text-center mb-2">
+        <h6 class="text-center dark:text-gray-200 text-[12px] text-center mb-2">
           {{ `${userData.email}` }}
         </h6>
 
-        <h6 class="text-center text-[14px] capitalize text-center mb-2">
+        <h6 class="text-center text-[14px] dark:text-gray-200 capitalize text-center mb-2">
           {{ `Status | ${userData.role}` }}
-          <span class="text-sm text-primary underline"
+          <span class="text-xs text-primary underline"
             ><router-link to="/become-a-creator">Become a Creator</router-link></span
           >
         </h6>
 
-        <span class="flex gap-1 justify-center" v-if="userData.hasCountry">
+        <span class="flex gap-1 justify-center dark:text-gray-200" v-if="userData.hasCountry">
           <i-icon icon="ic:baseline-location-on" />
           <span class="text-xs">{{ userData.countryName }}</span>
         </span>
 
         <div class="flex gap-2 w-full mt-4">
-          <span class="bg-gray-100 px-2 w-full rounded-md flex flex-col gap-1 py-2 items-center">
+          <span
+            class="bg-gray-100 dark:bg-black1 dark:text-gray-100 px-2 w-full rounded-md flex flex-col gap-1 py-2 items-center"
+          >
             <i-icon icon="noto:glowing-star" />
             <span class="text-xs">{{ likes }} Likes</span>
           </span>
 
-          <!-- <span class="bg-gray-100 px-2 w-full rounded-md flex flex-col gap-1 py-2 items-center">
+          <!-- <span class="bg-gray-100 dark:bg-black1 dark:text-gray-100 px-2 w-full rounded-md flex flex-col gap-1 py-2 items-center">
             <i-icon icon="solar:bell-bold" />
             <span class="text-xs">0 Views</span>
           </span> -->
 
-          <span class="bg-gray-100 px-2 w-full rounded-md flex flex-col gap-1 py-2 items-center">
+          <span
+            class="bg-gray-100 dark:bg-black1 dark:text-gray-100 px-2 w-full rounded-md flex flex-col gap-1 py-2 items-center"
+          >
             <i-icon icon="ic:baseline-rocket-launch" />
             <span class="text-xs">{{ following }} Following</span>
           </span>
 
-          <span class="bg-gray-100 px-2 w-full rounded-md flex flex-col gap-1 py-2 items-center">
+          <span
+            class="bg-gray-100 dark:bg-black1 dark:text-gray-100 px-2 w-full rounded-md flex flex-col gap-1 py-2 items-center"
+          >
             <i-icon icon="solar:bell-bold" />
             <span class="text-xs">{{ followers }} Followers</span>
           </span>
@@ -117,7 +127,7 @@
     </div>
 
     <div class="w-full">
-      <span class="flex mx-auto mb-3 bg-gray-200 w-fit">
+      <!-- <span class="flex mx-auto mb-3 bg-gray-200 w-fit">
         <span
           class="block px-3 py-2 text-[12px] capitalize font-medium"
           role="button"
@@ -128,116 +138,75 @@
         >
           {{ item.label }}
         </span>
+      </span> -->
+
+      <span class="flex block relative">
+        <span
+          @click="activateTab(i)"
+          :class="[
+            activeTab == i
+              ? 'dark:text-white dark:border-b-white border-b-primary text-primary'
+              : 'dark:text-gray-500 dark:border-b-gray-500 text-gray-600',
+            'border-b pb-1 border-b-2 font-semibold capitalize text-[14px] w-full text-center'
+          ]"
+          v-for="(item, i) in tabs"
+          :key="i"
+        >
+          <span class="flex gap-2 justify-center items-center">
+            <i-icon :icon="item.icon" />
+            {{ item.label.split('_').join(' ') }}
+          </span>
+        </span>
       </span>
-      <div class="bg-white p-4">
+
+      <div class="mt-4">
         <div class="flex gap-2 flex-col">
-          <div class="grid grid-cols-3 gap-2" v-if="activeTab == '1' || activeTab == '0'">
-            <div v-for="item in posts.images" :key="item.id" class="relative">
-              <img
-                @click="view('image', item)"
-                class="rounded-sm h-[80px] w-full object-cover object-center"
-                @error="$handleImageError"
-                :src="item.filepaths[0]"
-                alt=""
-              />
-              <span
-                class="bg-[#000] text-xs p-[4px] justify-end flex gap-1 items-center text-white block absolute bottom-0 w-full"
-              >
-                <i-icon icon="icon-park-solid:like" />
-                {{ item.likes }}
-              </span>
-            </div>
-          </div>
-          <div class="grid grid-cols-3 gap-2" v-if="activeTab == '2' || activeTab == '0'">
-            <div v-for="(item, index) in posts.reels" :key="item.id">
-              <video
-                @click="view('video', item)"
-                class="rounded-sm h-[80px] w-full object-cover object-center"
-                v-if="!item.hasError"
-                @error="handleVideoError(index)"
-                muted
-                :src="item?.videoUrl"
-                :id="'video-player-' + index"
-                ref="videoPlayers"
-              ></video>
-              <img
-                v-else
-                @click="view('video', item)"
-                @error="$handleImageError"
-                :src="item.thumbnailUrl"
-                alt="Placeholder"
-                class="h-[80px] w-full object-cover object-center"
-              />
+          <div class="grid grid-cols-3 gap-1">
+            <div v-for="(item, index) in posts" :key="index">
+              <div class="relative" v-if="item.postType == 'image' && activeTab !== 2">
+                <img
+                  @click="view(item)"
+                  class="rounded-sm h-[80px] w-full object-cover object-center"
+                  @error="$handleImageError"
+                  :src="item.file[0].filepath"
+                  alt=""
+                />
+                <span v-if="item.file.length > 1" class="absolute top-1 text-white right-1">
+                  <i-icon icon="tabler:box-multiple-filled" />
+                </span>
+              </div>
+              <div v-if="item.postType == 'video' && activeTab !== 1" class="relative">
+                <video
+                  @click="view(item)"
+                  class="rounded-sm h-[80px] w-full object-cover object-center"
+                  v-if="!item.hasError"
+                  @error="handleVideoError(index)"
+                  muted
+                  :src="item?.file[0].filepath"
+                  :id="'video-player-' + index"
+                  ref="videoPlayers"
+                ></video>
+                <img
+                  v-else
+                  @click="view('video', item)"
+                  @error="$handleImageError"
+                  :src="item.thumbnailUrl"
+                  alt="Placeholder"
+                  class="h-[80px] w-full object-cover object-center"
+                />
+                <span v-if="item.postType == 'video'" class="absolute top-1 text-white right-1">
+                  <i-icon icon="icon-park-outline:video" />
+                </span>
+              </div>
             </div>
           </div>
         </div>
-        <!-- <component :is="tabs[activeTab].component" /> -->
       </div>
     </div>
-
-    <vDialog
-      v-model:visible="showContainer"
-      modal
-      :style="{ width: '80%' }"
-      @hide="closeContainer"
-      @after-hide="closeContainer"
-      :showHeader="false"
-      unstyled
-      :pt="{
-        root: 'border-none',
-        mask: {
-          style: 'backdrop-filter: blur(4px)'
-        }
-      }"
-    >
-      <div class="bg-white p-4 rounded-lg">
-        <div class="flex justify-between mb-2">
-          <h4 class="font-semibold text-lg">Preview</h4>
-          <span class="text-red-500 text-sm underline" @click="closeContainer">Close</span>
-        </div>
-        <div class="flex flex-col gap-3 w-full">
-          <video
-            @error="handleVideoError(index)"
-            v-if="type == 'video'"
-            muted
-            ref="videoInfo"
-            class="rounded-sm h-[250px] w-[100%] object-cover object-center"
-            :src="item?.videoUrl"
-            :id="'video-player-' + item?.videoUrl"
-            controls
-          ></video>
-          <img
-            v-if="type == 'image'"
-            class="rounded-sm h-[250px] w-full object-cover object-center"
-            @error="$handleImageError"
-            :src="item.filepaths[0]"
-            alt=""
-          />
-          <!-- {{ item }} -->
-          <div v-if="type == 'video'">
-            <h5 class="font-semibold text-sm capitalize">title</h5>
-            <h6>{{ item.title }}</h6>
-          </div>
-          <div>
-            <h5 class="font-semibold text-sm capitalize">description</h5>
-            <p>{{ item.description }}</p>
-          </div>
-          <div class="w-full">
-            <button @click="deleteRecord" class="brand-btn bg-red-500 w-full text-white">
-              Delete
-            </button>
-          </div>
-        </div>
-      </div>
-    </vDialog>
   </div>
 </template>
 
 <script>
-// import Edit from '@/components/profile/Edit.vue'
-// import Transactions from '@/components/profile/Transactions.vue'
-// import Referral from '@/components/profile/Referral.vue'
-// import { markRaw } from 'vue'
 import image from '@/assets/img/no-user.png'
 // import videojs from "video.js";
 import Hls from 'hls.js'
@@ -260,15 +229,18 @@ export default {
       },
       tabs: [
         {
-          label: 'all'
+          label: 'all_posts',
+          icon: 'material-symbols:border-all-outline'
           // component: markRaw(Edit)
         },
         {
-          label: 'photos'
+          label: 'photos',
+          icon: 'clarity:image-gallery-line'
           // component: markRaw(Edit)
         },
         {
-          label: 'videos'
+          label: 'videos',
+          icon: 'streamline:play-list-9'
           // component: markRaw(Transactions)
         }
         // {
@@ -282,19 +254,16 @@ export default {
       followers: 0,
       following: 0,
       isUploading: false,
-      posts: {},
       showContainer: false,
       type: null,
-      item: {}
+      posts: []
     }
   },
 
   methods: {
-    view(e, obj) {
-      console.log(e)
-      this.type = e
-      this.item = obj
-      this.showContainer = true
+    view(e) {
+      // console.log(e)
+      this.$router.push({ name: 'post-details', params: { id: e._id } })
     },
 
     deleteRecord() {
@@ -331,23 +300,6 @@ export default {
       }
     },
 
-    // userLogout() {
-    //   this.$store.dispatch('auth/logout')
-    //   this.$swal
-    //     .fire({
-    //       title: 'Woo hoo 😫',
-    //       text: 'Logged out succesfully',
-    //       icon: 'success',
-    //       confirmButtonText: 'Ok!'
-    //     })
-    //     .then((result) => {
-    //       console.log(result, 'kkk')
-    //       if (result.isConfirmed) {
-    //         this.$router.go()
-    //       }
-    //     })
-    // },
-
     closeContainer() {
       this.showContainer = false
     },
@@ -357,7 +309,7 @@ export default {
     },
 
     handleVideoError(index) {
-      this.posts.reels[index].hasError = true
+      this.posts[index].hasError = true
     },
 
     getLikes() {
@@ -382,27 +334,28 @@ export default {
         this.following = res.followingCount
       })
     },
+
     getEarnWallet() {
       this.$wallet.earnWallet().then((res) => {
         console.log(res)
       })
     },
+
     getPosts() {
-      this.$userActivity.allPosts().then((res) => {
+      this.$userActivity.allPosts(this.user._id).then((res) => {
         console.log(res)
-        this.posts = res
+        this.posts = res.posts
         this.$nextTick(() => {
-          if (this.posts.reels) {
-            this.posts.reels.forEach((reel, index) => {
+          if (this.posts) {
+            this.posts.forEach((reel, index) => {
               const videoElement = this.$refs.videoPlayers[index]
-              // console.log(videoElement, 'ommmo')
               if (videoElement) {
                 if (Hls.isSupported()) {
                   const hls = new Hls()
-                  hls.loadSource(reel.videoUrl)
+                  hls.loadSource(reel.file[0].filepath)
                   hls.attachMedia(videoElement)
                 } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
-                  videoElement.src = reel.videoUrl
+                  videoElement.src = reel.file[0].filepath
                 } else {
                   console.error(`HLS not supported on video ${index + 1}`)
                 }

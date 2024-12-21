@@ -87,7 +87,7 @@
           </span>
           <div class="bg-white p-4">
             <div class="flex gap-2 flex-col">
-              <div class="grid grid-cols-3 gap-2" v-if="activeTab == '1' || activeTab == '0'">
+              <!-- <div class="grid grid-cols-3 gap-2" v-if="activeTab == '1' || activeTab == '0'">
                 <div v-for="item in images" :key="item.id" class="relative">
                   <img
                     @click="view('image', item)"
@@ -103,8 +103,8 @@
                     {{ item.likes }}
                   </span>
                 </div>
-              </div>
-              <div class="grid grid-cols-3 gap-2" v-if="activeTab == '2' || activeTab == '0'">
+              </div> -->
+              <!-- <div class="grid grid-cols-3 gap-2" v-if="activeTab == '2' || activeTab == '0'">
                 <div v-for="(item, index) in reels" :key="item.id">
                   <video
                     @click="view('video', item)"
@@ -124,7 +124,7 @@
                     class="h-[80px] w-full object-cover object-center"
                   />
                 </div>
-              </div>
+              </div> -->
             </div>
             <!-- <component :is="tabs[activeTab].component" /> -->
           </div>

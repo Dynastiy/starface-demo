@@ -1,60 +1,48 @@
 <template>
-  <div class="py-2 px-4 bg-white z-10 rounded-bl-3xl rounded-br-3xl">
+  <div class="py-4 px-2 z-10 dark:bg-black2 bg-gray-100 sticky top-0">
     <div class="flex justify-between items-center">
-      <!-- {{ user }} -->
-      <!-- <span v-if="routeName === 'home'" class="brand-icon block text-2xl">
-
-      </span> -->
-      <div class="flex gap-2 items-center justify-between">
-        <span
-          @click="$router.go(-1)"
-          role="button"
-          class="bg-gray-200 border border-gray-300 p-[8px] rounded-full"
-        >
-          <i-icon icon="charm:arrow-left" class="text-lg" />
+      <div class="flex gap-2 items-center justify-between" v-if="routeName !== 'feeds'">
+        <span @click="$router.go(-1)" role="button" class="">
+          <i-icon icon="charm:arrow-left" class="text-lg dark:text-gray-100 text-black3" />
         </span>
         <div class="flex justify-center w-full">
-          <h3 class="font-semibold text-lg capitalize">{{ routeName.split('-').join(' ') }}</h3>
+          <h3 class="font-semibold text-lg capitalize dark:text-gray-100 text-black3">
+            {{ routeName.split('-').join(' ') }}
+          </h3>
         </div>
       </div>
-      <div class="flex gap-2 items-center">
-        <!-- <el-dropdown trigger="click" placement="bottom-end">
-          <span class="el-dropdown-link relative">
-            <i-icon icon="ion:notifcations" class="text-[#000]" width="25px" />
-            <span class="absolute block bg-red-600 top-0 right-0 text-white font-medium w-3 h-3 ring ring-[2px] ring-white rounded-full text-[8px] flex items-center justify-center">
-              {{unreadNotifications.length}}
-            </span>
-          </span>
-          <template #dropdown>
-            <el-dropdown-menu class="p-3 w-[200px]">
-              <template v-if="notifications.length">
-                <div class="flex flex-col" v-for="(item, idx) in unreadNotifications" :key="idx">
-                  <span> {{ item.type }} from {{ item.senderName || 'user' }}</span>
-                  <span>{{ item.text }}</span>
-                </div>
-              </template>
-              <template v-else>
-                <div>No notifications</div>
-              </template>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown> -->
+      <img v-else src="@/assets/img/icons/coin_claim.webp" class="w-12" alt="" />
+      <div class="flex gap-3 items-center">
+        <div>
+          <wallet-data />
+        </div>
         <router-link to="/notifications" class="relative">
-          <i-icon icon="ion:notifcations" class="text-[#000]" width="25px" />
+          <i-icon
+            icon="tabler:message-filled"
+            class="dark:text-gray-100 text-black3"
+            width="25px"
+          />
           <span
             class="absolute block bg-red-600 top-0 right-0 text-white font-medium w-3 h-3 ring ring-[2px] ring-white rounded-full p-[3px] text-[10px] flex items-center justify-center"
           >
             {{ unreadNotifications.length }}
           </span>
         </router-link>
-        <img
+        <button @click="toggleTheme">
+          <i-icon
+            :icon="theme == 'dark' ? 'solar:sun-bold' : 'bxs:moon'"
+            class="dark:text-amber-300 text-black3"
+            width="27px"
+          />
+        </button>
+        <!-- <img
           v-if="user"
           :src="user.profilePicture ? user.profilePicture : image"
           class="w-[40px] h-[40px] border-2 p-[2px] border-gray-300 rounded-full object-fit object-top"
           role="button"
           @click="$router.push('/profile')"
           @error="$handleProfileError"
-        />
+        /> -->
       </div>
     </div>
   </div>
@@ -63,7 +51,9 @@
 <script>
 import image from '@/assets/img/no-user.png'
 import socket from '@/plugins/socket'
+import WalletData from '@/components/utils/walletData.vue'
 export default {
+  components: { WalletData },
   data() {
     return {
       image,
@@ -86,11 +76,28 @@ export default {
       // Emit the event to fetch all messages
       let data = { userId: this.user._id }
       socket.emit('getAllNotifications', data)
+    },
+
+    getEarnWallet() {
+      if (!this.isLoggedIn) {
+        return
+      }
+      this.$wallet.earnWallet().then((res) => {
+        let starBalance = res.star
+        console.log(res)
+        this.$store.commit('drawer/setStarBalance', starBalance)
+      })
+    },
+
+    toggleTheme() {
+      // Toggle between light and dark themes
+      let theme = this.theme === 'dark' ? 'light' : 'dark'
+      this.$store.commit('setTheme', theme)
+      document.documentElement.className = theme // Apply theme to <html>
     }
   },
 
   mounted() {
-
     // Listen for messages when component mounts
     socket.on('newNotification', (notification) => {
       console.log('Notification received:', notification)
@@ -102,6 +109,11 @@ export default {
     })
 
     this.getNotification()
+    
+  },
+
+  beforeMount(){
+    this.getEarnWallet()
   },
 
   watch: {
@@ -128,7 +140,11 @@ export default {
     },
     routeName() {
       return this.$route.meta.name
-    }
+    },
+    theme() {
+      return this.$store.getters['getTheme']
+    },
+    
   }
 }
 </script>

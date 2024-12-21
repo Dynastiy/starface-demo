@@ -1,11 +1,11 @@
 <template>
-  <div class="p-4">
-    <h4 class="font-semibold mb-2">Transaction History</h4>
+  <div class="">
+    <!-- <h4 class="font-semibold mb-2">Transaction History</h4> -->
     <el-skeleton :loading="loading" animated>
       <template #template>
         <div class="flex flex-col gap-4">
           <div v-for="item in 6" :key="item">
-            <el-skeleton-item variant="image" style="height: 40px; border-radius: 10px" />
+            <el-skeleton-item variant="image" style="height: 80px; border-radius: 10px" />
           </div>
         </div>
       </template>
@@ -15,7 +15,7 @@
             <div
               v-for="(item, idx) in items"
               :key="idx"
-              class="bg-white p-3 flex justify-between rounded-lg"
+              class="dark:bg-black3 bg-gray-200 p-3 flex justify-between rounded-lg"
             >
               <div class="flex gap-2">
                 <!-- <span
@@ -29,21 +29,24 @@
                   />
                 </span> -->
                 <span class="flex flex-col">
-                  <span class="font-semibold text-sm break-all">
+                  <span class="font-semibold text-sm break-all dark:text-white">
                     {{
                       `${item.transactionType} #${item._id}`
                     }}
                   </span>
-                  <span class="text-xs" v-html="$formatDate(item.createdAt)"> </span>
+                  <span class="text-xs dark:text-gray-300" v-html="$formatDate(item.createdAt)"> </span>
                 </span>
               </div>
-              <div class="flex flex-col items-end">
+              <div class="flex flex-col items-end dark:text-gray-100">
                 <span class="text-sm font-semibold">
                   {{ item.amount + ' ' + item.asset }}
                 </span>
                 <!-- <span class="text-xs text-uppercase">{{ item.recipientAddress }}</span> -->
               </div>
             </div>
+          </div>
+          <div v-if="!loading && items.length === 0" class="text-center dark:text-gray-300 text-sm text-gray-500">
+            No Activity
           </div>
         </div>
       </template>

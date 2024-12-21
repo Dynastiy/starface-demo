@@ -2,13 +2,13 @@
   <div class="p-6 flex flex-col justify-between pb-[80px]">
     <div class="flex flex-col gap-4">
       <div>
-        <span class="text-xs font-medium text-gray-500"> Wallet Balance: </span>
-        <span class="flex gap-1 items-center font-semibold">
+        <span class="text-xs font-medium text-gray-500 dark:text-gray-300"> Wallet Balance: </span>
+        <span class="flex gap-1 items-center font-semibold text-xl font-semibold dark:text-white">
           <i-icon icon="basil:wallet-solid" />
           {{ `${wallet}USDT` }}
         </span>
       </div>
-      <span class="text-sm font-semibold">Fund your balance below with USDT</span>
+      <span class="text-sm font-semibold dark:text-gray-200">Fund your balance below with USDT</span>
       <div class="flex items-center p-2 bg-white rounded-[6px] gap-3">
         <span class="bg-transparent w-full text-sm font-semibold block break-all">
           {{ address }}
@@ -25,9 +25,9 @@
       </div>
 
       <div class="flex gap-3 flex-col">
-        <h4 class="text-lg font-bold leading-tight">Become a creator to increase your earnings.</h4>
+        <h4 class="text-lg font-bold dark:text-white leading-tight">Become a creator to increase your earnings.</h4>
         <div>
-          <label class="text-xs" for="">Select Plan</label>
+          <label class="text-sm dark:text-gray-300" for="">Select Plan</label>
           <div class="flex flex-col gap-2">
             <div
               v-for="(item, i) in fees"
@@ -47,8 +47,8 @@
         </div>
 
         <div>
-          <h4 class="font-semibold my-2 text-lg">Benefits</h4>
-          <ul>
+          <h4 class="font-semibold my-2 dark:text-gray-300 text-lg">Benefits</h4>
+          <ul class="dark:text-white">
             <li>* Access to exclusive content</li>
             <li>* Promote content</li>
             <li>* Earn from views</li>

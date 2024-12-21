@@ -1,16 +1,16 @@
 <template>
-  <div class="p-6 flex flex-col justify-between pb-[80px]">
+  <div class="p-4 flex flex-col justify-between pb-[80px]">
     <div class="flex flex-col gap-4">
       <div>
-        <span class="text-xs font-medium text-gray-500">
+        <span class="text-xs dark:text-gray-300 font-medium text-gray-500">
           Wallet Balance:
         </span> 
-        <span class="flex gap-1 items-center font-semibold">
+        <span class="flex gap-1 items-center font-semibold text-xl font-semibold dark:text-white">
           <i-icon icon="basil:wallet-solid" />
           {{`${wallet}USDT`}}
         </span>
       </div>
-      <span class="text-sm font-semibold">Fund your balance below with USDT</span>
+      <span class="text-sm font-semibold dark:text-gray-300">Fund your balance below with USDT</span>
       <div class="flex items-center p-2 bg-white rounded-[6px] gap-3">
         <span class="bg-transparent w-full text-sm font-semibold block break-all">
           {{ address }}
@@ -27,17 +27,17 @@
       </div>
 
       <div>
-        <button class="brand-btn w-full brand-primary-clear"><router-link to="/become-a-creator">Earn as a creator</router-link></button>
+        <router-link to="/become-a-creator"><button class="brand-btn w-full brand-primary-clear">Earn as a creator</button></router-link>
       </div>
 
       <div class="flex gap-3 flex-col">
         <div>
-          <h4 class="text-sm font-medium">Subscribe to any of the plans below to start earning daily from watching videos.</h4>
+          <h4 class="text-sm font-medium dark:text-gray-300">Subscribe to any of the plans below to start earning daily from watching videos.</h4>
           <hr class="my-2">
-          <h6 class="text-xs text-gray-600">Each earning cycle may take 3 to 4 weeks to complete.</h6>
+          <h6 class="text-xs text-gray-600 dark:text-gray-400">Each earning cycle may take 3 to 4 weeks to complete.</h6>
         </div>
         <div>
-          <label class="text-xs" for="">Select Plan</label>
+          <label class="text-sm dark:text-gray-300" for="">Select Plan</label>
           <UpgradeFees @refreshBalance="getAllWallets" />
         </div>
       </div>

@@ -5,25 +5,25 @@
         class="bg-gray-100 border-gray-200 text-[13px] px-2 rounded-md py-[2px] block w-fit font-medium text-gray-500"
         >STEP 1</span
       >
-      <h2 class="font-bold text-2xl">Create Account</h2>
-      <h3 class="font-medium text-gray-400 text-sm">Can we get your email and referral code?</h3>
+      <h2 class="font-bold text-2xl dark:text-white">Create Account</h2>
+      <h3 class="font-medium text-gray-400 text-sm dark:text-white">Can we get your email and referral code?</h3>
     </div>
 
     <vForm @submit="onSubmit" v-slot="{ meta }" class="mt-12 flex flex-col justify-between">
       <div class="flex flex-col gap-4">
         <div>
           <label for="">Email</label>
-          <vField name="email" class="input" type="email" rules="email"> </vField>
+          <vField name="email" class="input dark:bg-white" type="email" rules="email"> </vField>
           <ErrorMessage name="email" class="text-xs text-error"></ErrorMessage>
         </div>
 
         <div>
           <label for="">Referral Code</label>
-          <vField v-model="ref" name="referralCode" class="input" type="text"> </vField>
+          <vField v-model="ref" name="referralCode" class="input dark:bg-white" type="text"> </vField>
         </div>
 
         <div>
-          <label class="block leading-tight" for="">By registering, you have agreed to our <a target="_blank" href="https://termsandcondition.starface.chat" class="text-primary underline">terms and conditions</a></label>
+          <label class="block leading-tight dark:text-gray-300" for="">By registering, you have agreed to our <a target="_blank" href="https://termsandcondition.starface.chat" class="text-primary underline">terms and conditions</a></label>
           <!-- <vField v-model="ref" name="referralCode" class="input" type="text"> </vField> -->
         </div>
       </div>
@@ -45,7 +45,7 @@
         </button>
         <div class="mt-3">
           <span class="flex justify-center gap-1 text-[13px]">
-            <span class="font-medium text-gray2">Already have an account?</span>
+            <span class="font-medium text-gray2 dark:text-white">Already have an account?</span>
             <router-link class="font-semibold text-primary" to="/auth/login">Login</router-link>
           </span>
         </div>

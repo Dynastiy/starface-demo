@@ -4,13 +4,15 @@ export default {
   state: {
     collapsed: false,
     subMenu: null,
-    type: 'retailer'
+    type: 'retailer',
+    starBalance: null
   },
 
   getters: {
     isCollapsed: (state) => state.collapsed,
     subMenu: (state) => state.subMenu,
-    getType: (state) => state.type
+    getType: (state) => state.type,
+    getStarBalance: (state) => state.starBalance
   },
 
   mutations: {
@@ -22,6 +24,9 @@ export default {
     },
     setType(state, data) {
       state.type = data
+    },
+    setStarBalance(state, data) {
+      state.starBalance = data
     }
   },
 

@@ -4,6 +4,7 @@ import auth from './auth';
 import chat from './chat';
 import userActivity from './userActivity';
 import wallet from './wallet';
+import feeds from './feeds';
 
 export const services = {
   reels,
@@ -11,7 +12,8 @@ export const services = {
   auth,
   chat,
   userActivity,
-  wallet
+  wallet,
+  feeds
 };
 
 // Optionally, if you want to access all services via a single object

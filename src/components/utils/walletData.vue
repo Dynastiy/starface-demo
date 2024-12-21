@@ -2,15 +2,19 @@
   <div class="wallet-data w-fit">
     <!-- {{user}} -->
     <span class="flex gap-3 items-center font-medium p-1 rounded-md">
+      <!-- {{ starBalance }} -->
       <router-link to="/wallet" class="flex items-center">
-        <img src="@/assets/img/icons/blue-starface.webp" class="w-8" alt="" />
-        <span class="text-[14px] text-white font-medium">{{ !isLoggedIn ? 0 : user.demo ? balance.demoStarBalance : balance.balance }}</span>
+        <img src="@/assets/img/icons/blue-starface.webp" class="w-7" alt="" />
+        <span class="text-[12px] dark:text-white font-semibold whitespace-nowrap" v-if="starBalance !== null">{{ !isLoggedIn ? 0 : user.demo ? starBalance.demoStarBalance : starBalance.balance }}</span>
       </router-link>
 
       <router-link to="/wallet" class="flex items-center">
-        <img src="@/assets/img/icons/yellow-starface.webp" class="w-8" />
-        <span class="text-[14px] text-white font-medium" v-if="user">{{
-          $convertToDollar(user.demo ? balance.demoStarBalance : balance.balance)
+        <img src="@/assets/img/icons/yellow-starface.webp" class="w-7" />
+        <span class="text-[12px] dark:text-white whitespace-nowrap font-semibold" v-if="user && starBalance !== null">{{
+          $convertToDollar(user.demo ? starBalance.demoStarBalance : starBalance.balance)
+         }}</span>
+         <span v-else class="text-[12px] dark:text-white font-semibold">{{
+          $convertToDollar(0)
          }}</span>
       </router-link>
 
@@ -25,21 +29,21 @@
 <script>
 export default {
   props: {
-    starBalance: Object
+    // starBalance: Object
   },
   data() {
     return {
-      balance: {}
+      // balance: {}
     }
   },
 
   watch: {
-    starBalance: {
-      handler(val) {
-        this.balance = val
-      },
-      immediate: true
-    }
+    // starBalance: {
+    //   handler(val) {
+    //     this.balance = val
+    //   },
+    //   immediate: true
+    // }
   },
 
   computed: {
@@ -50,6 +54,10 @@ export default {
     isLoggedIn() {
       return this.$store.getters['auth/getAuthenticated']
     },
+
+    starBalance() {
+      return this.$store.getters['drawer/getStarBalance']
+    }
   }
 }
 </script>

@@ -9,6 +9,7 @@ import videos from "@/stores/videos";
 // initial state
 let initialState = {
   auth: auth.state,
+  theme: 'light',
 };
 // const debug = process.env.NODE_ENV !== "production";
 let plugins = [createPersistedState({})];
@@ -27,9 +28,13 @@ export default createStore({
         Object.assign(state[key], initialState[key]);
       });
     },
+    setTheme(state, data) {
+      state.theme = data
+    },
   },
   actions: {},
   getters: {
     getToken: (state) => state.auth.token,
+    getTheme: (state) => state.theme,
   },
 });

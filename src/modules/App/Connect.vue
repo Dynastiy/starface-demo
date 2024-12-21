@@ -297,7 +297,7 @@ export default {
 
 <style scoped>
 .reels-page {
-  background-color: #000;
+  /* background-color: #000; */
   width: 100%;
   height: 100vh;
   overflow: hidden;

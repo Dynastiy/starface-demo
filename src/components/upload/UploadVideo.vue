@@ -103,10 +103,12 @@ export default {
       this.isLoading = true
 
       const formData = new FormData()
+      formData.append('postType', 'video')
       formData.append('file', this.image)
       formData.append('title', this.title)
       formData.append('description', this.description)
-      this.$reels
+
+      this.$feeds
         .create(formData)
         .then((res) => {
           this.$emit('completed')
@@ -121,6 +123,7 @@ export default {
     onChange() {
       this.files = this.$refs.file.files
       this.image = this.files[0]
+      console.log(this.image)
     },
 
     dragover(e) {

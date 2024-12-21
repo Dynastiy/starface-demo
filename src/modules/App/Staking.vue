@@ -1,7 +1,7 @@
 <template>
-  <div class="p-4">
+  <div class="p-4 pb-[80px]">
     <div class="flex justify-between mb-4">
-      <h4 class="font-semibold mb-2">Staking History</h4>
+      <h4 class="font-semibold mb-2 dark:text-gray-100">Staking History</h4>
       <button
         class="brand-btn brand-primary-clear py-2 text-xs"
         v-if="items.length > 0 && !loading"
@@ -24,22 +24,22 @@
             <div
               v-for="(item, idx) in items"
               :key="idx"
-              class="bg-white p-3 flex justify-between rounded-lg"
+              class="dark:bg-black3 bg-gray-200  p-3 flex justify-between rounded-lg"
             >
               <div class="flex gap-2">
                 <span class="flex flex-col">
-                  <span class="font-semibold text-sm break-all">
+                  <span class="font-semibold dark:text-white text-sm break-all">
                     {{ `#${item._id}` }}
                   </span>
                   <div class="flex flex-col">
-                    <span class="text-xs" v-html="`<b>ROI:</b> ${item.roi}`"> </span>
+                    <span class="text-xs dark:text-gray-100" v-html="`<b>ROI:</b> ${item.roi}`"> </span>
                     <span
-                      class="text-xs"
+                      class="text-xs dark:text-gray-200"
                       v-html="`<b>Start Date:</b> ${$formatDate(item.startDate)}`"
                     >
                     </span>
                     <span
-                      class="text-xs"
+                      class="text-xs dark:text-gray-200"
                       v-html="`<b>Start Date:</b> ${$formatDate(item.endDate)}`"
                     >
                     </span>
@@ -53,7 +53,7 @@
                     Unstake
                   </button>
                 </div>
-                <span class="text-sm font-semibold">
+                <span class="text-sm font-semibold dark:text-gray-200">
                   {{ item.amount + ' SFC' }}
                 </span>
                 <!-- <span class="text-xs text-uppercase">{{ item.recipientAddress }}</span> -->
@@ -63,7 +63,7 @@
 
           <div v-if="items.length == 0 && !loading" class="flex flex-col gap-1 mt-8 items-center">
             <i-icon icon="streamline:investment-selection-solid" class="text-4xl" />
-            <span class="text-xl font-semibold">No Stakings yet!</span>
+            <span class="text-xl dark:text-gray-300 text-sm text-gray-500 font-semibold">No Stakings yet!</span>
             <button
               class="brand-btn brand-primary-clear py-2 text-xs"
               @click="showContainer = true"

@@ -5,12 +5,12 @@
         class="flex lg:flex-row md:flex-row flex-col justify-between lg:items-end md:items-end gap-4"
       >
         <div>
-          <div class="flex justify-between items-start">
-            <div class="flex flex-col mb-4">
+          <div class="flex justify-between items-start dark:bg-black3 bg-gray-300 p-6 border-gray-300 bg-opacity-50 rounded-lg">
+            <div class="flex flex-col justify-center h-full">
               <span class="text-xs block text-primary leading-tightest font-semibold">
                 Star Balance</span
               >
-              <span class="font-bold text-4xl leading-tightest">{{ walletData.starBalance }}</span>
+              <span class="font-bold dark:text-white text-4xl leading-tightest">{{ walletData.starBalance }}</span>
               <span class="text-sm text-gray-500 block leading-tightest font-semibold">{{
                 $convertToDollar(walletData.starBalance)
               }}</span>
@@ -26,7 +26,7 @@
             </button>
           </div>
 
-          <div class="grid grid-cols-2 gap-3 w-full">
+          <!-- <div class="grid grid-cols-2 gap-3 w-full">
             <div
               class="bg-secondary w-full p-3 rounded-md flex flex-col"
               v-for="(value, name) in walletData.otherBalances"
@@ -37,13 +37,13 @@
               }}</span>
               <span class="font-bold text-xl text-white">{{ value }}</span>
             </div>
-          </div>
+          </div> -->
         </div>
         <div class="flex lg:w-fit md:w-fit w-full gap-2">
           <button
             role="button"
             :class="[
-              'border w-full whitespace-nowrap bg-gray-100 flex flex-col items-center gap-1 rounded-[5px] px-1 py-[5px] text-[11px] capitalize font-sembold'
+              'w-full whitespace-nowrap flex flex-col items-center gap-1 rounded-[5px] px-1 py-[5px] text-[11px] capitalize font-sembold'
             ]"
             v-for="item in actions"
             :disabled="isDemoAccount(item)"
@@ -53,17 +53,17 @@
             <i-icon
               :icon="item.icon"
               :class="[
-                ' block rounded-full text-xl p-[2px]',
+                ' block rounded-full text-3xl p-[2px]',
                 isDemoAccount(item) ? 'text-gray-600 bg-gray-400' : ' bg-primary text-white'
               ]"
             />
-            <span :class="['text-[9px]', isDemoAccount(item) ? 'text-gray-400' : '']">{{
+            <span :class="['text-[10px] dark:text-white font-semibold', isDemoAccount(item) ? 'text-gray-400' : '']">{{
               item.label.split('_').join(' ')
             }}</span>
           </button>
         </div>
         <div v-if="user.demo">
-          <span class="text-red-500 block text-[11px] font-medium"
+          <span class="text-red-500 block text-[12px] font-semibold"
             >*Please, upgrade account to activate withdrawal</span
           >
         </div>

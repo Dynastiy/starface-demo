@@ -1,6 +1,7 @@
 <template>
   <div class="app-container">
-    <app-header :class="[isNotVisible ? 'sticky top-0' : 'hidden']" />
+    <app-header class="" />
+    <!-- <app-header :class="[isNotVisible ? 'sticky top-0' : 'hidden']" /> -->
     <div class="content">
       <slot />
     </div>
@@ -142,6 +143,17 @@ export default {
       this.visibleBottom = true
     },
 
+    getEarnWallet() {
+      if (!this.isLoggedIn) {
+        return
+      }
+      this.$wallet.earnWallet().then((res) => {
+        let starBalance = res.star
+        console.log(res)
+        this.$store.commit('drawer/setStarBalance', starBalance)
+      })
+    },
+
     upload(e) {
       this.showContainer = true
       console.log(e)
@@ -158,15 +170,17 @@ export default {
     },
 
     joinUploadRoom() {
-      // Join the user's room
-      const userId = this.user._id
-      socket.emit('joinUploadReelsRoom', userId)
+      if (this.user) {
+        // Join the user's room
+        const userId = this.user._id
+        socket.emit('joinUploadReelsRoom', userId)
+      }
     }
   },
 
   mounted() {
     this.joinUploadRoom()
-    
+    this.getEarnWallet()
   },
 
   created() {},
@@ -176,9 +190,9 @@ export default {
   },
 
   computed: {
-    isNotVisible() {
-      return this.routeName != 'connect' && this.routeName != 'feeds'
-    },
+    // isNotVisible() {
+    //   return this.routeName != 'connect' && this.routeName != 'feeds'
+    // },
 
     routeName() {
       return this.$route.meta.name
@@ -202,6 +216,9 @@ export default {
 
     subRouteName() {
       return this.$route.meta.subName
+    },
+    isLoggedIn() {
+      return this.$store.getters['auth/getAuthenticated']
     }
   }
 }

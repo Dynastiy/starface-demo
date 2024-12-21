@@ -5,8 +5,8 @@
         class="bg-gray-100 border-gray-200 text-[13px] px-2 rounded-md py-[2px] block w-fit font-medium text-gray-500"
         >STEP 3</span
       >
-      <h3 class="lg:text-2xl md:text-2xl text-xl font-bold mb-0">Set Password</h3>
-      <span class="text-[15px] block font-regular text-gray2"
+      <h3 class="lg:text-2xl dark:text-white md:text-2xl text-xl font-bold mb-0">Set Password</h3>
+      <span class="text-[15px] block dark:text-white font-regular text-gray2"
         >Set valid password for account aunthentication</span
       >
     </div>
@@ -22,7 +22,7 @@
         <div>
           <label for="">Password</label>
           <vField name="password" v-slot="{ field }">
-            <div class="input-field">
+            <div class="input-field dark:bg-white">
               <span class="w-full flex gap-2 items-center">
                 <span class="password-iccon">
                   <i-icon icon="solar:lock-bold" class="form-icon" />
@@ -49,7 +49,7 @@
         <div>
           <label for="">Confirm Password</label>
           <vField name="confirmPassword" v-slot="{ field }">
-            <div class="input-field">
+            <div class="input-field dark:bg-white">
               <span class="w-full flex gap-2 items-center">
                 <span class="password-iccon">
                   <i-icon icon="solar:lock-bold" class="form-icon" />

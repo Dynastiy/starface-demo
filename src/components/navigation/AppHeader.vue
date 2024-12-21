@@ -1,10 +1,10 @@
 <template>
   <div class="" id="mobile-drawer">
     <div
-      class="py-4 px-6 bg-white shadow-sm lg:ml-[300px] md:ml-[300px] md:relative lg:relative z-auto lg:z-10 md:z-10"
+      class="py-4 px-2 lg:ml-[300px] md:ml-[300px] md:relative lg:relative z-auto lg:z-10 md:z-10"
     >
       <div class="flex justify-between items-center">
-        <span class="font-bold capitalize text-xl"> {{routeName}} </span>
+        <span class="font-bold capitalize text-xl"> {{ routeName }} </span>
         <div class="flex gap-3 items-center">
           <div class="flex items-center gap-1">
             <!-- <span
@@ -25,7 +25,6 @@
               </div>
             </div>
             <div>
-
               <el-dropdown trigger="click">
                 <span class="el-dropdown-link">
                   <i-icon icon="prime:angle-down" class="" width="20px" />
@@ -124,8 +123,10 @@ export default {
     }
   },
 
-  mounted(){
-    this.getNotifications()
+  mounted() {
+    if (this.user) {
+      this.getNotifications()
+    }
   },
 
   computed: {

@@ -7,7 +7,7 @@
       <el-skeleton style="width: 100%" :loading="loading" animated>
         <template #template>
           <div>
-            <div class="flex flex-col mb-4">
+            <div class="flex flex-col">
               <el-skeleton-item
                 variant="text"
                 style="height: 10px; border-radius: 10px; width: 30px"
@@ -40,8 +40,35 @@
         </template>
       </el-skeleton>
     </div>
-    
-    <txn-history />
+
+    <div class="p-4">
+      <span class="flex block relative">
+        <span
+          @click="activateTab(item)"
+          :class="[
+            activeTab == item
+              ? 'dark:text-white dark:border-b-white border-b-primary text-primary'
+              : 'dark:text-gray-500 dark:border-b-gray-500 text-gray-600',
+            'border-b pb-2 border-b-2 font-semibold capitalize text-[14px] w-full text-center'
+          ]"
+          v-for="item in ['assets', 'activity']"
+          :key="item"
+          >{{ item }}</span
+        >
+      </span>
+      <div class="mt-4">
+        <template v-if="activeTab == 'assets'">
+          <div>
+            <other-assets :walletData="walletData" />
+          </div>
+        </template>
+        <template v-else>
+          <div>
+            <txn-history />
+          </div>
+        </template>
+      </div>
+    </div>
 
     <vDialog
       v-model:visible="showContainer"
@@ -64,7 +91,7 @@
         </span>
         <fund v-if="action == 'fund_wallet'" />
         <withdraw v-if="action == 'withdraw'" @refresh="refreshData" :walletData="walletData" />
-        <transfer v-if="action == 'purchase'" @refresh="refreshData" :walletData="walletData"/>
+        <transfer v-if="action == 'purchase'" @refresh="refreshData" :walletData="walletData" />
         <convert v-if="action == 'convert'" @refresh="refreshData" :walletData="walletData" />
       </div>
     </vDialog>
@@ -78,21 +105,23 @@ import Fund from '@/components/wallet/Fund.vue'
 import Withdraw from '@/components/wallet/Withdraw.vue'
 import Transfer from '@/components/wallet/Transfer.vue'
 import Convert from '@/components/wallet/Convert.vue'
+import OtherAssets from '@/components/wallet/OtherAssets.vue'
 export default {
-  components: { UserWallet, TxnHistory, Fund, Withdraw, Transfer, Convert },
+  components: { UserWallet, TxnHistory, Fund, Withdraw, Transfer, Convert, OtherAssets },
   data() {
     return {
       showContainer: false,
       action: '',
       walletData: {},
-      loading: false
+      loading: false,
+      activeTab: 'assets'
     }
   },
 
   methods: {
     actionClick(e) {
       console.log(e)
-      if(e.label !== 'staking') {
+      if (e.label !== 'staking') {
         this.showContainer = true
         this.action = e.label
         return
@@ -100,9 +129,13 @@ export default {
       this.$router.push('/staking')
     },
 
-    refreshData(){
-     this.closeContainer()
-     this.getWalletData() 
+    activateTab(item) {
+      this.activeTab = item
+    },
+
+    refreshData() {
+      this.closeContainer()
+      this.getWalletData()
     },
 
     closeContainer() {
@@ -153,9 +186,7 @@ export default {
   computed: {
     user() {
       return this.$store.getters['auth/getUser']
-    },
+    }
   }
 }
 </script>
-
-<style></style>

@@ -3,32 +3,32 @@
     <!-- Hello World -->
     <div class="flex flex-col gap-6">
       <div>
-        <h4>Referral Earnings</h4>
-        <div class="flex lg:flex-row md:flex-row flex-col gap-4">
-          <div class="bg-white p-4 rounded-md flex flex-col">
-            <span class="text-[13px] text-gray-500"> Total Earning </span>
-            <span class="font-bold text-xl">{{ record.referralBalance }}</span>
+        <h4 class="dark:text-gray-100 font-semibold">Referral Earnings</h4>
+        <div class="flex lg:flex-row md:flex-row flex-col gap-4 mt-3">
+          <div class="dark:bg-black3 bg-gray-200 p-4 rounded-md flex flex-col">
+            <span class="text-[13px] dark:text-gray-300 text-gray-500"> Total Earning </span>
+            <span class="font-bold dark:text-white text-xl">{{ record.referralBalance }}</span>
           </div>
-          <div class="bg-white p-4 rounded-md flex flex-col">
-            <span class="text-[13px] text-gray-500"> Current Value </span>
-            <span class="font-bold text-xl">{{ '0' }}</span>
+          <div class="dark:bg-black3 bg-gray-200 p-4 rounded-md flex flex-col">
+            <span class="text-[13px] dark:text-gray-300 text-gray-500"> Current Value </span>
+            <span class="font-bold dark:text-white text-xl">{{ '0' }}</span>
           </div>
-          <div class="bg-white p-4 rounded-md flex flex-col">
-            <span class="text-[13px] text-gray-500"> Total Referrals </span>
-            <span class="font-bold text-xl">{{ record.referrerCount }}</span>
+          <div class="dark:bg-black3 bg-gray-200 p-4 rounded-md flex flex-col">
+            <span class="text-[13px] dark:text-gray-300 text-gray-500"> Total Referrals </span>
+            <span class="font-bold dark:text-white text-xl">{{ record.referrerCount }}</span>
           </div>
         </div>
       </div>
       <img src="@/assets/img/share.svg" class="w-36 block mx-auto" alt="" />
-      <h2 class="font-semibold text-lg text-center">Invite your friends</h2>
-      <h6 class="text-gray-500 text-[13px] lg:w-5/12 md:w-6/12 w-full mx-auto">
+      <h2 class="font-semibold text-lg dark:text-gray-100 text-center">Invite your friends</h2>
+      <h6 class="text-gray-500 text-[13px] lg:w-5/12 dark:text-gray-300 md:w-6/12 w-full mx-auto">
         Refer your friends and earn upto <b>25 SFC</b> per referral & your friends will get
         <b>20 SFC</b>
       </h6>
 
-      <div class="bg-white col-span-2 rounded-md p-4">
+      <div class="dark:bg-black3 bg-gray-200 col-span-2 rounded-md p-4">
         <div>
-          <div class="flex items-center bg-gray-100 p-2 rounded-[6px] border border-gray-100">
+          <div class="flex items-center dark:bg-black2 bg-gray-100 p-2 rounded-[6px] border dark:border-black3 border-gray-100">
             <!-- <input
               type="text"
               class="bg-transparent w-full text-sm font-semibold"
@@ -36,7 +36,7 @@
               disabled
               readonly
             /> -->
-            <span class="bg-transparent w-full text-sm font-semibold block break all text-center">
+            <span class="bg-transparent w-full dark:text-gray-200 text-sm font-semibold block break all text-center">
               {{ locat }}
             </span>
           </div>
@@ -59,26 +59,26 @@
             </button>
           </div>
         </div>
-        <hr class="my-2" />
+        <hr class="my-2 dark:border-gray-600" />
         <div>
-          <h4 class="font-semibold mb-3 text-xl">How to earn from StarFace referral</h4>
+          <h4 class="font-semibold mb-3 text-xl dark:text-gray-200">How to earn from StarFace referral</h4>
           <div class="flex lg:flex-row md:flex-row flex-col justify-between gap-8">
             <span
-              class="text-sm lg:text-center md:text-center flex flex-col lg:items-center md:items-center"
+              class="text-sm lg:text-center md:text-center flex flex-col lg:items-center dark:text-gray-100 md:items-center"
             >
               <i-icon class="bg-primary text-white text-2xl p-[5px] rounded-full" icon="ion:gift" />
               <span> Earn <b>2SFC</b> when friend installs and sign up on the app. </span>
             </span>
 
             <span
-              class="text-sm lg:text-center md:text-center flex flex-col lg:items-center md:items-center"
+              class="text-sm lg:text-center md:text-center flex flex-col lg:items-center dark:text-gray-100 md:items-center"
             >
               <i-icon class="bg-primary text-white text-2xl p-[5px] rounded-full" icon="ion:gift" />
               <span> Earn <b>20SFC</b> when your friend becomes a creator </span>
             </span>
 
             <span
-              class="text-sm lg:text-center md:text-center flex flex-col lg:items-center md:items-center"
+              class="text-sm lg:text-center md:text-center flex flex-col lg:items-center dark:text-gray-100 md:items-center"
             >
               <i-icon class="bg-primary text-white text-2xl p-[5px] rounded-full" icon="ion:gift" />
               <span>

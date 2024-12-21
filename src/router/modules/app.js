@@ -11,9 +11,11 @@ import ChatArea from '@/modules/App/chat/chatArea.vue'
 import Invite from '@/modules/App/Invite.vue'
 import Edit from '@/modules/App/profile/Edit.vue'
 import BecomeACreator from '@/modules/App/profile/BecomeACreator.vue'
-import Reels from '@/modules/App/Reels.vue'
+import Reels from '@/modules/App/Index.vue'
 import Staking from '@/modules/App/Staking.vue'
 import Notifications from '@/modules/App/Notifications.vue'
+import _id from '@/modules/App/post/_id.vue'
+import Promote from '@/modules/App/post/promote.vue'
 
 const routes = [
   {
@@ -26,6 +28,32 @@ const routes = [
       requiresAuth: false,
       parent: 'feeds',
       name: 'feeds'
+    }
+  },
+
+  {
+    path: '/feeds/:id/view',
+    name: 'post-details',
+    // component: Home,
+    component: _id,
+    meta: {
+      layout: 'Dashboard',
+      requiresAuth: false,
+      parent: 'feeds',
+      name: 'Post'
+    }
+  },
+
+  {
+    path: '/feed/:id/promote',
+    name: 'promote-post',
+    // component: Home,
+    component: Promote,
+    meta: {
+      layout: 'Dashboard',
+      requiresAuth: false,
+      parent: 'feeds',
+      name: 'Promote'
     }
   },
 
@@ -173,7 +201,7 @@ const routes = [
       layout: 'Dashboard',
       requiresAuth: true,
       parent: 'profile',
-      name: 'edit-profile'
+      name: 'profile'
     }
   },
 

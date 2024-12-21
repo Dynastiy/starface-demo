@@ -1,6 +1,10 @@
 <template>
   <div class="">
-    <Loader v-if="isLoading" />
+    <Loader v-if="isLoading">
+      <template #counter>
+        <span v-if="uploadProgress > 0">{{ `${Math.ceil(uploadProgress)}%` }}</span>
+      </template>
+    </Loader>
     <div class="flex flex-col justify-between">
       <!-- <progress :value="uploadProgress" max="100"></progress> -->
       <!-- <span>{{ uploadProgress }}%</span> -->
@@ -72,6 +76,7 @@
 </template>
 
 <script>
+import socket from '@/plugins/socket'
 export default {
   data() {
     return {
@@ -90,13 +95,14 @@ export default {
       this.isLoading = true
 
       const formData = new FormData()
-      formData.append('images', this.image)
+      formData.append('postType', 'image')
+      formData.append('files', this.image)
+      formData.append('title', this.title)
       formData.append('description', this.description)
-      this.$reels
-        .uploadImage(formData)
+      this.$feeds
+        .create(formData)
         .then((res) => {
           this.$emit('completed')
-
           return res
         })
         .finally(() => {
@@ -154,6 +160,19 @@ export default {
 
   mounted() {
     // this.getUser()
+    // Listen for progress updates
+    socket.on('uploadProgress', (data) => {
+      if (data.step == 'started') {
+        console.log('Upload started')
+      } else if (data.step == 'processing' || data.step == 'hlsProcessing') {
+        // console.log(`Processing: ${data.progress}%`)
+        this.uploadProgress = data.progress
+      } else if (data.step == 'completed') {
+        console.log('Upload completed successfully!')
+      } else if (data.step == 'error') {
+        console.error('Error during upload:', data.error)
+      }
+    })
   },
 
   computed: {

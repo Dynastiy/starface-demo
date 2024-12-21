@@ -2,8 +2,8 @@
   <div>
     <div class="flex flex-col justify-between">
       <div class="mb-4">
-        <h2 class="font-bold text-2xl">Create Account</h2>
-        <h3 class="font-medium text-gray-400 text-sm">Can we get your email and referral code?</h3>
+        <h2 class="font-bold text-2xl dark:text-white">Create Account</h2>
+        <h3 class="font-medium text-gray-400 text-sm dark:text-white">Can we get your email and referral code?</h3>
         <div></div>
       </div>
 
@@ -19,13 +19,13 @@
             <div class="flex flex-col gap-4">
               <div>
                 <label for="">Email</label>
-                <vField name="title" placeholder="Enter Property Title" class="input"> </vField>
+                <vField name="title" placeholder="Enter Property Title" class="input dark:bg-white"> </vField>
                 <ErrorMessage name="title" class="text-xs text-error"></ErrorMessage>
               </div>
 
               <div>
                 <label for="">Referral Code</label>
-                <vField name="amount" placeholder="Amount" class="input"> </vField>
+                <vField name="amount" placeholder="Amount" class="input dark:bg-white"> </vField>
                 <ErrorMessage name="amount" class="text-xs text-error"></ErrorMessage>
               </div>
             </div>

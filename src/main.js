@@ -231,7 +231,7 @@ app.use(QrReader)
 
 
 // Plugins
-import { currencyFormat, formatDate, getID, handleImageError, handleProfileError, formatRelativeTime, convertToDollar } from './plugins/filters'
+import { currencyFormat, formatDate, getID, handleImageError, handleProfileError, formatRelativeTime, convertToDollar, formatRelativeTimeShort } from './plugins/filters'
 app.config.globalProperties.$currencyFormat = currencyFormat
 app.config.globalProperties.$formatDate = formatDate
 app.config.globalProperties.$getID = getID
@@ -239,6 +239,8 @@ app.config.globalProperties.$handleProfileError = handleProfileError
 app.config.globalProperties.$handleImageError = handleImageError
 app.config.globalProperties.$formatRelativeTime = formatRelativeTime
 app.config.globalProperties.$convertToDollar = convertToDollar
+app.config.globalProperties.$formatRelativeTimeShort = formatRelativeTimeShort
+
 
 
 
