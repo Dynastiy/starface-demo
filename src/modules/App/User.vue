@@ -41,7 +41,7 @@
         </span> -->
         <div class="flex justify-between">
           <div>
-            <span class="text-sm block text-gray-500">Bio</span>
+            <span class="text-sm block dark:text-gray-300 text-gray-500 font-semibold">Bio</span>
             <p class="text-sm">
               {{ info.bio }}
             </p>
@@ -61,8 +61,10 @@
         </div>
 
         <div>
-          <span class="text-sm block text-gray-500">Interests</span>
-          <span class="flex gap-2 flex-wrap">
+          <span class="text-sm block text-gray-500 dark:text-gray-300 font-semibold"
+            >Interests</span
+          >
+          <span class="flex gap-2 flex-wrap mt-2">
             <span
               class="bg-gray-100 border border-gray-200 px-2 py-1 text-xs rounded-xl"
               v-for="item in info.interests"
@@ -73,113 +75,84 @@
         </div>
 
         <div class="w-full">
-          <span class="flex mx-auto mb-3 bg-gray-200 w-fit">
+          <!-- <span class="flex mx-auto mb-3 bg-gray-200 w-fit">
+        <span
+          class="block px-3 py-2 text-[12px] capitalize font-medium"
+          role="button"
+          @click="activateTab(i)"
+          :class="{ 'brand-primary-clear text-white font-semibold': i === activeTab }"
+          v-for="(item, i) in tabs"
+          :key="i"
+        >
+          {{ item.label }}
+        </span>
+      </span> -->
+
+          <span class="flex block relative">
             <span
-              class="block px-3 py-2 text-[12px] capitalize font-medium"
-              role="button"
               @click="activateTab(i)"
-              :class="{ 'brand-primary-clear text-white font-semibold': i === activeTab }"
+              :class="[
+                activeTab == i
+                  ? 'dark:text-white dark:border-b-white border-b-primary text-primary'
+                  : 'dark:text-gray-500 dark:border-b-gray-500 text-gray-600',
+                'border-b pb-1 border-b-2 font-semibold capitalize text-[14px] w-full text-center'
+              ]"
               v-for="(item, i) in tabs"
               :key="i"
             >
-              {{ item.label }}
+              <span class="flex gap-2 justify-center items-center">
+                <i-icon :icon="item.icon" />
+                {{ item.label.split('_').join(' ') }}
+              </span>
             </span>
           </span>
-          <div class="bg-white p-4">
+
+          <div class="mt-4">
             <div class="flex gap-2 flex-col">
-              <!-- <div class="grid grid-cols-3 gap-2" v-if="activeTab == '1' || activeTab == '0'">
-                <div v-for="item in images" :key="item.id" class="relative">
-                  <img
-                    @click="view('image', item)"
-                    class="rounded-sm h-[80px] w-full object-cover object-center"
-                    @error="$handleImageError"
-                    :src="item.images[0].filepath"
-                    alt=""
-                  />
-                  <span
-                    class="bg-[#000] text-xs p-[4px] justify-end flex gap-1 items-center text-white block absolute bottom-0 w-full"
-                  >
-                    <i-icon icon="icon-park-solid:like" />
-                    {{ item.likes }}
-                  </span>
+              <div class="grid grid-cols-3 gap-1">
+                <div v-for="(item, index) in posts" :key="index">
+                  <div class="relative" v-if="item.postType == 'image' && activeTab !== 2">
+                    <img
+                      @click="view(item)"
+                      class="rounded-sm h-[80px] w-full object-cover object-center"
+                      @error="$handleImageError"
+                      :src="item.file[0].filepath"
+                      alt=""
+                    />
+                    <span v-if="item.file.length > 1" class="absolute top-1 text-white right-1">
+                      <i-icon icon="tabler:box-multiple-filled" />
+                    </span>
+                  </div>
+                  <div v-if="item.postType == 'video' && activeTab !== 1" class="relative">
+                    <video
+                      @click="view(item)"
+                      class="rounded-sm h-[80px] w-full object-cover object-center"
+                      v-if="!item.hasError"
+                      @error="handleVideoError(index)"
+                      muted
+                      :src="item?.file[0].filepath"
+                      :id="'video-player-' + index"
+                      ref="videoPlayers"
+                    ></video>
+                    <img
+                      v-else
+                      @click="view('video', item)"
+                      @error="$handleImageError"
+                      :src="item.thumbnailUrl"
+                      alt="Placeholder"
+                      class="h-[80px] w-full object-cover object-center"
+                    />
+                    <span v-if="item.postType == 'video'" class="absolute top-1 text-white right-1">
+                      <i-icon icon="icon-park-outline:video" />
+                    </span>
+                  </div>
                 </div>
-              </div> -->
-              <!-- <div class="grid grid-cols-3 gap-2" v-if="activeTab == '2' || activeTab == '0'">
-                <div v-for="(item, index) in reels" :key="item.id">
-                  <video
-                    @click="view('video', item)"
-                    class="rounded-sm h-[80px] w-full object-cover object-center"
-                    v-if="!item.hasError"
-                    @error="handleVideoError(index)"
-                    muted
-                    ref="videoPlayers"
-                    :src="item?.videoUrl"
-                  ></video>
-                  <img
-                    @click="view('video', item)"
-                    v-else
-                    @error="$handleImageError"
-                    :src="item.thumbnailUrl"
-                    alt="Placeholder"
-                    class="h-[80px] w-full object-cover object-center"
-                  />
-                </div>
-              </div> -->
+              </div>
             </div>
-            <!-- <component :is="tabs[activeTab].component" /> -->
           </div>
         </div>
       </div>
     </div>
-
-    <vDialog
-      v-model:visible="showContainer"
-      modal
-      :style="{ width: '80%' }"
-      @hide="closeContainer"
-      @after-hide="closeContainer"
-      :showHeader="false"
-      unstyled
-      :pt="{
-        root: 'border-none',
-        mask: {
-          style: 'backdrop-filter: blur(4px)'
-        }
-      }"
-    >
-      <div class="bg-white p-4 rounded-lg">
-        <div class="flex justify-between mb-2">
-          <h4 class="font-semibold text-lg">Preview</h4>
-          <span class="text-red-500 text-sm underline" @click="closeContainer">Close</span>
-        </div>
-        <div class="flex flex-col gap-3 w-full">
-          <video
-            @error="handleVideoError(index)"
-            v-if="type == 'video'"
-            muted
-            class="rounded-sm h-[250px] w-[100%] object-cover object-center"
-            :src="item?.videoUrl"
-            controls
-            ref="videoInfo"
-          ></video>
-          <img
-            v-if="type == 'image'"
-            class="rounded-sm h-[250px] w-full object-cover object-center"
-            @error="$handleImageError"
-            :src="item.images[0].filepath"
-            alt=""
-          />
-          <div v-if="type == 'video'">
-            <h5 class="font-semibold text-sm capitalize">title</h5>
-            <h6>{{ item.title }}</h6>
-          </div>
-          <div>
-            <h5 class="font-semibold text-sm capitalize">description</h5>
-            <p>{{ item.description }}</p>
-          </div>
-        </div>
-      </div>
-    </vDialog>
   </div>
 </template>
 
@@ -214,15 +187,18 @@ export default {
       reels: [],
       tabs: [
         {
-          label: 'all'
+          label: 'all_posts',
+          icon: 'material-symbols:border-all-outline'
           // component: markRaw(Edit)
         },
         {
-          label: 'photos'
+          label: 'photos',
+          icon: 'clarity:image-gallery-line'
           // component: markRaw(Edit)
         },
         {
-          label: 'videos'
+          label: 'videos',
+          icon: 'streamline:play-list-9'
           // component: markRaw(Transactions)
         }
         // {
@@ -232,7 +208,8 @@ export default {
       ],
       type: '',
       item: {},
-      showContainer: false
+      showContainer: false,
+      posts: []
     }
   },
 
@@ -256,7 +233,6 @@ export default {
       this.$auth.getUser(this.userID).then((res) => {
         console.log(res)
         this.info = res.user
-        this.getUserImages()
         this.getUserReels()
       })
     },
@@ -404,30 +380,21 @@ export default {
       })
     },
 
-    getUserImages() {
-      this.$appImages.getUser(this.userID).then((res) => {
-        console.log(res)
-        this.images = res.data
-        // this.info = res.user
-      })
-    },
-
     getUserReels() {
-      this.$appImages.getUserReels(this.userID).then((res) => {
+      this.$userActivity.allPosts(this.userID).then((res) => {
         console.log(res)
-        this.reels = res.reels
+        this.posts = res.posts
         this.$nextTick(() => {
-          if (this.reels) {
-            this.reels.forEach((reel, index) => {
+          if (this.posts) {
+            this.posts.forEach((reel, index) => {
               const videoElement = this.$refs.videoPlayers[index]
-              console.log(videoElement, 'ommmo')
               if (videoElement) {
                 if (Hls.isSupported()) {
                   const hls = new Hls()
-                  hls.loadSource(reel.videoUrl)
+                  hls.loadSource(reel.file[0].filepath)
                   hls.attachMedia(videoElement)
                 } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
-                  videoElement.src = reel.videoUrl
+                  videoElement.src = reel.file[0].filepath
                 } else {
                   console.error(`HLS not supported on video ${index + 1}`)
                 }
@@ -435,8 +402,6 @@ export default {
             })
           }
         })
-        // this.images = res.data
-        // this.info = res.user
       })
     },
 

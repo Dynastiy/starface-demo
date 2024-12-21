@@ -187,7 +187,7 @@ export default {
 .dropzone-container {
   height: 150px;
   width: 100%;
-  background: var(---gray-200);
+  /* background: var(---gray-200); */
   border: 2px solid var(---gray-500);
   /* border-style: ; */
   border-radius: 12px;

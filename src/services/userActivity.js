@@ -48,8 +48,9 @@ export default {
       let res = await $request.get(`api/post/get-posts/user/${ID}`)
       return res.data
     } catch (error) {
-      catchAxiosError(error)
-      throw error
+      // catchAxiosError(error)
+      // throw error
+      return error
     }
   },
 

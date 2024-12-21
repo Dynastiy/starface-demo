@@ -8,13 +8,17 @@
         alt=""
       />
       <div class="text-center flex flex-col items-center">
-        <h4 class="capitalize font-semibold leading-tight text-md">
+        <h4 class="capitalize dark:text-white font-semibold leading-tight text-md">
           {{ `${info.firstName} ${info.lastName}` }}
         </h4>
-        <h6 class="capitalize text-gray-500 text-xs">{{ `@${info.userName}` }}</h6>
-        <button class="bg-gray-200 text-[14px] px-2 mt-2 w-fit rounded-md font-semibold py-1">
-          <router-link :to="`/user/profile/${info._id}`">View Profile</router-link> 
-        </button>
+        <h6 class="capitalize dark:text-gray-300 text-gray-500 text-xs">
+          {{ `@${info.userName}` }}
+        </h6>
+        <router-link :to="`/user/profile/${info._id}`"
+          ><button class="dark:bg-black3 dark:text-gray-200 bg-gray-200 text-[14px] px-2 mt-2 w-fit rounded-md font-medium py-1">
+            View Profile
+          </button>
+        </router-link>
       </div>
     </div>
   </div>

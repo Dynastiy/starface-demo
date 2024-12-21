@@ -6,7 +6,7 @@
         v-for="item in notifications"
         :key="item.id"
         :class="[
-          item.isRead ? 'bg-gray-200' : 'bg-white',
+          item.isRead ? 'bg-gray-300 dark:bg-black3' : 'dark:bg-gray-600 bg-gray-200',
           'flex gap-2 items-center p-3 rounded-lg'
         ]"
         role="button"
@@ -18,7 +18,7 @@
           <i-icon :icon="item.isRead ? 'tabler:message' : 'tabler:message-up'" class="text-2xl" />
         </span>
         <div class="flex flex-col">
-          <span class="text-sm capitalize">
+          <span class="text-sm capitalize dark:text-white">
             {{ item.type }} received from <b>{{ item.senderName || 'user' }}</b></span
           >
           <span class="text-[11px] text-gray-400">

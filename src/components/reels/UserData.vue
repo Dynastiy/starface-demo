@@ -12,8 +12,11 @@
           <router-link :to="`/user/profile/${item.user}`" class="font-semibold dark:text-white text-black3">
             {{ `${item.userName}` }}
           </router-link>
-          <span class="text-[8px] block leading-tight dark:text-gray-300 text-black3">{{ $formatRelativeTime(item.createdAt) }}</span>
-           <!-- <span>{{ item.createdAt }}</span> -->
+          <!-- <span>
+            {{item.promoted}}
+          </span> -->
+          <span v-if="!item.promoted" class="text-[8px] block leading-tight dark:text-gray-300 text-black3">{{ $formatRelativeTime(item.createdAt) }}</span>
+           <span class="dark:text-gray-300 text-black3 font-bold text-[10px] flex gap-1 items-center leading-tight" v-else>Sponsored <i-icon icon="subway:world-1" ></i-icon> </span>
         </span>
       </div>
 

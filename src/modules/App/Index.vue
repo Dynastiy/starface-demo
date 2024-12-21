@@ -195,7 +195,7 @@ const showContainer = ref(false)
 const fetchingReels = ref(true)
 
 const initializeVideos = () => {
-  console.log(videoPlayers.value)
+  // console.log(videoPlayers.value)
   videoPlayers.value.forEach((videoElement, index) => {
     const reel = allFeeds.value[index]
     if (reel && reel.postType == 'video' && videoElement) {
@@ -207,7 +207,8 @@ const initializeVideos = () => {
       } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
         videoElement.src = videoUrl
       } else {
-        console.error(`HLS not supported on video ${index + 1}`)
+        // console.error(`HLS not supported on video ${index + 1}`)
+        return 
       }
       // Explicitly pause all videos at initialization
       videoElement.pause()
@@ -240,7 +241,7 @@ const redeem = () => {
 const getEarnWallet = () => {
   services.wallet.earnWallet().then((res) => {
     let starBalance = res.star
-    console.log(res)
+    // console.log(res)
     store.commit('drawer/setStarBalance', starBalance)
   })
 }
@@ -260,7 +261,7 @@ const showContainerModified = () => {
 const openComments = (e) => {
   visibleBottom.value = true
   let itemData = JSON.parse(e)
-  console.log(itemData)
+  // console.log(itemData)
   comments.value = itemData.comments
   reel.value = itemData
 }
@@ -344,7 +345,8 @@ const getFeeds = async (append = false) => {
 
     
   } catch (error) {
-    console.log(error)
+    // console.log(error)
+    return error
   } finally {
     loading.value = false
     fetchingReels.value = false
@@ -362,13 +364,8 @@ const handleScroll = debounce((event) => {
   const scrollPosition = scrollContainer.scrollTop + scrollContainer.clientHeight;
   const scrollHeight = scrollContainer.scrollHeight;
 
-  // Log to debug
-  console.log("Scroll Position:", scrollPosition);
-  console.log("Scroll Height:", scrollHeight);
-
   // Check if we are near the bottom of the scroll container
   if (scrollPosition >= scrollHeight - 100 && !loading.value) {
-    console.log("Near bottom, loading more posts...");
     loadMorePosts();
   }
 }, 300); // 300ms debounce
@@ -383,7 +380,7 @@ onMounted(() => {
   showContainerModified()
   getFeeds()
   socket.on('postUpdated', ({ postId, updatedData }) => {
-    console.log(updatedData, postId, 'updated data')
+    // console.log(updatedData, postId, 'updated data')
     allFeeds.value = allFeeds.value.map((reel) =>
       reel._id == postId ? { ...reel, ...updatedData } : reel
     )

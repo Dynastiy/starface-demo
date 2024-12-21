@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white p-4 shadow-sm">
+  <div class="bg-white dark:bg-black3  p-4 shadow-sm">
     <div v-if="queryData.status == 'pending' && queryData.type == 'chat_requests'">
       <h4 class="gap-1 text-center text-[15px] justify-center">
         Accept Message Request from

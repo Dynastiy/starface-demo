@@ -73,9 +73,9 @@
           >
         </span>
       </div>
-      <h4 class="font-semibold capitalize">{{ activeTab.split('_').join(' ') }}</h4>
+      <h4 class="font-semibold capitalize dark:text-white">{{ activeTab.split('_').join(' ') }}</h4>
       <div class="flex flex-col gap-4 mt-2">
-        <div class="bg-white p-2 rounded-md" v-for="item in displayedMessages" :key="item">
+        <div class="dark:bg-black3 bg-white p-2 rounded-md" v-for="item in displayedMessages" :key="item">
           <span @click="openChat(item)" role="button" class="flex justify-between items-start">
             <span class="flex gap-2 items-center">
               <span class="relative">
@@ -90,10 +90,10 @@
                 ></span>
               </span>
               <span>
-                <h5 class="font-semibold text-[15px] capitalize">
+                <h5 class="font-semibold dark:text-white text-[15px] capitalize">
                   {{ item.user.userName || 'Starface User' }}
                 </h5>
-                <h6 class="text-[11px]" v-if="item.lastMessage">
+                <h6 class="text-[11px] dark:text-gray-400" v-if="item.lastMessage">
                   {{ (item.lastMessage.sender == userID ? 'You: ' : '') + item.lastMessage.text }}
                 </h6>
                 <h6 class="text-[11px]" v-else>

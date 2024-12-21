@@ -53,7 +53,7 @@
         }
       }"
     >
-      <div class="bg-white p-4 rounded-md">
+      <div class="dark:bg-black3 bg-white p-4 rounded-md">
         <div class="flex justify-between">
           <h4 class="capitalize font-semibold text-sm">{{ `post ${type}` }}</h4>
           <span class="text-red-500 underline text-xs" role="button" @click="closeContainer">
@@ -173,7 +173,7 @@ export default {
       if (this.user) {
         // Join the user's room
         const userId = this.user._id
-        socket.emit('joinUploadReelsRoom', userId)
+        socket.emit('joinUploadPostRoom', userId)
       }
     }
   },
