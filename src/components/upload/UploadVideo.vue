@@ -47,10 +47,10 @@
       </div>
 
       <div class="form">
-        <div>
+        <!-- <div>
           <label for="">Title</label>
           <input type="text" v-model="title" placeholder="Enter a title..." class="input" />
-        </div>
+        </div> -->
 
         <div>
           <label for="">Description</label>

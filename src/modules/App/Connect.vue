@@ -17,8 +17,8 @@
           class="bg-transparent"
         />
       </div>
-      <button class="text-white" @click="showContainer = true">
-        <i-icon icon="mi:filter" class="text-2xl" />
+      <button class=" dark:text-white" @click="showContainer = true">
+        <i-icon icon="mi:filter" class="text-2xl " />
       </button>
     </div>
     <el-skeleton :loading="loading" animated>

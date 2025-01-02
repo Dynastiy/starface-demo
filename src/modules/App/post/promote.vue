@@ -81,15 +81,32 @@
 
           <div class="px-2">
             <h3 class="font-semibold dark:text-white">Promotion Details</h3>
-            <form @submit.prevent="onSubmit" class="form flex flex-col gap-2">
+            <div class="form flex flex-col gap-2">
               <div>
                 <label for="">Location</label>
-                <input
-                  type="text"
-                  v-model="formData.targetLocation"
-                  placeholder="Enter Location"
-                  class="input dark:bg-white py-2"
-                />
+                <div class="input-field w-full flex gap-1 flex-wrap dark:bg-white">
+                  <div class="flex gap-2 flex-wrap py-2">
+                    <span
+                      v-for="(item, idx) in locations"
+                      :key="idx"
+                      class="text-[11px] px-2 font-medium rounded-lg bg-gray-200 flex items-center gap-2 py-[4px]"
+                    >
+                      {{ item }}
+                      <span role="button" @click="removeLocation(idx)">
+                        <i-icon icon="zondicons:close-outline" class="text-xs text-red-500" />
+                      </span>
+                    </span>
+                  </div>
+                  <input
+                    type="text"
+                    v-model.trim="location"
+                    @keyup.enter.prevent="addLocation"
+                    class="bg-transparent flex-1 py-2"
+                    placeholder="Enter Location"
+                    @blur="addLocation"
+                    @keydown.backspace="removeLastLocation"
+                  />
+                </div>
               </div>
 
               <div>
@@ -112,8 +129,8 @@
                 />
               </div>
 
-              <button class="brand-btn brand-primary-clear mt-3 w-full">Promote Post</button>
-            </form>
+              <button class="brand-btn brand-primary-clear mt-3 w-full" @click="onSubmit">Promote Post</button>
+            </div>
           </div>
         </div>
       </template>
@@ -141,9 +158,10 @@ const item = ref({})
 const videoInfo = ref(null)
 const muted = ref(false)
 const fetchingReels = ref(true)
+const locations = ref([])
+const location = ref()
 
 const formData = ref({
-  targetLocation: '', //City or country
   amount: '', // From USDT Balance
   duration: '' //In days
 })
@@ -152,9 +170,31 @@ const toggleMute = () => {
   muted.value = !muted.value
 }
 
+const addLocation = () => {
+  if (location.value !== '') {
+    locations.value.push(location.value)
+    location.value = ''
+  }
+}
+
+const removeLocation = (index) => {
+  locations.value.splice(index, 1)
+}
+
+const removeLastLocation = () => {
+  if (location.value == '' && locations.value.length > 0) {
+    locations.value.pop()
+  }
+}
+
 const onSubmit = async () => {
+  let allLocations = []
+  locations.value.forEach((element) => {
+    allLocations.push(element)
+  })
   let payload = {
     ...formData.value,
+    targetLocation: allLocations,
     description: item.value.description,
     files: item.value.file[0].filepath //Optional Image or video
   }

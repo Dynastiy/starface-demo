@@ -248,7 +248,6 @@ export default {
         return
       }
       this.$wallet.earnWallet().then((res) => {
-        // console.log(res)
         this.starBalance = res.star
       })
     },

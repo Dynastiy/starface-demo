@@ -164,7 +164,7 @@ export default {
           otherBalances: {
             ...this.walletData.otherBalances,
             USDT: res[1].balance,
-            SFC: res[0].balance
+            // SFC: res[0].balance
           }
         }
       })

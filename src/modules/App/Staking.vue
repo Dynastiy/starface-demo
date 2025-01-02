@@ -40,7 +40,7 @@
                     </span>
                     <span
                       class="text-xs dark:text-gray-200"
-                      v-html="`<b>Start Date:</b> ${$formatDate(item.endDate)}`"
+                      v-html="`<b>End Date:</b> ${$formatDate(item.endDate)}`"
                     >
                     </span>
                   </div>

@@ -449,7 +449,9 @@ export default {
     }
   },
 
-  mounted() {},
+  mounted() {
+    this.getUser()
+  },
 
   beforeMount() {
     this.getProfileData()

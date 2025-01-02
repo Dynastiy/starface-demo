@@ -44,15 +44,6 @@
                     id="videoItem"
                     autoplay
                   ></video>
-                  <!-- <div
-                    v-if="isPlayButtonVisible[0]"
-                    class="absolute inset-0 flex top-0 w-fit h-fit left-0 items-center justify-center top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                    @click.stop="togglePlayPause(0)"
-                  >
-                    <button class="p-6 bg-black bg-opacity-30 text-white rounded-full">
-                      <Icon :icon="isPlaying[0] ? 'mdi:pause' : 'mdi:play'" class="text-3xl" />
-                    </button>
-                  </div> -->
                   <button
                     class="bg-black absolute top-2 right-2 text-white p-2 bg-opacity-50 rounded-full"
                     @click="toggleMute"

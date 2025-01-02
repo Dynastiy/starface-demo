@@ -134,4 +134,15 @@ export default {
       throw error
     }
   },
+
+  async analytics(id, formData) {
+    try {
+      let res = await $request.post(`api/promotion/post/${id}`, formData)
+      catchAxiosSuccess(res.data)
+      return res.data
+    } catch (error) {
+      catchAxiosError(error)
+      throw error
+    }
+  },
 }

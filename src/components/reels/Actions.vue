@@ -6,7 +6,7 @@
       </button>
       <div class="w-full text-right">
         <button
-        @click.stop="$router.push(`/feed/${item._id}/promote`)"
+          @click.stop="$router.push(`/feed/${item._id}/promote`)"
           v-if="!item.promoted"
           class="brand-btn brand-primary-clear text-[12px] py-[5px] px-2 rounded-[4px]"
         >
@@ -38,7 +38,7 @@
             :class="[checkLiked(item) ? 'text-red-500' : '', 'text-[20px]']"
             :icon="checkLiked(item) ? 'icon-park-solid:like' : 'icon-park-outline:like'"
           />
-            <!-- <span>{{showReaction()}}</span> -->
+          <!-- <span>{{showReaction()}}</span> -->
           <span class="text-sm font-semibold no-select">{{ item.likes }}</span>
         </button>
         <button class="flex gap-2 items-center dark:text-gray-50 text-black3" role="button">
@@ -54,7 +54,12 @@
           <span class="text-sm font-semibold no-select">{{ item?.shares }}</span>
         </button>
       </div>
-      <button v-if="user && user._id !== item.user" @click.stop="gift(item)" class="flex gap-1 items-center flex-col" role="button">
+      <button
+        v-if="user && user._id !== item.user"
+        @click.stop="gift(item)"
+        class="flex gap-1 items-center flex-col"
+        role="button"
+      >
         <i-icon class="text-[25px] heartbeat" icon="noto-v1:sunflower" />
       </button>
 
@@ -77,10 +82,30 @@
       >
         <div class="reaction-box flex gap-6" @click.stop @touchend.stop>
           <!-- <button class="reaction text-white text-xs flex flex-col items-center" @click="setReaction('Like')"><span>👍</span> Like</button> -->
-          <button class="reaction text-white text-xs flex flex-col items-center" @click="setReaction('love')"><span class="text-2xl">❤️</span> Love</button>
-          <button class="reaction text-white text-xs flex flex-col items-center" @click="setReaction('wow')"><span class="text-2xl">😮</span> Wow</button>
-          <button class="reaction text-white text-xs flex flex-col items-center" @click="setReaction('sad')"><span class="text-2xl">😢</span> Sad</button>
-          <button class="reaction text-white text-xs flex flex-col items-center" @click="setReaction('angry')"><span class="text-2xl">😡</span> Angry</button>
+          <button
+            class="reaction text-white text-xs flex flex-col items-center"
+            @click="setReaction('love')"
+          >
+            <span class="text-2xl">❤️</span> Love
+          </button>
+          <button
+            class="reaction text-white text-xs flex flex-col items-center"
+            @click="setReaction('wow')"
+          >
+            <span class="text-2xl">😮</span> Wow
+          </button>
+          <button
+            class="reaction text-white text-xs flex flex-col items-center"
+            @click="setReaction('sad')"
+          >
+            <span class="text-2xl">😢</span> Sad
+          </button>
+          <button
+            class="reaction text-white text-xs flex flex-col items-center"
+            @click="setReaction('angry')"
+          >
+            <span class="text-2xl">😡</span> Angry
+          </button>
         </div>
       </div>
     </div>
@@ -158,11 +183,11 @@ export default {
         this.$router.push('/auth/login')
         return
       }
-      if(this.checkLiked(this.item)) {
+      if (this.checkLiked(this.item)) {
         this.like()
         return
       }
-     
+
       let payload = {
         reactionType: reaction
       }
@@ -248,17 +273,30 @@ export default {
       // Perform additional actions like showing a success message or tracking an event
     },
 
-    triggerShare(e) {
-      this.onShare(this.onShareSuccess(e))
+    async triggerShare(e) {
+      // this.onShare(this.onShareSuccess(e))
+
+      try {
+        await navigator.share({
+          title: `
+          I have just saw this post on Starface.chat.`,
+          text: 'Share Post Link',
+          url: `${this.locat}/feeds/${e._id}/view`
+        })
+        // Run the callback on success
+        // if (callback) callback()
+        this.completeShare(e)
+      } catch (err) {
+        alert(err)
+      }
     },
 
-    getReaction(){
-
-    //  <button class="reaction text-white text-xs flex flex-col items-center" @click="setReaction('Like')"><span>👍</span> Like</button> -->
-          // <button class="reaction text-white text-xs flex flex-col items-center" @click="setReaction('love')"><span class="text-2xl">❤️</span> Love</button>
-          // <button class="reaction text-white text-xs flex flex-col items-center" @click="setReaction('wow')"><span class="text-2xl">😮</span> Wow</button>
-          // <button class="reaction text-white text-xs flex flex-col items-center" @click="setReaction('sad')"><span class="text-2xl">😢</span> Sad</button>
-          // <button class="reaction text-white text-xs flex flex-col items-center" @click="setReaction('angry')"><span class="text-2xl">😡</span> Angry</button>
+    getReaction() {
+      //  <button class="reaction text-white text-xs flex flex-col items-center" @click="setReaction('Like')"><span>👍</span> Like</button> -->
+      // <button class="reaction text-white text-xs flex flex-col items-center" @click="setReaction('love')"><span class="text-2xl">❤️</span> Love</button>
+      // <button class="reaction text-white text-xs flex flex-col items-center" @click="setReaction('wow')"><span class="text-2xl">😮</span> Wow</button>
+      // <button class="reaction text-white text-xs flex flex-col items-center" @click="setReaction('sad')"><span class="text-2xl">😢</span> Sad</button>
+      // <button class="reaction text-white text-xs flex flex-col items-center" @click="setReaction('angry')"><span class="text-2xl">😡</span> Angry</button>
     },
 
     refresh() {
@@ -363,7 +401,12 @@ export default {
     },
     isLoggedIn() {
       return this.$store.getters['auth/getAuthenticated']
-    }
+    },
+    locat() {
+      // let window;
+      console.log(window.location)
+      return `${window.location.origin}`
+    },
   }
 }
 </script>

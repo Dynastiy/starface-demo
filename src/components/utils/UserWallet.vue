@@ -10,7 +10,7 @@
               <span class="text-xs block text-primary leading-tightest font-semibold">
                 Star Balance</span
               >
-              <span class="font-bold dark:text-white text-4xl leading-tightest">{{ walletData.starBalance }}</span>
+              <span class="font-bold dark:text-white text-4xl leading-tightest">{{ `SFC ${walletData.starBalance}` }}</span>
               <span class="text-sm text-gray-500 block leading-tightest font-semibold">{{
                 $convertToDollar(walletData.starBalance)
               }}</span>
